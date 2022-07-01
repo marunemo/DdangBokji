@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import ItemCard from './ListItem';
 
 function TouristSpotList() {
 	const [spotData, setSpotData] = useState({});
 	const [isLoaded, setLoading] = useState(false);
 	
-	fetch('https://openapi.mnd.go.kr/sample/json/DS_MND_GUN_WLFRINSTLTN_SRNDT/1/5/')
-		.then((res) => res.json())
+	axios.get('https://openapi.mnd.go.kr/sample/json/DS_MND_GUN_WLFRINSTLTN_SRNDT/1/5/')
 		.then((data) => {
+			console.log(data);
 			setSpotData({
 				data: data,
 			});

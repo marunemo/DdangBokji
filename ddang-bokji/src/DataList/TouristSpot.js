@@ -6,14 +6,19 @@ function TouristSpotList() {
 	const [spotData, setSpotData] = useState({});
 	const [isLoaded, setLoading] = useState(false);
 	
-	axios.get('https://openapi.mnd.go.kr/sample/json/DS_MND_GUN_WLFRINSTLTN_SRNDT/1/5/')
-		.then((data) => {
-			console.log(data);
-			setSpotData({
-				data: data,
-			});
-			setLoading(true);
-	});
+	try {
+		axios.get('/sample/json/DS_MND_GUN_WLFRINSTLTN_SRNDT/1/5/')
+			.then((data) => {
+				console.log(data);
+				setSpotData({
+					data: data,
+				});
+				setLoading(true);
+		});
+	}
+	catch(e) {
+		console.log(e);
+	}
 	
 	if(isLoaded) {
 		return <p>Loading...</p>

@@ -1,26 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ItemCard from './ListItem';
 
 function TouristSpotList() {
-	const [spotData, setSpotData] = useState({});
+	const [spotData, setSpotData] = useState(null);
 	const [isLoaded, setLoading] = useState(false);
 	
 	try {
-		axios.get('/sample/json/DS_MND_GUN_WLFRINSTLTN_SRNDT/1/5/')
-			.then((data) => {
-				console.log(data);
-				setSpotData({
-					data: data,
-				});
-				setLoading(true);
-		});
+		useEffect(() => {
+			axios.get('/sample/json/DS_MND_GUN_WLFRINSTLTN_SRNDT/1/5/')
+				.then((fetchData) => {
+					for(const tourSpot of fetchData.data.DS_MND_GUN_WLFRINSTLTN_SRNDT.row) {
+						setSpotData(tourSpot);
+						console.log(tourSpot)
+					}
+					setLoading(true);
+			});
+		}, []);
 	}
 	catch(e) {
 		console.log(e);
 	}
 	
-	if(isLoaded) {
+	if(!isLoaded) {
 		return <p>Loading...</p>
 	}
 		

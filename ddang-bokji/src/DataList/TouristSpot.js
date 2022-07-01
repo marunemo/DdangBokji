@@ -10,10 +10,10 @@ function TouristSpotList() {
 		useEffect(() => {
 			axios.get('/sample/json/DS_MND_GUN_WLFRINSTLTN_SRNDT/1/5/')
 				.then((fetchData) => {
-					for(const tourSpot of fetchData.data.DS_MND_GUN_WLFRINSTLTN_SRNDT.row) {
-						setSpotData(tourSpot);
-						console.log(tourSpot)
-					}
+					//for(const tourSpot of fetchData.data.DS_MND_GUN_WLFRINSTLTN_SRNDT.row) {
+					setSpotData(fetchData.data.DS_MND_GUN_WLFRINSTLTN_SRNDT.row[0]);
+					console.log(fetchData.data.DS_MND_GUN_WLFRINSTLTN_SRNDT.row[0]);
+					//}
 					setLoading(true);
 			});
 		}, []);
@@ -28,7 +28,7 @@ function TouristSpotList() {
 		
 	return (
 		<ItemCard
-			titile={spotData.rel_instltnnm}
+			title={spotData.rel_instltnnm}
 			description={spotData.instltnpstn}
 		/>
 	)

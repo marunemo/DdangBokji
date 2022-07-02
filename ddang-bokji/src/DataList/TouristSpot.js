@@ -3,17 +3,24 @@ import axios from 'axios';
 import ItemCard from './ListItem';
 
 function TouristSpotList() {
-	const [spotData, setSpotData] = useState(null);
+	const [spotData, setSpotData] = useState([]);
 	const [isLoaded, setLoading] = useState(false);
 	
 	try {
 		useEffect(() => {
 			axios.get('/sample/json/DS_MND_GUN_WLFRINSTLTN_SRNDT/1/5/')
 				.then((fetchData) => {
-					//for(const tourSpot of fetchData.data.DS_MND_GUN_WLFRINSTLTN_SRNDT.row) {
-					setSpotData(fetchData.data.DS_MND_GUN_WLFRINSTLTN_SRNDT.row[0]);
-					console.log(fetchData.data.DS_MND_GUN_WLFRINSTLTN_SRNDT.row[0]);
-					//}
+					const tourSpots = fetchData.data.DS_MND_GUN_WLFRINSTLTN_SRNDT.row.map(tourSpot => {
+						return (
+							<ItemCard
+								title={tourSpot.rel_instltnnm}
+								description={tourSpot.instltnpstn}
+								photoImage={tourSpot.image_file}
+								imageDesc={tourSpot.phototitle}
+							/>
+						)
+					})
+					setSpotData(tourSpots);
 					setLoading(true);
 			});
 		}, []);
@@ -26,14 +33,7 @@ function TouristSpotList() {
 		return <p>Loading...</p>
 	}
 		
-	return (
-		<ItemCard
-			title={spotData.rel_instltnnm}
-			description={spotData.instltnpstn}
-			photoImage={spotData.image_file}
-			imageDesc={spotData.phototitle}
-		/>
-	)
+	return spotData;
 }
 
 export default TouristSpotList;

@@ -30,6 +30,8 @@ function TouristSpotList() {
 		<ItemCard
 			title={spotData.rel_instltnnm}
 			description={spotData.instltnpstn}
+			photoImage={spotData.image_file}
+			imageDesc={spotData.phototitle}
 		/>
 	)
 }

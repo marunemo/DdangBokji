@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Col, Row } from 'antd';
 import axios from 'axios';
 import ItemCard from './ListItem';
 
@@ -10,7 +11,7 @@ function TouristSpotList() {
 		useEffect(() => {
 			axios.get('/sample/json/DS_MND_GUN_WLFRINSTLTN_SRNDT/1/5/')
 				.then((fetchData) => {
-					const tourSpots = fetchData.data.DS_MND_GUN_WLFRINSTLTN_SRNDT.row.map(tourSpot => {
+					const tourSpots = fetchData.data.DS_MND_GUN_WLFRINSTLTN_SRNDT.row.map((tourSpot) => {
 						return (
 							<ItemCard
 								title={tourSpot.rel_instltnnm}

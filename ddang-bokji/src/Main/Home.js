@@ -1,5 +1,6 @@
 import React from 'react';
 import { Breadcrumb, Layout, Menu, Row } from 'antd';
+import TouristSpotList from '../DataList/TouristSpot';
 
 function HomeContainer() {
 	const headerMenu = ["Home"].map((option, key) => {
@@ -43,7 +44,7 @@ function HomeContainer() {
 						<Breadcrumb.Item>3</Breadcrumb.Item>
 					</Breadcrumb>
 					<Layout.Content style={styles.content}>
-						Content
+						<TouristSpotList />
 					</Layout.Content>
 				</Layout>
 			</Layout>
@@ -75,8 +76,7 @@ const styles = {
 	},
 	content: {
 		background: '#fff',
-		padding: 24,
+		padding: 16,
 		margin: 0,
-		height: '100%'
 	}
 }

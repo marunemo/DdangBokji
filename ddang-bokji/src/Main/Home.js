@@ -1,5 +1,5 @@
 import React from 'react';
-import { Breadcrumb, Layout, Menu, Row } from 'antd';
+import { Layout, Menu, Row } from 'antd';
 import TouristSpotList from '../DataList/TouristSpot';
 
 function HomeContainer() {
@@ -38,11 +38,6 @@ function HomeContainer() {
 					/>
 				</Layout.Sider>
 				<Layout style={styles.contentLayout}>
-					<Breadcrumb style={styles.breadCrumb}>
-						<Breadcrumb.Item>1</Breadcrumb.Item>
-						<Breadcrumb.Item>2</Breadcrumb.Item>
-						<Breadcrumb.Item>3</Breadcrumb.Item>
-					</Breadcrumb>
 					<Layout.Content style={styles.content}>
 						<TouristSpotList />
 					</Layout.Content>
@@ -61,22 +56,20 @@ const styles = {
 	},
 	sider: {
 		background: '#fff',
-		width: 200
 	},
 	sideMenu: {
 		height: '100%',
-		borderRight: 0
+		borderRight: 0,
+		fontSize: '12pt'
 	},
 	contentLayout: {
-		padding: '0 24px 24px',
+		background: '#e3e3e3',
+		padding: '24px',
 		margin: '0',
 	},
-	breadCrumb: {
-		margin: '16px 0'
-	},
 	content: {
-		background: '#fff',
-		padding: 16,
+		background: '#e3e3e3',
+		padding: '16px',
 		margin: 0,
 	}
 }

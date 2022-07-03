@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Spin, Space, Typography } from 'antd';
 import axios from 'axios';
 import ItemCard from './ListItem';
 import ItemGrid from './ItemGrid';
@@ -31,7 +32,26 @@ function TouristSpotList() {
 	}
 	
 	if(!isLoaded) {
-		return <p>Loading...</p>
+		return(
+			<Space
+				style={{
+					width: '100%',
+					height: '100%',
+					justifyContent: 'center'
+				}}
+				direction="horizontal"
+				align="center"
+				size="middle"
+			>
+				<Spin size="large" />
+				<Typography.Title
+					style={{ color: 'red' }}
+					level={2}
+				>
+					Loading...
+				</Typography.Title>
+			</Space>
+		);
 	}
 		
 	return <ItemGrid items={spotData} />;

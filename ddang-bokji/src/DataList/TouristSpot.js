@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Spin, Space, Typography } from 'antd';
 import axios from 'axios';
-import ItemCard from './ListItem';
-import ItemGrid from './ItemGrid';
+import ItemCard from '../Utility/ListItem';
+import ItemGrid from '../Utility/ItemGrid';
 
 function TouristSpotList() {
 	const [spotData, setSpotData] = useState([]);

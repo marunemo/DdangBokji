@@ -10,7 +10,7 @@ function TouristSpotList() {
 	
 	try {
 		useEffect(() => {
-			axios.get('/sample/json/DS_MND_GUN_WLFRINSTLTN_SRNDT/1/5/')
+			axios.get(`/${process.env.REACT_APP_MND_TOKEN}/json/DS_MND_GUN_WLFRINSTLTN_SRNDT/1/17/`)
 				.then((fetchData) => {
 					const tourSpots = fetchData.data.DS_MND_GUN_WLFRINSTLTN_SRNDT.row.map((tourSpot) => {
 						return (

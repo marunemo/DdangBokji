@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Col, Row } from 'antd';
 import axios from 'axios';
 import ItemCard from './ListItem';
+import ItemGrid from './ItemGrid';
 
 function TouristSpotList() {
 	const [spotData, setSpotData] = useState([]);
@@ -34,7 +34,7 @@ function TouristSpotList() {
 		return <p>Loading...</p>
 	}
 		
-	return spotData;
+	return <ItemGrid items={spotData} />;
 }
 
 export default TouristSpotList;

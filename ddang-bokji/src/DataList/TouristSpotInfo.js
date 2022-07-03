@@ -4,6 +4,7 @@ import { UserOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import LoadingSpin from '../Utility/LoadingSpin';
+import KakaoMap from '../Utility/KakaoMap';
 
 function TouristSpotInfo({ match }) {
 	const { id } = useParams();
@@ -55,6 +56,7 @@ function TouristSpotInfo({ match }) {
 						전화 : {spotInfo.cntadr}
 					</Typography.Text>
 				</Typography>
+				<KakaoMap />
 			</Layout.Content>
 			<Layout.Sider
 				width="50%"

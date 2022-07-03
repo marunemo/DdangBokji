@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Spin, Space, Typography } from 'antd';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import LoadingSpin from '../Utility/LoadingSpin';
 
 function TouristSpotInfo({ match }) {
 	const { id } = useParams();
@@ -21,28 +21,9 @@ function TouristSpotInfo({ match }) {
 		console.log(e);
 	}
 	
-	if(!isLoaded) {
-		return(
-			<Space
-				style={{
-					width: '100%',
-					height: '100%',
-					justifyContent: 'center'
-				}}
-				direction="horizontal"
-				align="center"
-				size="middle"
-			>
-				<Spin size="large" />
-				<Typography.Title
-					style={{ color: 'red' }}
-					level={2}
-				>
-					Loading...
-				</Typography.Title>
-			</Space>
-		);
-	}
+	if(!isLoaded)
+		return <LoadingSpin />;
+	
 	return JSON.stringify(spotInfo);
 }
 

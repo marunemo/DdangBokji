@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Spin, Space, Typography } from 'antd';
 import axios from 'axios';
 import { Link } from "react-router-dom";
 import ItemCard from '../Utility/ListItem';
 import ItemGrid from '../Utility/ItemGrid';
+import LoadingSpin from '../Utility/LoadingSpin';
 
 function TouristSpotList() {
 	const [spotData, setSpotData] = useState([]);
@@ -34,28 +34,8 @@ function TouristSpotList() {
 		console.log(e);
 	}
 	
-	if(!isLoaded) {
-		return(
-			<Space
-				style={{
-					width: '100%',
-					height: '100%',
-					justifyContent: 'center'
-				}}
-				direction="horizontal"
-				align="center"
-				size="middle"
-			>
-				<Spin size="large" />
-				<Typography.Title
-					style={{ color: 'red' }}
-					level={2}
-				>
-					Loading...
-				</Typography.Title>
-			</Space>
-		);
-	}
+	if(!isLoaded)
+		return <LoadingSpin />
 		
 	return <ItemGrid items={spotData} />;
 }

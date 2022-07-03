@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Image, Typography } from 'antd';
+import { Layout, Image, Typography, List, Comment, Avatar } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import LoadingSpin from '../Utility/LoadingSpin';
@@ -25,12 +26,23 @@ function TouristSpotInfo({ match }) {
 	if(!isLoaded)
 		return <LoadingSpin />;
 	
+	const comments = [
+		{
+			author: 'test',
+			content: 'test1',
+			datetime: '1234.56.78'
+		},
+		{
+			author: 'test',
+			content: 'test2',
+			datetime: '2468.10.12'
+		}
+	]
+	
 	return (
-		<Layout>
-			<Layout.Content>
+		<Layout style={styles.infoLayout}>
+			<Layout.Content style={styles.contentLayout}>
 				<Image
-					width="100%"
-					height="100%"
 					alt={spotInfo.phototitle}
 					src={spotInfo.image_file}
 					// Empty icons created by LAFS - Flaticon
@@ -44,10 +56,41 @@ function TouristSpotInfo({ match }) {
 					</Typography.Text>
 				</Typography>
 			</Layout.Content>
-			<Layout.Sider>
+			<Layout.Sider
+				width="50%"
+				style={styles.siderLayout}
+			>
+				<List
+					header={"2개의 댓글이 있습니다."}
+					itemLayout="horizontal"
+					dataSource={comments}
+					renderItem={(item) => (
+						<Comment
+							avatar={<Avatar icon={<UserOutlined />} />}
+							author={item.author}
+							content={item.content}
+							datetime={item.datetime}
+						/>
+					)}
+				/>
 			</Layout.Sider>
 		</Layout>
 	);
 }
 
 export default TouristSpotInfo;
+
+const styles = {
+	infoLayout: {
+		height: '100%',
+		margin: 0,
+		padding: 0
+	},
+	contentLayout: {
+		height: '100%'
+	},
+	siderLayout: {
+		height: '100%',
+		backgroundColor: '#fff'
+	}
+}

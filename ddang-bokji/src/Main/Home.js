@@ -29,7 +29,7 @@ function HomeContainer() {
 					/>
 				</Row>
 			</Layout.Header>
-			<Layout style={{ minHeight: '360px' }}>
+			<Layout style={styles.mainLayout}>
 				<Layout.Sider style={styles.sider}>
 					<Menu
 						style={styles.sideMenu}
@@ -51,8 +51,12 @@ export default HomeContainer;
 
 const styles = {
 	homeLayout: {
+		height: '100%',
 		padding: 0,
 		margin: 0,
+	},
+	mainLayout: {
+		height: '100%'
 	},
 	sider: {
 		background: '#fff',
@@ -63,6 +67,7 @@ const styles = {
 		fontSize: '12pt'
 	},
 	contentLayout: {
+		height: '100%',
 		background: '#e3e3e3',
 		padding: '24px',
 		margin: '0',

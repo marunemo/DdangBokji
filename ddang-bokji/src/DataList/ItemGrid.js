@@ -8,10 +8,16 @@ function ItemGrid(props) {
 	var lastFullBundle = Math.floor(items.length / 4) * 4;
 	for(let index = 0; index < lastFullBundle; index += 4) {
 		gridList.push(
-			<Row key={'itemRow' + index}>
+			<Row
+				key={'itemRow' + index}
+				gutter={16}
+			>
 				{[0, 1, 2, 3].map((colIndex) => {
 					return (
-						<Col key={'itemCol' + (index + colIndex)}>
+						<Col
+							key={'itemCol' + (index + colIndex)}
+							span={6}
+						>
 							{items[index + colIndex]}
 						</Col>
 					);

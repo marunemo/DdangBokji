@@ -5,7 +5,7 @@ function ItemCard(props) {
 	return (
 		<Card
 			style={{
-				width: 300
+				width: '100%'
 			}}
 			cover={
 				<img

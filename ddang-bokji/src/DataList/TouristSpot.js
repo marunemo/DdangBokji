@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Spin, Space, Typography } from 'antd';
 import axios from 'axios';
+import { Link } from "react-router-dom";
 import ItemCard from '../Utility/ListItem';
 import ItemGrid from '../Utility/ItemGrid';
 
@@ -14,12 +15,14 @@ function TouristSpotList() {
 				.then((fetchData) => {
 					const tourSpots = fetchData.data.DS_MND_GUN_WLFRINSTLTN_SRNDT.row.map((tourSpot) => {
 						return (
-							<ItemCard
-								title={tourSpot.rel_instltnnm}
-								description={tourSpot.instltnpstn}
-								photoImage={tourSpot.image_file}
-								imageDesc={tourSpot.phototitle}
-							/>
+							<Link to={'/TouristSpot/' + tourSpot.rowno}>
+								<ItemCard
+									title={tourSpot.rel_instltnnm}
+									description={tourSpot.instltnpstn}
+									photoImage={tourSpot.image_file}
+									imageDesc={tourSpot.phototitle}
+								/>
+							</Link>
 						)
 					})
 					setSpotData(tourSpots);

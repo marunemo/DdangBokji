@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import HomeContainer from './Home';
-import SpotInfo from '../Utility/SpotInfo';
+import TouristSpotInfo from '../DataList/TouristSpotInfo';
 
 function MainRouter() {
 	return (
@@ -12,8 +12,8 @@ function MainRouter() {
 					element={<HomeContainer />}
 				/>
 				<Route
-					path="//:id"
-					element={<SpotInfo />}
+					path="/TouristSpot/:id"
+					element={<TouristSpotInfo />}
 				/>
 			</Routes>
 		</BrowserRouter>

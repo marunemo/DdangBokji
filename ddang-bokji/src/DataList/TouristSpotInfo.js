@@ -1,9 +1,9 @@
 import React from 'react';
 
-function SpotInfo() {
+function TouristSpotInfo() {
 	return (
 		<p>Hello World!</p>
 	);
 }
 
-export default SpotInfo;
+export default TouristSpotInfo;

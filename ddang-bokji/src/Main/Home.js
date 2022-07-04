@@ -1,16 +1,9 @@
 import React from 'react';
-import { Layout, Menu, Row, Button } from 'antd';
+import { Layout, Menu, Button } from 'antd';
 import { BulbFilled } from '@ant-design/icons';
 import TouristSpotList from '../DataList/TouristSpot';
 
 function HomeContainer() {
-	const headerMenu = ["Home"].map((option, key) => {
-		return ({
-			key: String(key),
-			label: option
-		});
-	})
-	
 	const sideMenu = ["Test"].map((option, key) => {
 		return ({
 			key: String(key),
@@ -21,16 +14,7 @@ function HomeContainer() {
 	
 	return (
 		<Layout style={styles.homeLayout}>
-			<Layout.Header className="header">
-				<Row justify="end">
-					<Menu
-						theme="dark"
-						mode="horizontal"
-						items={headerMenu}
-					/>
-				</Row>
-			</Layout.Header>
-			<Layout style={styles.mainLayout}>
+			<Layout style={styles.bodyLayout}>
 				<Layout.Sider style={styles.sider}>
 					<Menu
 						style={styles.sideMenu}
@@ -61,7 +45,7 @@ const styles = {
 		padding: 0,
 		margin: 0,
 	},
-	mainLayout: {
+	bodyLayout: {
 		minHeight: '100%'
 	},
 	sider: {

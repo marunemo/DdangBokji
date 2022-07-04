@@ -56,23 +56,23 @@ export default HomeContainer;
 
 const styles = {
 	homeLayout: {
-		height: '100%',
+		minHeight: '100%',
 		padding: 0,
 		margin: 0,
 	},
 	mainLayout: {
-		height: '100%'
+		minHeight: '100%'
 	},
 	sider: {
 		background: '#fff',
 	},
 	sideMenu: {
-		height: '100%',
+		minHeight: '100%',
 		borderRight: 0,
 		fontSize: '12pt'
 	},
 	contentLayout: {
-		height: '100%',
+		minHeight: '100%',
 		background: '#e3e3e3',
 		padding: '24px',
 		margin: '0',

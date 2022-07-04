@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Layout, Menu, Row } from 'antd';
 import HomeContainer from './Home';
 import TouristSpotInfo from '../DataList/TouristSpotInfo';
+import MilWord from '../MilStudy/MilWord';
 
 function MainRouter() {
 	const headerMenu = ["Home"].map((option, key) => {
@@ -34,6 +35,10 @@ function MainRouter() {
 						<Route
 							path="/TouristSpot/:id"
 							element={<TouristSpotInfo />}
+						/>
+						<Route
+							path="/MilStudy"
+							element={<MilWord />}
 						/>
 					</Routes>
 				</Layout>

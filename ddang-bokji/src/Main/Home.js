@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+import { useNavigate } from "react-router-dom";
 import { Layout, Menu, Button } from 'antd';
 import { BulbFilled } from '@ant-design/icons';
 import TouristSpotList from '../DataList/TouristSpot';
 
 function HomeContainer() {
+	const navigate = useNavigate();
+	const gotoMilStudy = useCallback(() => {
+		navigate('/MilStudy')
+	}, [navigate]);
+	
 	const sideMenu = ["Test"].map((option, key) => {
 		return ({
 			key: String(key),
@@ -32,6 +38,7 @@ function HomeContainer() {
 				style={styles.floatingButton}
 				shape="circle"
 				icon={<BulbFilled style={styles.floatingIcon} />}
+				onClick={gotoMilStudy}
 			/>
 		</Layout>
 	);

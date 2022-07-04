@@ -1,5 +1,5 @@
 import React from 'react';
-import { Layout, Menu, Row, BackTop, Space } from 'antd';
+import { Layout, Menu, Row, Button } from 'antd';
 import { BulbFilled } from '@ant-design/icons';
 import TouristSpotList from '../DataList/TouristSpot';
 
@@ -44,17 +44,10 @@ function HomeContainer() {
 					</Layout.Content>
 				</Layout>
 			</Layout>
-			<BackTop
-				visibilityHeight={-1}
-				onClick={() => console.log("hello world!")}
-			>
-				<Space
-					style={styles.eventButton}
-					align="center"
-				>
-					<BulbFilled />
-				</Space>
-			</BackTop>
+			<Button
+				style={styles.floatingButton}
+				icon={<BulbFilled style={styles.floatingIcon} />}
+			/>
 		</Layout>
 	);
 }
@@ -89,13 +82,17 @@ const styles = {
 		padding: '16px',
 		margin: 0,
 	},
-	eventButton: {
+	floatingButton: {
+		position: 'fixed',
+		bottom: '50px',
+		right: '50px',
 		height: '70px',
 		width: '70px',
 		borderRadius: '50%',
-		backgroundColor: '#1088e9',
-		color: '#fff',
+		backgroundColor: '#1088e9'
+	},
+	floatingIcon: {
 		fontSize: '30px',
-		justifyContent: 'center'
+		color: '#fff'
 	}
 }

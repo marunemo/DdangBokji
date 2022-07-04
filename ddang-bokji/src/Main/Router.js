@@ -37,7 +37,7 @@ function MainRouter() {
 							element={<TouristSpotInfo />}
 						/>
 						<Route
-							path="/MilStudy"
+							path="/MilStudy/*"
 							element={<StudyRouter />}
 						/>
 					</Routes>

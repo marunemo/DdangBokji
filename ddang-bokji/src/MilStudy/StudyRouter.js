@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
 import MilWord from './MilWord';
+import MilExam from './MilExam';
 
 function StudyRouter() {
 	const sideMenu = ["Test"].map((option, key) => {
@@ -26,6 +27,10 @@ function StudyRouter() {
 					<Route
 						path="/"
 						element={<MilWord />}
+					/>
+					<Route
+						path="/Exam"
+						element={<MilExam />}
 					/>
 				</Routes>
 			</Layout.Content>

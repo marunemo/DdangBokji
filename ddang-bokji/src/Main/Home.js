@@ -46,6 +46,7 @@ function HomeContainer() {
 			</Layout>
 			<Button
 				style={styles.floatingButton}
+				shape="circle"
 				icon={<BulbFilled style={styles.floatingIcon} />}
 			/>
 		</Layout>
@@ -88,8 +89,8 @@ const styles = {
 		right: '50px',
 		height: '70px',
 		width: '70px',
-		borderRadius: '50%',
-		backgroundColor: '#1088e9'
+		backgroundColor: '#1088e9',
+		boxShadow: '3px 4px 5px rgba(0, 0, 0, 0.3)'
 	},
 	floatingIcon: {
 		fontSize: '30px',

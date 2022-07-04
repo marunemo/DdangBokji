@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Layout, Menu, Row } from 'antd';
 import HomeContainer from './Home';
 import TouristSpotInfo from '../DataList/TouristSpotInfo';
-import MilWord from '../MilStudy/MilWord';
+import StudyRouter from '../MilStudy/StudyRouter';
 
 function MainRouter() {
 	const headerMenu = ["Home"].map((option, key) => {
@@ -38,7 +38,7 @@ function MainRouter() {
 						/>
 						<Route
 							path="/MilStudy"
-							element={<MilWord />}
+							element={<StudyRouter />}
 						/>
 					</Routes>
 				</Layout>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Typography } from 'antd';
+import { Layout, Typography, Radio, Space } from 'antd';
 import axios from 'axios';
 import LoadingSpin from '../Utility/LoadingSpin';
 
@@ -39,13 +39,19 @@ function MilExam() {
 		<Layout style={styles.bodyLayout}>
 			<Typography>
 				<Typography.Paragraph>{milTerms[testProblem].desc}</Typography.Paragraph>
-				{
-					[0, 1, 2, 3].map(() => {
-						return (
-							<Typography.Title>{milTerms[exampleIndex[0]].title}</Typography.Title>
-						);
-					})
-				}
+				<Radio.Group>
+					<Space direction="vertical">
+						{
+							[0, 1, 2, 3].map((answer) => {
+								return (
+									<Radio value={answer}>
+										{milTerms[exampleIndex[answer]].title}
+									</Radio>
+								);
+							})
+						}
+					</Space>
+				</Radio.Group>
 			</Typography>
 		</Layout>
 	);

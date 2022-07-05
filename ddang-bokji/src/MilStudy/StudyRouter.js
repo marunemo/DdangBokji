@@ -1,17 +1,32 @@
-import React from 'react';
-import { Routes, Route } from 'react-router-dom';
+import React, { useCallback } from 'react';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
 import MilWord from './MilWord';
 import MilExam from './MilExam';
 
 function StudyRouter() {
-	const sideMenu = ["Test"].map((option, key) => {
-		return ({
-			key: String(key),
+	const navigate = useNavigate();
+	const linkToSelect = useCallback(({ key }) => {
+		if(key === 'MilWord')
+			navigate('/MilStudy')
+		else if(key === 'MilExam')
+			navigate('/MilStudy/Exam')
+	}, [navigate]);
+	
+	const sideMenu = [
+		{
+			key: 'MilWord',
 			icon: null,
-			label: option,
-		});
-	});
+			label: '오늘의 단어',
+		},
+		{
+			key: 'MilExam',
+			icon: null,
+			label: '단어 시험',
+		},
+	];
+	
+	
 	
 	return (
 		<Layout style={styles.studyLayout}>
@@ -20,6 +35,7 @@ function StudyRouter() {
 					style={styles.sideMenu}
 					mode="inline"
 					items={sideMenu}
+					onSelect={linkToSelect}
 				/>
 			</Layout.Sider>
 			<Layout.Content style={styles.content}>

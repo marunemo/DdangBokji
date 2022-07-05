@@ -1,6 +1,7 @@
-import React, { useCallback } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { Layout, Menu } from 'antd';
+import axios from 'axios';
 import MilWord from './MilWord';
 import MilExam from './MilExam';
 
@@ -12,6 +13,19 @@ function StudyRouter() {
 		else if(key === 'MilExam')
 			navigate('/MilStudy/Exam')
 	}, [navigate]);
+	
+	const milTerms = useMemo(() => {
+			return axios.get(`/${process.env.REACT_APP_MND_TOKEN}/json/DS_WARHSTR_MILAFRTERMNLG/1/700/`)
+				.then((fetchData) => {
+					return fetchData.data.DS_WARHSTR_MILAFRTERMNLG.row.map((terms) => {
+						return ({
+							title: terms.title,
+							desc: terms.ctnt,
+							type: terms.actlthing_stdrd
+						});
+					});
+			});
+		}, []);
 	
 	const sideMenu = [
 		{
@@ -25,8 +39,6 @@ function StudyRouter() {
 			label: '단어 시험',
 		},
 	];
-	
-	
 	
 	return (
 		<Layout style={styles.studyLayout}>
@@ -42,11 +54,11 @@ function StudyRouter() {
 				<Routes>
 					<Route
 						path="/"
-						element={<MilWord />}
+						element={<MilWord milTerms={milTerms} />}
 					/>
 					<Route
 						path="/Exam"
-						element={<MilExam />}
+						element={<MilExam milTerms={milTerms} />}
 					/>
 				</Routes>
 			</Layout.Content>

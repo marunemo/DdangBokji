@@ -1,33 +1,23 @@
 import React, { useState, useEffect } from 'react';
 import { Layout, Typography, Radio, Space } from 'antd';
-import axios from 'axios';
 import LoadingSpin from '../Utility/LoadingSpin';
 
-function MilExam() {
-	const [milTerms, setMilTerms] = useState([]);
-	const [isLoaded, setLoading] = useState(false);
+function MilExam(props) {
+	const [testMilTerms, setTestMilTerms] = useState(null);
+	const { milTerms } = props;
 
 	try {
 		useEffect(() => {
-			axios.get(`/${process.env.REACT_APP_MND_TOKEN}/json/DS_WARHSTR_MILAFRTERMNLG/1/700/`)
-				.then((fetchData) => {
-					const militaryTerms = fetchData.data.DS_WARHSTR_MILAFRTERMNLG.row.map((terms) => {
-						return ({
-							title: terms.title,
-							desc: terms.ctnt,
-							type: terms.actlthing_stdrd
-						});
-					});
-					setMilTerms(militaryTerms);
-					setLoading(true);
-			});
-		}, []);
+			milTerms.then((milTerm) => {
+				setTestMilTerms(milTerm);
+			})
+		}, [milTerms]);
 	}
 	catch(e) {
 		console.log(e);
 	}
 	
-	if(!isLoaded)
+	if(testMilTerms === null)
 		return <LoadingSpin />;
 	
 	let totalIndex = [...Array(700).keys()]
@@ -38,14 +28,14 @@ function MilExam() {
 	return (
 		<Layout style={styles.bodyLayout}>
 			<Typography>
-				<Typography.Paragraph>{milTerms[testProblem].desc}</Typography.Paragraph>
+				<Typography.Paragraph>{testMilTerms[testProblem].desc}</Typography.Paragraph>
 				<Radio.Group>
 					<Space direction="vertical">
 						{
 							[0, 1, 2, 3].map((answer) => {
 								return (
 									<Radio value={answer}>
-										{milTerms[exampleIndex[answer]].title}
+										{testMilTerms[exampleIndex[answer]].title}
 									</Radio>
 								);
 							})

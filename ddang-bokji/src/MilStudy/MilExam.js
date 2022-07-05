@@ -34,7 +34,7 @@ function MilExam(props) {
 						{
 							[0, 1, 2, 3].map((answer) => {
 								return (
-									<Radio value={answer}>
+									<Radio key={'answer' + answer} value={answer}>
 										{testMilTerms[exampleIndex[answer]].title}
 									</Radio>
 								);

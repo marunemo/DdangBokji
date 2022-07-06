@@ -4,7 +4,9 @@ import LoadingSpin from '../Utility/LoadingSpin';
 
 function MilExam(props) {
 	const [testMilTerms, setTestMilTerms] = useState(null);
+	const [currentAnswer, setCurrentAnswer] = useState(0);
 	const [currentPhase, setPhase] = useState(0);
+	const [problemAnswers, setAnswers] = useState([]);
 	const { milTerms } = props;
 	let totalIndex = [...Array(700).keys()]
 	totalIndex.sort(() => Math.random() - 0.5);
@@ -39,12 +41,12 @@ function MilExam(props) {
 			</Steps>
 			<Typography>
 				<Typography.Paragraph>{testMilTerms[testProblem].desc}</Typography.Paragraph>
-				<Radio.Group>
+				<Radio.Group onChange={(event) => setCurrentAnswer(event.target.value)}>
 					<Space direction="vertical">
 						{
 							[0, 1, 2, 3].map((answer) => {
 								return (
-									<Radio key={'answer' + answer} value={answer}>
+									<Radio key={'answer' + answer} value={answer} checked={false}>
 										{testMilTerms[problemIndex[answer]].title}
 									</Radio>
 								);
@@ -54,10 +56,15 @@ function MilExam(props) {
 				</Radio.Group>
 			</Typography>
 			{
-				(currentPhase === 10)
+				(currentPhase === 9)
 				? (
 					<Button
 						type="primary"
+						onClick={() => {
+							setAnswers((answers) => [...answers, currentAnswer]);
+							setCurrentAnswer(0);
+							console.log(problemAnswers)
+						}}
 					>
 						제출
 					</Button>
@@ -65,7 +72,11 @@ function MilExam(props) {
 				: (
 					<Button
 						type="primary"
-						onClick={() => setPhase((curr) => (curr + 1))}
+						onClick={() => {
+							setAnswers((answers) => [...answers, currentAnswer]);
+							setCurrentAnswer(0);
+							setPhase((curr) => (curr + 1))
+						}}
 					>
 						다음
 					</Button>

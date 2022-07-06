@@ -4,7 +4,7 @@ import LoadingSpin from '../Utility/LoadingSpin';
 
 function MilExam(props) {
 	const [testMilTerms, setTestMilTerms] = useState(null);
-	const [currentAnswer, setCurrentAnswer] = useState(-1);
+	const [currentAnswer, setCurrentAnswer] = useState(undefined);
 	const [currentPhase, setPhase] = useState(0);
 	const [problemAnswers, setAnswers] = useState([]);
 	const { milTerms } = props;
@@ -50,12 +50,15 @@ function MilExam(props) {
 				</Typography>
 			</Form.Item>
 			<Form.Item label="답">
-				<Radio.Group onChange={(event) => setCurrentAnswer(event.target.value)}>
+				<Radio.Group
+					value={currentAnswer}
+					onChange={(event) => setCurrentAnswer(event.target.value)}
+				>
 					<Space direction="vertical">
 						{
 							[0, 1, 2, 3].map((answer) => {
 								return (
-									<Radio key={'answer' + answer} value={answer} checked={false}>
+									<Radio key={'answer' + answer} value={answer}>
 										{testMilTerms[problemIndex[answer]].title}
 									</Radio>
 								);
@@ -64,46 +67,50 @@ function MilExam(props) {
 					</Space>
 				</Radio.Group>
 			</Form.Item>
-			{
-				(currentPhase === 9)
-				? (
-					<Button
-						type="primary"
-						onClick={() => {
-							console.log([...problemAnswers, currentAnswer])
-						}}
-					>
-						제출
-					</Button>
-				)
-				: (
-					<Button
-						type="primary"
-						onClick={() => {
-							setAnswers((answers) => [...answers, currentAnswer]);
-							setCurrentAnswer(-1);
-							setPhase((curr) => (curr + 1))
-						}}
-					>
-						다음 문제
-					</Button>
-				)
-			}
-			{
-				(currentPhase !== 0) &&
-				(
-					<Button
-						type="primary"
-						onClick={() => {
-							setAnswers((answers) => answers.slice(0, currentPhase - 1));
-							setCurrentAnswer(-1);
-							setPhase((curr) => (curr - 1))
-						}}
-					>
-						이전 문제
-					</Button>
-				)
-			}
+			<Form.Item>
+				{
+					(currentPhase === 9)
+					? (
+						<Button
+							type="primary"
+							onClick={() => {
+								console.log([...problemAnswers, currentAnswer])
+							}}
+						>
+							제출
+						</Button>
+					)
+					: (
+						<Button
+							type="primary"
+							onClick={() => {
+								setAnswers((answers) => [...answers, currentAnswer]);
+								setCurrentAnswer(undefined);
+								setPhase((curr) => (curr + 1))
+							}}
+						>
+							다음 문제
+						</Button>
+					)
+				}
+				{
+					(currentPhase !== 0) &&
+					(
+						<Button
+							type="primary"
+							onClick={() => {
+								setPhase((curr) => {
+									setAnswers((answers) => answers.slice(0, curr - 1));
+									setCurrentAnswer(curr - 1);
+									return (curr - 1);
+								})
+							}}
+						>
+							이전 문제
+						</Button>
+					)
+				}
+			</Form.Item>
 		</Form>
 	);
 }

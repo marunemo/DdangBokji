@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Typography, Radio, Space, Steps, Button } from 'antd';
+import { Form, Typography, Radio, Space, Steps, Button } from 'antd';
 import LoadingSpin from '../Utility/LoadingSpin';
 
 function MilExam(props) {
@@ -29,18 +29,27 @@ function MilExam(props) {
 		return <LoadingSpin />;
 	
 	return (
-		<Layout style={styles.bodyLayout}>
-			<Steps current={currentPhase}>
-				{
-					[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((problemPhase) => {
-						return (
-							<Steps.Step key={"problem" + problemPhase} />
-						);
-					})
-				}
-			</Steps>
-			<Typography>
-				<Typography.Paragraph>{testMilTerms[testProblem].desc}</Typography.Paragraph>
+		<Form
+			layout="vertical"
+			style={styles.bodyLayout}
+		>
+			<Form.Item label="문제 단계">
+				<Steps current={currentPhase}>
+					{
+						[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((problemPhase) => {
+							return (
+								<Steps.Step key={"problem" + problemPhase} />
+							);
+						})
+					}
+				</Steps>
+			</Form.Item>
+			<Form.Item label="문제">
+				<Typography>
+					<Typography.Paragraph>{testMilTerms[testProblem].desc}</Typography.Paragraph>
+				</Typography>
+			</Form.Item>
+			<Form.Item label="답">
 				<Radio.Group onChange={(event) => setCurrentAnswer(event.target.value)}>
 					<Space direction="vertical">
 						{
@@ -54,16 +63,14 @@ function MilExam(props) {
 						}
 					</Space>
 				</Radio.Group>
-			</Typography>
+			</Form.Item>
 			{
 				(currentPhase === 9)
 				? (
 					<Button
 						type="primary"
 						onClick={() => {
-							setAnswers((answers) => [...answers, currentAnswer]);
-							setCurrentAnswer(0);
-							console.log(problemAnswers)
+							console.log([...problemAnswers, currentAnswer])
 						}}
 					>
 						제출
@@ -97,7 +104,7 @@ function MilExam(props) {
 					</Button>
 				)
 			}
-		</Layout>
+		</Form>
 	);
 }
 

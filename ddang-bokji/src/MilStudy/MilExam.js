@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Typography, Radio, Space } from 'antd';
+import { Layout, Typography, Radio, Space, Steps, Button } from 'antd';
 import LoadingSpin from '../Utility/LoadingSpin';
 
 function MilExam(props) {
 	const [testMilTerms, setTestMilTerms] = useState(null);
+	const [currentPhase, setPhase] = useState(0);
 	const { milTerms } = props;
+	let totalIndex = [...Array(700).keys()]
+	totalIndex.sort(() => Math.random() - 0.5);
+	const problemIndex = totalIndex.slice(0, 4 * 10);
+	const testProblem = problemIndex[0];
+	problemIndex.sort(() => Math.random() - 0.5);
 
 	try {
 		useEffect(() => {
@@ -20,13 +26,17 @@ function MilExam(props) {
 	if(testMilTerms === null)
 		return <LoadingSpin />;
 	
-	let totalIndex = [...Array(700).keys()]
-	totalIndex.sort(() => Math.random() - 0.5);
-	const exampleIndex = totalIndex.slice(0, 4);
-	const testProblem = exampleIndex[0];
-	exampleIndex.sort(() => Math.random() - 0.5);
 	return (
 		<Layout style={styles.bodyLayout}>
+			<Steps current={currentPhase}>
+				{
+					[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((problemPhase) => {
+						return (
+							<Steps.Step key={"problem" + problemPhase} />
+						);
+					})
+				}
+			</Steps>
 			<Typography>
 				<Typography.Paragraph>{testMilTerms[testProblem].desc}</Typography.Paragraph>
 				<Radio.Group>
@@ -35,7 +45,7 @@ function MilExam(props) {
 							[0, 1, 2, 3].map((answer) => {
 								return (
 									<Radio key={'answer' + answer} value={answer}>
-										{testMilTerms[exampleIndex[answer]].title}
+										{testMilTerms[problemIndex[answer]].title}
 									</Radio>
 								);
 							})
@@ -43,6 +53,24 @@ function MilExam(props) {
 					</Space>
 				</Radio.Group>
 			</Typography>
+			{
+				(currentPhase === 10)
+				? (
+					<Button
+						type="primary"
+					>
+						제출
+					</Button>
+				)
+				: (
+					<Button
+						type="primary"
+						onClick={() => setPhase((curr) => (curr + 1))}
+					>
+						다음
+					</Button>
+				)
+			}
 		</Layout>
 	);
 }

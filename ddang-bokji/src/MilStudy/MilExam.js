@@ -4,7 +4,7 @@ import LoadingSpin from '../Utility/LoadingSpin';
 
 function MilExam(props) {
 	const [testMilTerms, setTestMilTerms] = useState(null);
-	const [currentAnswer, setCurrentAnswer] = useState(0);
+	const [currentAnswer, setCurrentAnswer] = useState(-1);
 	const [currentPhase, setPhase] = useState(0);
 	const [problemAnswers, setAnswers] = useState([]);
 	const { milTerms } = props;
@@ -74,11 +74,26 @@ function MilExam(props) {
 						type="primary"
 						onClick={() => {
 							setAnswers((answers) => [...answers, currentAnswer]);
-							setCurrentAnswer(0);
+							setCurrentAnswer(-1);
 							setPhase((curr) => (curr + 1))
 						}}
 					>
-						다음
+						다음 문제
+					</Button>
+				)
+			}
+			{
+				(currentPhase !== 0) &&
+				(
+					<Button
+						type="primary"
+						onClick={() => {
+							setAnswers((answers) => answers.slice(0, currentPhase - 1));
+							setCurrentAnswer(-1);
+							setPhase((curr) => (curr - 1))
+						}}
+					>
+						이전 문제
 					</Button>
 				)
 			}

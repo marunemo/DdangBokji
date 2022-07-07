@@ -65,7 +65,7 @@ function TouristSpotInfo({ match }) {
 							전화 : {spotInfo.cntadr}
 						</Typography.Text>
 					</Typography>
-					<KakaoMap />
+					<KakaoMap address={spotInfo.instltnpstn} />
 				</Layout.Content>
 				<Layout.Sider
 					width="50%"

@@ -1,15 +1,29 @@
 import React, { useEffect } from 'react';
 
-function KakaoMap() {
+function KakaoMap(props) {
 	const { kakao } = window;
+	const { address } = props;
 	
 	useEffect(() => {
 		const container = document.getElementById('map');
-		const options = {
-			center: new kakao.maps.LatLng(33.450701, 126.570667),
-			level: 13
-		};
-		const map = new kakao.maps.Map(container, options);
+		
+		const geocoder = new kakao.maps.services.Geocoder();
+		geocoder.addressSearch(address, function(result, status) {
+		 	if (status === kakao.maps.services.Status.OK) {
+				const options = {
+					center: new kakao.maps.LatLng(result[0].y, result[0].x),
+					level: 3
+				};
+				return new kakao.maps.Map(container, options);
+			}
+			
+			const options = {
+				center: new kakao.maps.LatLng(33.450701, 126.570667),
+				level: 13
+			};
+			const map = new kakao.maps.Map(container, options);
+			return map;
+		});
 	}, []);
 	
 	return (

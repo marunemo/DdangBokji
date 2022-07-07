@@ -2,7 +2,7 @@ import React from 'react';
 
 function KakaoMap(props) {
 	const { kakao } = window;
-	const { address } = props;
+	const { address, style } = props;
 	
 	const container = document.getElementById('map');
 	if(container) {
@@ -32,7 +32,7 @@ function KakaoMap(props) {
 	}
 	
 	return (
-		<div id="map" style={{ width: '500px', height: '400px' }}></div>
+		<div id="map" style={style}></div>
 	);
 }
 

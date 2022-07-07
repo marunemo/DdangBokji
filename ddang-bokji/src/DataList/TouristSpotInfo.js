@@ -66,7 +66,10 @@ function TouristSpotInfo({ match }) {
 						<Typography.Text>주소 : {spotInfo.instltnpstn}</Typography.Text><br />
 						<Typography.Text>전화 : {spotInfo.cntadr}</Typography.Text><br />
 					</Typography>
-					<KakaoMap address={spotInfo.instltnpstn} />
+					<KakaoMap
+						style={styles.spotMap}
+						address={spotInfo.instltnpstn}
+					/>
 				</Layout.Content>
 				<Layout.Sider
 					width="50%"
@@ -113,5 +116,9 @@ const styles = {
 	siderLayout: {
 		height: '100%',
 		backgroundColor: '#fff',
+	},
+	spotMap: {
+		width: '100%',
+		height: '100vh'
 	}
 }

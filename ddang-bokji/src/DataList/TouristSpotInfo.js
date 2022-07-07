@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Image, Typography, List, Comment, Avatar } from 'antd';
+import { Layout, Image, Typography, List, Comment, Avatar, Button } from 'antd';
 import { UserOutlined, RollbackOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
@@ -42,8 +42,13 @@ function TouristSpotInfo({ match }) {
 	
 	return (
 		<Layout style={styles.infoLayout}>
-			<Layout.Header>
-				<RollbackOutlined style={{ color: '#fff' }} />
+			<Layout.Header style={styles.headerLayout}>
+				<Button
+					type="ghost"
+					shape="circle"
+					size="large"
+					icon={<RollbackOutlined />}
+				/>
 			</Layout.Header>
 			<Layout style={styles.mainLayout}>
 				<Layout.Content style={styles.contentLayout}>
@@ -92,6 +97,9 @@ const styles = {
 		height: '100%',
 		margin: 0,
 		padding: 0
+	},
+	headerLayout: {
+		backgroundColor: '#fff',
 	},
 	mainLayout: {
 		height: '100%',

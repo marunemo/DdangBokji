@@ -1,18 +1,24 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Layout, Menu, Row } from 'antd';
+import { Layout, Menu, Row, Button } from 'antd';
 import HomeContainer from './Home';
 import TouristSpotInfo from '../DataList/TouristSpotInfo';
 import StudyRouter from '../MilStudy/StudyRouter';
 import { signInGoogle } from '../Utility/Firebase';
 
 function MainRouter() {
-	const headerMenu = ["Home"].map((option, key) => {
-		return ({
-			key: String(key),
-			label: option
-		});
-	})
+	const headerMenu = [
+		{
+			label: (
+				<Button
+					type="text"
+					onClick={signInGoogle}
+				>
+					로그인
+				</Button>
+			)
+		}
+	];
 	
 	
 	return (

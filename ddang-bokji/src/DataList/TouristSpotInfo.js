@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import LoadingSpin from '../Utility/LoadingSpin';
 import KakaoMap from '../Utility/KakaoMap';
+import emptyImg from '../Assets/no-pictures.png';
 
 function TouristSpotInfo({ match }) {
 	const { id } = useParams();
@@ -55,8 +56,7 @@ function TouristSpotInfo({ match }) {
 					<Image
 						alt={spotInfo.phototitle}
 						src={spotInfo.image_file}
-						// Empty icons created by LAFS - Flaticon
-						fallback="https://cdn-icons.flaticon.com/png/512/3586/premium/3586675.png?token=exp=1656836791~hmac=9ab5c8883e35964c0a42820f9065b528"
+						fallback={emptyImg}
 					/>
 					<Typography>
 						<Typography.Text>

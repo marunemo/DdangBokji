@@ -54,16 +54,17 @@ function TouristSpotInfo({ match }) {
 			<Layout style={styles.mainLayout}>
 				<Layout.Content style={styles.contentLayout}>
 					<Image
+						width="100%"
+						height="100%"
+						style={styles.sampleImage}
 						alt={spotInfo.phototitle}
 						src={spotInfo.image_file}
 						fallback={emptyImg}
 					/>
 					<Typography>
-						<Typography.Text>
-							이름 : {spotInfo.rel_instltnnm}\
-							주소 : {spotInfo.instltnpstn}\
-							전화 : {spotInfo.cntadr}
-						</Typography.Text>
+						<Typography.Text>이름 : {spotInfo.rel_instltnnm}</Typography.Text><br />
+						<Typography.Text>주소 : {spotInfo.instltnpstn}</Typography.Text><br />
+						<Typography.Text>전화 : {spotInfo.cntadr}</Typography.Text><br />
 					</Typography>
 					<KakaoMap address={spotInfo.instltnpstn} />
 				</Layout.Content>
@@ -106,7 +107,8 @@ const styles = {
 		marginTop: '12px'
 	},
 	contentLayout: {
-		height: '100%'
+		height: '100%',
+		padding: '3%'
 	},
 	siderLayout: {
 		height: '100%',

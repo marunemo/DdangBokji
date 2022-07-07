@@ -4,6 +4,7 @@ import { Layout, Menu, Row } from 'antd';
 import HomeContainer from './Home';
 import TouristSpotInfo from '../DataList/TouristSpotInfo';
 import StudyRouter from '../MilStudy/StudyRouter';
+import { signInGoogle } from '../Utility/Firebase';
 
 function MainRouter() {
 	const headerMenu = ["Home"].map((option, key) => {

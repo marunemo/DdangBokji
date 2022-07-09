@@ -20,11 +20,12 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
+const auth = getAuth();
 
 function signInGoogle() {
 	const googleAuth = new GoogleAuthProvider();
-	const auth = getAuth();
 	return signInWithPopup(auth, googleAuth)
 }
 
+export default auth;
 export { signInGoogle };

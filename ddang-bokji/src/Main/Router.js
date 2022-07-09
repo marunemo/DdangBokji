@@ -1,22 +1,46 @@
-import React from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Layout, Menu, Row, Button } from 'antd';
+import { onAuthStateChanged, signOut } from "firebase/auth";
 import HomeContainer from './Home';
 import TouristSpotInfo from '../DataList/TouristSpotInfo';
 import StudyRouter from '../MilStudy/StudyRouter';
-import { signInGoogle } from '../Utility/Firebase';
+import auth, { signInGoogle } from '../Utility/Firebase';
 
 function MainRouter() {
+	const [currentUser, setCurrentUser] = useState(null);
+	const logOut = (() => {
+		signOut(auth).then(() => setCurrentUser(null)).catch(error => console.log(error))
+	})
+	
+	useEffect(() => {
+		onAuthStateChanged(auth, (user) => {
+			if(user) {
+				setCurrentUser(user);
+			}
+		})
+	}, []);
+	
 	const headerMenu = [
 		{
-			label: (
-				<Button
-					type="text"
-					onClick={signInGoogle}
-				>
-					로그인
-				</Button>
-			)
+			label: 
+				currentUser
+				? (
+					<Button
+						type="text"
+						onClick={logOut}
+					>
+						로그아웃
+					</Button>
+				)
+				: (
+						<Button
+							type="text"
+							onClick={signInGoogle}
+						>
+							로그인
+						</Button>
+					)
 		}
 	];
 	

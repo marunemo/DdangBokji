@@ -19,8 +19,9 @@ function MainRouter() {
 			if(user) {
 				setCurrentUser(user);
 				const database = getDatabase();
+				const today = new Date();
 				set(ref(database, 'users/' + user.uid), {
-					accessTime: new Date().toLocaleTimeString(),
+					accessDate: today.getFullYear().toString() + '/' + today.getMonth().toString() + '/' + today.getDate().toString(),
 				});
 			}
 		})

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Layout, Menu, Row, Col, Button } from 'antd';
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, set, ref, get, child } from "firebase/database";
 import HomeContainer from './Home';
 import TouristSpotInfo from '../DataList/TouristSpotInfo';
 import StudyRouter from '../MilStudy/StudyRouter';
@@ -10,22 +10,45 @@ import auth, { signInGoogle } from '../Utility/Firebase';
 
 function MainRouter() {
 	const [currentUser, setCurrentUser] = useState(null);
+	const database = getDatabase();
+	
 	const logOut = useCallback(() => {
 		signOut(auth).then(() => setCurrentUser(null)).catch(error => console.log(error))
 	}, []);
+	
+	const todayDateFormat = (today) => {
+		return today.getFullYear().toString() + '/' + today.getMonth().toString() + '/' + today.getDate().toString();
+	};
+	
+	const saveUserStatus = useCallback((user) => {
+		set(ref(database, 'users/' + user.uid), {
+			accessDate: todayDateFormat(new Date()),
+		});
+	}, [database]);
+	
+	const getLastUserAccessDate = useCallback((user) => {
+		return get(child(ref(database), 'users/' + user.uid)).then((snapshot) => {
+			if(!snapshot.exists())
+				return null;
+			
+			return snapshot.val().accessDate;
+		})
+		.catch(error => console.log(error));
+	}, [database]);
 	
 	useEffect(() => {
 		onAuthStateChanged(auth, (user) => {
 			if(user) {
 				setCurrentUser(user);
-				const database = getDatabase();
-				const today = new Date();
-				set(ref(database, 'users/' + user.uid), {
-					accessDate: today.getFullYear().toString() + '/' + today.getMonth().toString() + '/' + today.getDate().toString(),
+				getLastUserAccessDate(user).then((accessDate) => {
+					const today = todayDateFormat(new Date());
+					if(accessDate !== today) {
+						saveUserStatus(user);
+					}
 				});
 			}
 		})
-	}, []);
+	}, [saveUserStatus, getLastUserAccessDate]);
 	
 	const headerMenu = currentUser
 		? [

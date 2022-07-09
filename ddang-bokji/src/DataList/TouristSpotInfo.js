@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Layout, Image, Typography, List, Comment, Avatar } from 'antd';
+import { Layout, Image, Typography, List, Comment, Avatar, Button } from 'antd';
 import { UserOutlined, RollbackOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import LoadingSpin from '../Utility/LoadingSpin';
 import KakaoMap from '../Utility/KakaoMap';
+import emptyImg from '../Assets/no-pictures.png';
 
 function TouristSpotInfo({ match }) {
 	const { id } = useParams();
@@ -42,25 +43,33 @@ function TouristSpotInfo({ match }) {
 	
 	return (
 		<Layout style={styles.infoLayout}>
-			<Layout.Header>
-				<RollbackOutlined style={{ color: '#fff' }} />
+			<Layout.Header style={styles.headerLayout}>
+				<Button
+					type="ghost"
+					shape="circle"
+					size="large"
+					icon={<RollbackOutlined />}
+				/>
 			</Layout.Header>
 			<Layout style={styles.mainLayout}>
 				<Layout.Content style={styles.contentLayout}>
 					<Image
+						width="100%"
+						height="100%"
+						style={styles.sampleImage}
 						alt={spotInfo.phototitle}
 						src={spotInfo.image_file}
-						// Empty icons created by LAFS - Flaticon
-						fallback="https://cdn-icons.flaticon.com/png/512/3586/premium/3586675.png?token=exp=1656836791~hmac=9ab5c8883e35964c0a42820f9065b528"
+						fallback={emptyImg}
 					/>
 					<Typography>
-						<Typography.Text>
-							이름 : {spotInfo.rel_instltnnm}\
-							주소 : {spotInfo.instltnpstn}\
-							전화 : {spotInfo.cntadr}
-						</Typography.Text>
+						<Typography.Text>이름 : {spotInfo.rel_instltnnm}</Typography.Text><br />
+						<Typography.Text>주소 : {spotInfo.instltnpstn}</Typography.Text><br />
+						<Typography.Text>전화 : {spotInfo.cntadr}</Typography.Text><br />
 					</Typography>
-					<KakaoMap />
+					<KakaoMap
+						style={styles.spotMap}
+						address={spotInfo.instltnpstn}
+					/>
 				</Layout.Content>
 				<Layout.Sider
 					width="50%"
@@ -93,15 +102,23 @@ const styles = {
 		margin: 0,
 		padding: 0
 	},
+	headerLayout: {
+		backgroundColor: '#fff',
+	},
 	mainLayout: {
 		height: '100%',
 		marginTop: '12px'
 	},
 	contentLayout: {
-		height: '100%'
+		height: '100%',
+		padding: '3%'
 	},
 	siderLayout: {
 		height: '100%',
 		backgroundColor: '#fff',
+	},
+	spotMap: {
+		width: '100%',
+		height: '100vh'
 	}
 }

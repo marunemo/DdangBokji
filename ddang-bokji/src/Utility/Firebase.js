@@ -24,7 +24,7 @@ const analytics = getAnalytics(app);
 function signInGoogle() {
 	const googleAuth = new GoogleAuthProvider();
 	const auth = getAuth();
-	return signInWithPopup(auth, googleAuth);
+	return signInWithPopup(auth, googleAuth)
 }
 
 export { signInGoogle };

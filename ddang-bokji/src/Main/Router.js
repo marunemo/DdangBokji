@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Layout, Menu, Row, Col, Button } from 'antd';
 import { onAuthStateChanged, signOut } from "firebase/auth";
+import { getDatabase, ref, set } from "firebase/database";
 import HomeContainer from './Home';
 import TouristSpotInfo from '../DataList/TouristSpotInfo';
 import StudyRouter from '../MilStudy/StudyRouter';
@@ -9,14 +10,18 @@ import auth, { signInGoogle } from '../Utility/Firebase';
 
 function MainRouter() {
 	const [currentUser, setCurrentUser] = useState(null);
-	const logOut = (() => {
+	const logOut = useCallback(() => {
 		signOut(auth).then(() => setCurrentUser(null)).catch(error => console.log(error))
-	})
+	}, []);
 	
 	useEffect(() => {
 		onAuthStateChanged(auth, (user) => {
 			if(user) {
 				setCurrentUser(user);
+				const database = getDatabase();
+				set(ref(database, 'users/' + user.uid), {
+					accessTime: new Date().toLocaleTimeString(),
+				});
 			}
 		})
 	}, []);

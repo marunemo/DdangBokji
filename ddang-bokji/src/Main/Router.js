@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Layout, Menu, Row, Button } from 'antd';
+import { Layout, Menu, Row, Col, Button } from 'antd';
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import HomeContainer from './Home';
 import TouristSpotInfo from '../DataList/TouristSpotInfo';
@@ -21,40 +21,61 @@ function MainRouter() {
 		})
 	}, []);
 	
-	const headerMenu = [
-		{
-			label: 
-				currentUser
-				? (
+	const headerMenu = currentUser
+		? [
+			{
+				key: 'userSetting',
+				label: currentUser.displayName + '님 반갑습니다.'
+			},
+			{
+				key: 'signOutButton',
+				label: (
 					<Button
-						type="text"
+						style={styles.signInButton}
+						type="link"
 						onClick={logOut}
 					>
 						로그아웃
 					</Button>
 				)
-				: (
-						<Button
-							type="text"
-							onClick={signInGoogle}
-						>
-							로그인
-						</Button>
-					)
-		}
-	];
+			}
+		]
+		: [
+			{
+				key: 'signInButton',
+				label: (
+					<Button
+						style={styles.signInButton}
+						type="link"
+						onClick={signInGoogle}
+					>
+						로그인
+					</Button>
+				)
+			}
+		]
 	
 	
 	return (
 		<BrowserRouter>
 			<Layout style={styles.mainLayout}>
 				<Layout.Header className="header">
-					<Row justify="end">
-						<Menu
-							theme="dark"
-							mode="horizontal"
-							items={headerMenu}
-						/>
+					<Row 
+						style={styles.headerTypesetting}
+						justify="space-between"
+					>
+						<Col>
+							<p style={{ color: '#fff' }}>Logo</p>
+						</Col>
+						<Col>
+							<Menu
+								style={styles.userMenu(currentUser)}
+								theme="dark"
+								mode="horizontal"
+								defaultSelectedKeys={undefined}
+								items={headerMenu}
+							/>
+						</Col>
 					</Row>
 				</Layout.Header>
 				<Layout>
@@ -86,4 +107,13 @@ const styles = {
 		padding: 0,
 		margin: 0,
 	},
+	signInButton: {
+		color: '#fff'
+	},
+	headerTypesetting: {
+		width: '100%'
+	},
+	userMenu: (currentUser) => ({
+		minWidth: currentUser ? '305px' : '115px'
+	})
 }

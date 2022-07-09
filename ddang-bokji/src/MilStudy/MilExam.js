@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Form, Typography, Radio, Space, Steps, Button } from 'antd';
+import { getDatabase, set, ref, get, child } from "firebase/database";
 import LoadingSpin from '../Utility/LoadingSpin';
+import auth from '../Utility/Firebase';
 
 function MilExam(props) {
 	const [testMilTerms, setTestMilTerms] = useState(null);
@@ -8,6 +10,23 @@ function MilExam(props) {
 	const [currentPhase, setPhase] = useState(0);
 	const [problemAnswers, setAnswers] = useState([]);
 	const { milTerms } = props;
+	
+	const problemList = useMemo(() => {
+		const user = auth.currentUser;
+		if(!user)
+			return null;
+		
+		return get(child(ref(getDatabase()), 'users/' + user.uid)).then((snapshot) => {
+			if(!snapshot.exists())
+				return null;
+			
+			return ({
+				problemQuestionList: snapshot.val().problemAnswerList,
+				problemAnswerList: snapshot.val().problemAnswerList,
+			});
+		})
+		.catch(error => console.log(error));
+	}, []);
 
 	try {
 		useEffect(() => {
@@ -41,7 +60,7 @@ function MilExam(props) {
 			</Form.Item>
 			<Form.Item label="문제">
 				<Typography>
-					<Typography.Paragraph>{testMilTerms[testProblem].desc}</Typography.Paragraph>
+					<Typography.Paragraph>{testMilTerms[problemList.problemAnswerList[currentPhase]].desc}</Typography.Paragraph>
 				</Typography>
 			</Form.Item>
 			<Form.Item label="답">
@@ -54,7 +73,7 @@ function MilExam(props) {
 							[0, 1, 2, 3].map((answer) => {
 								return (
 									<Radio key={'answer' + answer} value={answer}>
-										{testMilTerms[problemIndex[answer]].title}
+										{testMilTerms[problemList.problemAnswerList[currentPhase * 4 + answer]].title}
 									</Radio>
 								);
 							})

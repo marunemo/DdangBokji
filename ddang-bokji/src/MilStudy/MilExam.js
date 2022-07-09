@@ -10,9 +10,9 @@ function MilExam(props) {
 	const [currentPhase, setPhase] = useState(0);
 	const [problemAnswers, setAnswers] = useState([]);
 	const { milTerms } = props;
+	const user = auth.currentUser;
 	
 	const problemList = useMemo(() => {
-		const user = auth.currentUser;
 		if(!user)
 			return null;
 		
@@ -21,12 +21,13 @@ function MilExam(props) {
 				return null;
 			
 			return ({
-				problemQuestionList: snapshot.val().problemAnswerList,
-				problemAnswerList: snapshot.val().problemAnswerList,
+				questionList: snapshot.val().problemQuestionList,
+				answerList: snapshot.val().problemAnswerList,
 			});
 		})
 		.catch(error => console.log(error));
-	}, []);
+	}, [user]);
+	console.log(problemList);
 
 	try {
 		useEffect(() => {
@@ -39,7 +40,7 @@ function MilExam(props) {
 		console.log(e);
 	}
 	
-	if(testMilTerms === null)
+	if(testMilTerms === null || user === null)
 		return <LoadingSpin />;
 	
 	return (
@@ -58,29 +59,37 @@ function MilExam(props) {
 					}
 				</Steps>
 			</Form.Item>
-			<Form.Item label="문제">
-				<Typography>
-					<Typography.Paragraph>{testMilTerms[problemList.problemAnswerList[currentPhase]].desc}</Typography.Paragraph>
-				</Typography>
-			</Form.Item>
-			<Form.Item label="답">
-				<Radio.Group
-					value={currentAnswer}
-					onChange={(event) => setCurrentAnswer(event.target.value)}
-				>
-					<Space direction="vertical">
-						{
-							[0, 1, 2, 3].map((answer) => {
-								return (
-									<Radio key={'answer' + answer} value={answer}>
-										{testMilTerms[problemList.problemAnswerList[currentPhase * 4 + answer]].title}
-									</Radio>
-								);
-							})
-						}
-					</Space>
-				</Radio.Group>
-			</Form.Item>
+			{
+				problemList.then((problems) => {
+					return (
+						<>
+							<Form.Item label="문제">
+								<Typography>
+									<Typography.Paragraph>{testMilTerms[problems.answerList[currentPhase]].desc}</Typography.Paragraph>
+								</Typography>
+							</Form.Item>
+							<Form.Item label="답">
+								<Radio.Group
+									value={currentAnswer}
+									onChange={(event) => setCurrentAnswer(event.target.value)}
+								>
+									<Space direction="vertical">
+										{
+											[0, 1, 2, 3].map((answer) => {
+												return (
+													<Radio key={'answer' + answer} value={answer}>
+														{testMilTerms[problems.questionList[currentPhase * 4 + answer]].title}
+													</Radio>
+												);
+											})
+										}
+									</Space>
+								</Radio.Group>
+							</Form.Item>
+						</>
+					)
+				})
+			}
 			<Form.Item>
 				{
 					(currentPhase === 9)

@@ -8,11 +8,6 @@ function MilExam(props) {
 	const [currentPhase, setPhase] = useState(0);
 	const [problemAnswers, setAnswers] = useState([]);
 	const { milTerms } = props;
-	let totalIndex = [...Array(700).keys()]
-	totalIndex.sort(() => Math.random() - 0.5);
-	const problemIndex = totalIndex.slice(0, 4 * 10);
-	const testProblem = problemIndex[0];
-	problemIndex.sort(() => Math.random() - 0.5);
 
 	try {
 		useEffect(() => {

@@ -21,8 +21,21 @@ function MainRouter() {
 	};
 	
 	const saveUserStatus = useCallback((user) => {
+		let totalProblem = [...Array(700).keys()]
+		totalProblem.sort(() => Math.random() - 0.5);
+		let problemQuestionList = [];
+		let problemAnswerList = [];
+		for(var i = 0; i < 10; i++) {
+			problemAnswerList.push(totalProblem[i * 4]);
+			let problemQuestion = totalProblem.slice(i * 4, i * 4 + 4);
+			problemQuestion.sort(() => Math.random() - 0.5);
+			problemQuestionList.push(problemQuestion);
+		}
+		
 		set(ref(database, 'users/' + user.uid), {
 			accessDate: todayDateFormat(new Date()),
+			problemQuestionList,
+			problemAnswerList
 		});
 	}, [database]);
 	

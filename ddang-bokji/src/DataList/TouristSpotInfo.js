@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Layout, Image, Typography, List, Comment, Avatar, Button } from 'antd';
 import { UserOutlined, RollbackOutlined } from '@ant-design/icons';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
 import LoadingSpin from '../Utility/LoadingSpin';
 import KakaoMap from '../Utility/KakaoMap';
 import emptyImg from '../Assets/no-pictures.png';
 
 function TouristSpotInfo({ match }) {
 	const { id } = useParams();
+	const navigate = useNavigate();
 	const [spotInfo, setSpotInfo] = useState({});
 	const [isLoaded, setLoading] = useState(false);
+	const backToHome = useCallback(() => navigate('/'), [navigate]);
 
 	try {
 		useEffect(() => {
@@ -51,6 +53,7 @@ function TouristSpotInfo({ match }) {
 							shape="circle"
 							size="large"
 							icon={<RollbackOutlined />}
+							onClick={backToHome}
 						/>
 					</Layout.Header>
 					<Image

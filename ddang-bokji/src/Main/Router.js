@@ -102,7 +102,7 @@ function MainRouter() {
 	return (
 		<BrowserRouter>
 			<Layout style={styles.mainLayout}>
-				<Layout.Header className="header">
+				<Layout.Header style={styles.mainHeaderLayout}>
 					<Row 
 						style={styles.headerTypesetting}
 						justify="space-between"
@@ -121,7 +121,7 @@ function MainRouter() {
 						</Col>
 					</Row>
 				</Layout.Header>
-				<Layout>
+				<Layout style={styles.mainContentLayout}>
 					<Routes>
 						<Route
 							path="/"
@@ -149,6 +149,15 @@ const styles = {
 		minHeight: '100%',
 		padding: 0,
 		margin: 0,
+	},
+	mainHeaderLayout: {
+		width: '100%',
+		position: 'fixed',
+		zIndex: 1,
+	},
+	mainContentLayout: {
+		minHeight: '100vh - 64px',
+		marginTop: '64px'
 	},
 	signInButton: {
 		color: '#fff'

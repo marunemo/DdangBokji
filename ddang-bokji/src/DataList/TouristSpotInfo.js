@@ -73,7 +73,7 @@ function TouristSpotInfo({ match }) {
 				</Layout.Content>
 				<Layout.Sider
 					width="50%"
-					style={styles.siderLayout}
+					style={styles.commentListLayout}
 				>
 					<List
 						header={"2개의 댓글이 있습니다."}
@@ -103,20 +103,26 @@ const styles = {
 		padding: 0,
 		background: '#fff'
 	},
-	headerLayout: {
-		backgroundColor: '#fff',
-	},
 	mainLayout: {
 		height: '100%',
 		marginTop: '12px',
 		backgroundColor: '#fff'
 	},
+	headerLayout: {
+		backgroundColor: '#fff',
+	},
 	contentLayout: {
 		height: '100%',
-		padding: '25px'
+		padding: '25px',
+		marginRight: '50%'
 	},
-	siderLayout: {
-		height: '100%',
+	commentListLayout: {
+		overflow: 'auto',
+        height: '100vh',
+        position: 'fixed',
+        right: 0,
+        top: '64px',
+        bottom: 0,
 		backgroundColor: '#fff',
 	},
 	spotMap: {

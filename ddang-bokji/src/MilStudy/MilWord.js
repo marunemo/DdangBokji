@@ -6,7 +6,7 @@ import LoadingSpin from '../Utility/LoadingSpin';
 function MilWord(props) {
 	const [todayMilTerm, setTodayMilTerm] = useState(null);
 	const { milTerms, user } = props;
-	
+
 	const todayMilTermIndex = useMemo(() => {
 		if(!user)
 			return null;

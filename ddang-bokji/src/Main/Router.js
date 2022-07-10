@@ -129,7 +129,7 @@ function MainRouter() {
 						/>
 						<Route
 							path="/TouristSpot/:id"
-							element={<TouristSpotInfo />}
+							element={<TouristSpotInfo currentUser={currentUser} />}
 						/>
 						<Route
 							path="/MilStudy/*"

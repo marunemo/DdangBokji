@@ -2,46 +2,43 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Layout, Image, Typography, List, Comment, Avatar, Button } from 'antd';
 import { UserOutlined, RollbackOutlined } from '@ant-design/icons';
 import { useParams, useNavigate } from 'react-router-dom';
+import { doc, getDoc } from "firebase/firestore";
 import axios from 'axios';
+import { firestore } from '../Utility/Firebase';
 import LoadingSpin from '../Utility/LoadingSpin';
 import KakaoMap from '../Utility/KakaoMap';
 import emptyImg from '../Assets/no-pictures.png';
 
-function TouristSpotInfo({ match }) {
+function TouristSpotInfo(props) {
 	const { id } = useParams();
 	const navigate = useNavigate();
-	const [spotInfo, setSpotInfo] = useState({});
-	const [isLoaded, setLoading] = useState(false);
+	const [spotInfo, setSpotInfo] = useState(null);
+	const [spotComments, setSpotComments] = useState(null);
 	const backToHome = useCallback(() => navigate('/'), [navigate]);
-
+	const { currentUser } = props;
+	
 	try {
 		useEffect(() => {
-			axios.get(`/${process.env.REACT_APP_MND_TOKEN}/json/DS_MND_GUN_WLFRINSTLTN_SRNDT/${id}/${id}/`)
-				.then((fetchData) => {
-					setSpotInfo(fetchData.data.DS_MND_GUN_WLFRINSTLTN_SRNDT.row[0]);
-					setLoading(true);
-			});
-		}, [id]);
+			if(!spotInfo) {
+				axios.get(`/${process.env.REACT_APP_MND_TOKEN}/json/DS_MND_GUN_WLFRINSTLTN_SRNDT/${id}/${id}/`)
+					.then((fetchData) => {
+						setSpotInfo(fetchData.data.DS_MND_GUN_WLFRINSTLTN_SRNDT.row[0]);
+				});
+			}
+			
+			if(currentUser) {
+				getDoc(doc(firestore, "comments", spotInfo.rel_instltnnm)).then((doc) => {
+					setSpotComments(doc.data().commentsList);
+				});
+			}
+		}, [id, currentUser]);
 	}
 	catch(e) {
 		console.log(e);
 	}
 	
-	if(!isLoaded)
+	if(spotInfo === null || spotComments === null)
 		return <LoadingSpin />;
-	
-	const comments = [
-		{
-			author: 'test',
-			content: 'test1',
-			datetime: '1234.56.78'
-		},
-		{
-			author: 'test',
-			content: 'test2',
-			datetime: '2468.10.12'
-		}
-	]
 	
 	return (
 		<Layout style={styles.infoLayout}>
@@ -81,7 +78,7 @@ function TouristSpotInfo({ match }) {
 					<List
 						header={"2개의 댓글이 있습니다."}
 						itemLayout="horizontal"
-						dataSource={comments}
+						dataSource={spotComments}
 						renderItem={(item) => (
 							<Comment
 								avatar={<Avatar icon={<UserOutlined />} />}

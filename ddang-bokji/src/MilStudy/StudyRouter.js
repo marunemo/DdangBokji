@@ -90,10 +90,10 @@ const styles = {
 		padding: '0px 25px'
 	},
 	sider: {
+		height: '100vh - 64px',
 		background: '#fff',
 	},
 	sideMenu: {
-		minHeight: '100%',
 		borderRight: 0,
 		fontSize: '12pt'
 	},

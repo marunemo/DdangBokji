@@ -5,7 +5,7 @@ import axios from 'axios';
 import MilWord from './MilWord';
 import MilExam from './MilExam';
 
-function StudyRouter() {
+function StudyRouter(props) {
 	const navigate = useNavigate();
 	const linkToSelect = useCallback(({ key }) => {
 		if(key === 'MilWord')
@@ -54,11 +54,11 @@ function StudyRouter() {
 				<Routes>
 					<Route
 						path="/"
-						element={<MilWord milTerms={milTerms} />}
+						element={<MilWord milTerms={milTerms} user={props.currentUser} />}
 					/>
 					<Route
 						path="/Exam"
-						element={<MilExam milTerms={milTerms} />}
+						element={<MilExam milTerms={milTerms} user={props.currentUser} />}
 					/>
 				</Routes>
 			</Layout.Content>

@@ -132,7 +132,7 @@ function MainRouter() {
 						/>
 						<Route
 							path="/MilStudy/*"
-							element={<StudyRouter />}
+							element={<StudyRouter currentUser={currentUser} />}
 						/>
 					</Routes>
 				</Layout>

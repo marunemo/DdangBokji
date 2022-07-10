@@ -2,7 +2,6 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Form, Typography, Radio, Space, Steps, Button } from 'antd';
 import { getDatabase, set, ref, get, child } from "firebase/database";
 import LoadingSpin from '../Utility/LoadingSpin';
-import auth from '../Utility/Firebase';
 
 function MilExam(props) {
 	const [testMilTerms, setTestMilTerms] = useState(null);
@@ -10,8 +9,7 @@ function MilExam(props) {
 	const [currentAnswer, setCurrentAnswer] = useState(undefined);
 	const [currentPhase, setPhase] = useState(0);
 	const [userAnswers, setUserAnswers] = useState([]);
-	const { milTerms } = props;
-	const user = auth.currentUser;
+	const { milTerms, user } = props;
 	
 	const problemList = useMemo(() => {
 		if(!user)

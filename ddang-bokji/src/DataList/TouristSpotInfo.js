@@ -119,7 +119,7 @@ function TouristSpotInfo(props) {
 								// set icon as fallback for image
 								author={item.author}
 								content={item.content}
-								datetime={'1'}
+								datetime={new Date(item.datetime.seconds * 1000).toLocaleString()}
 							/>
 						)}
 					/>

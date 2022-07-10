@@ -1,12 +1,14 @@
 import React, { useMemo, useCallback } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import { Layout, Menu } from 'antd';
+import { Layout, Menu, Button } from 'antd';
+import { RollbackOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import MilWord from './MilWord';
 import MilExam from './MilExam';
 
 function StudyRouter(props) {
 	const navigate = useNavigate();
+	const backToHome = useCallback(() => navigate('/'), [navigate]);
 	const linkToSelect = useCallback(({ key }) => {
 		if(key === 'MilWord')
 			navigate('/MilStudy')
@@ -43,6 +45,15 @@ function StudyRouter(props) {
 	return (
 		<Layout style={styles.studyLayout}>
 			<Layout.Sider style={styles.sider}>
+				<Layout.Header style={styles.headerLayout}>
+					<Button
+						type="ghost"
+						shape="circle"
+						size="large"
+						icon={<RollbackOutlined />}
+						onClick={backToHome}
+					/>
+				</Layout.Header>
 				<Menu
 					style={styles.sideMenu}
 					mode="inline"
@@ -73,6 +84,10 @@ const styles = {
 		minHeight: '100%',
 		padding: 0,
 		margin: 0,
+	},
+	headerLayout: {
+		backgroundColor: '#fff',
+		padding: '0px 25px'
 	},
 	sider: {
 		background: '#fff',

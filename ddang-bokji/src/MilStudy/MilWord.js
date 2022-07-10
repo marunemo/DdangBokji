@@ -1,18 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Layout, Typography } from 'antd';
+import { getDatabase, set, ref, get, child } from "firebase/database";
 import LoadingSpin from '../Utility/LoadingSpin';
 
 function MilWord(props) {
 	const [todayMilTerm, setTodayMilTerm] = useState(null);
-	const { milTerms } = props;
-	const randInt = 1;
+	const { milTerms, user } = props;
+	
+	const todayMilTermIndex = useMemo(() => {
+		if(!user)
+			return null;
+		
+		return get(child(ref(getDatabase()), 'users/' + user.uid)).then((snapshot) => {
+			if(!snapshot.exists())
+				return null;
+			
+			return;
+		})
+		.catch(error => console.log(error));
+	}, [user]);
 
 	try {
 		useEffect(() => {
-			milTerms.then((milTerm) => {
-				setTodayMilTerm(milTerm[randInt]);
-			})
-		}, [milTerms, randInt]);
+			if(user) {
+				
+				milTerms.then((milTerm) => {
+					setTodayMilTerm(milTerm[randInt]);
+				});
+			}
+		}, [milTerms, user]);
 	}
 	catch(e) {
 		console.log(e);

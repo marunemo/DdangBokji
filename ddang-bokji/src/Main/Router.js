@@ -17,11 +17,11 @@ function MainRouter() {
 	}, []);
 	
 	const todayDateFormat = (today) => {
-		return today.getFullYear().toString() + '/' + today.getMonth().toString() + '/' + today.getDate().toString();
+		return today.getFullYear().toString() + '/' + (today.getMonth() + 1).toString() + '/' + today.getDate().toString();
 	};
 	
 	const saveUserStatus = useCallback((user) => {
-		let totalProblem = [...Array(700).keys()]
+		let totalProblem = [...Array(700).keys()];	
 		totalProblem.sort(() => Math.random() - 0.5);
 		let problemQuestionList = [];
 		let problemAnswerList = [];
@@ -34,6 +34,7 @@ function MainRouter() {
 		
 		set(ref(database, 'users/' + user.uid), {
 			accessDate: todayDateFormat(new Date()),
+			dailyTermIndex: Math.floor(Math.random() * 700),
 			problemQuestionList,
 			problemAnswerList
 		});

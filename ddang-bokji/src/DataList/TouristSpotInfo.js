@@ -17,7 +17,7 @@ function TouristSpotInfo(props) {
 	const [spotComments, setSpotComments] = useState(null);
 	const [currentComment, setCurrentComment] = useState('');
 	const backToHome = useCallback(() => navigate('/'), [navigate]);
-	const sendComment = useCallback((content) => {
+	const sendComment = useCallback((content, currentUser, spotInfo, spotComments) => {
 		const newComment = {
 			uid: currentUser.uid,
 			author: currentUser.displayName,
@@ -28,7 +28,7 @@ function TouristSpotInfo(props) {
 		setDoc(doc(firestore, "comments", spotInfo.rel_instltnnm), {
 			commentsList: [...spotComments, newComment]
 		}).then(() => setCurrentComment(''));
-	});
+	}, []);
 	
 	try {
 		useEffect(() => {
@@ -36,20 +36,15 @@ function TouristSpotInfo(props) {
 				axios.get(`/${process.env.REACT_APP_MND_TOKEN}/json/DS_MND_GUN_WLFRINSTLTN_SRNDT/${id}/${id}/`)
 					.then((fetchData) => {
 						setSpotInfo(fetchData.data.DS_MND_GUN_WLFRINSTLTN_SRNDT.row[0]);
-						if(currentUser && !spotComments) {
-							getDoc(doc(firestore, "comments", spotInfo.rel_instltnnm)).then((doc) => {
-								setSpotComments(doc.data().commentsList);
-							});
-						}
 					});
 			}
 			
-			if(currentUser && !spotComments) {
+			if(!spotComments && spotInfo) {
 				getDoc(doc(firestore, "comments", spotInfo.rel_instltnnm)).then((doc) => {
 					setSpotComments(doc.data().commentsList);
 				});
 			}
-		}, [id, currentUser]);
+		}, [id, spotInfo, spotComments]);
 	}
 	catch(e) {
 		console.log(e);
@@ -103,11 +98,11 @@ function TouristSpotInfo(props) {
 									autoSize={true}
 									allowClear={true}
 									value={currentComment}
-									onChange={(event) => setCurrentComment(event.target.value)}
+									onChange={(event) => setCurrentComment(event.target.value, currentUser, spotInfo, spotComments)}
 								/>
 								<Button
 									type="primary"
-									onClick={() => sendComment(currentComment)}
+									onClick={() => sendComment(currentComment, currentUser, spotInfo, spotComments)}
 								>
 									등록
 								</Button>
@@ -120,10 +115,11 @@ function TouristSpotInfo(props) {
 						dataSource={spotComments}
 						renderItem={(item) => (
 							<Comment
-								avatar={<Avatar icon={<UserOutlined />} />}
+								avatar={<Avatar src={item.avatar} icon={<UserOutlined />} />}
+								// set icon as fallback for image
 								author={item.author}
 								content={item.content}
-								datetime={item.datetime}
+								datetime={'1'}
 							/>
 						)}
 					/>

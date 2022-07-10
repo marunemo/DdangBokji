@@ -6,9 +6,10 @@ import auth from '../Utility/Firebase';
 
 function MilExam(props) {
 	const [testMilTerms, setTestMilTerms] = useState(null);
+	const [currentProblem, setCurrentProblem] = useState(null);
 	const [currentAnswer, setCurrentAnswer] = useState(undefined);
 	const [currentPhase, setPhase] = useState(0);
-	const [problemAnswers, setAnswers] = useState([]);
+	const [userAnswers, setUserAnswers] = useState([]);
 	const { milTerms } = props;
 	const user = auth.currentUser;
 	
@@ -27,20 +28,30 @@ function MilExam(props) {
 		})
 		.catch(error => console.log(error));
 	}, [user]);
-	console.log(problemList);
 
 	try {
 		useEffect(() => {
-			milTerms.then((milTerm) => {
-				setTestMilTerms(milTerm);
-			})
-		}, [milTerms]);
+			if(!testMilTerms) {
+				milTerms.then((milTerm) => {
+					setTestMilTerms(milTerm);
+				});
+			}
+			
+			if(user) {
+				problemList.then((problems) => {
+					setCurrentProblem({
+						answer: problems.answerList[currentPhase],
+						questions: problems.questionList[currentPhase],
+					})
+				});
+			}
+		}, [milTerms, user, currentPhase]);
 	}
 	catch(e) {
 		console.log(e);
 	}
 	
-	if(testMilTerms === null || user === null)
+	if(testMilTerms === null || currentProblem === null)
 		return <LoadingSpin />;
 	
 	return (
@@ -59,37 +70,29 @@ function MilExam(props) {
 					}
 				</Steps>
 			</Form.Item>
-			{
-				problemList.then((problems) => {
-					return (
-						<>
-							<Form.Item label="문제">
-								<Typography>
-									<Typography.Paragraph>{testMilTerms[problems.answerList[currentPhase]].desc}</Typography.Paragraph>
-								</Typography>
-							</Form.Item>
-							<Form.Item label="답">
-								<Radio.Group
-									value={currentAnswer}
-									onChange={(event) => setCurrentAnswer(event.target.value)}
-								>
-									<Space direction="vertical">
-										{
-											[0, 1, 2, 3].map((answer) => {
-												return (
-													<Radio key={'answer' + answer} value={answer}>
-														{testMilTerms[problems.questionList[currentPhase * 4 + answer]].title}
-													</Radio>
-												);
-											})
-										}
-									</Space>
-								</Radio.Group>
-							</Form.Item>
-						</>
-					)
-				})
-			}
+			<Form.Item label="문제">
+				<Typography>
+					<Typography.Paragraph>{testMilTerms[currentProblem.answer].desc}</Typography.Paragraph>
+				</Typography>
+			</Form.Item>
+			<Form.Item label="답">
+				<Radio.Group
+					value={currentAnswer}
+					onChange={(event) => setCurrentAnswer(event.target.value)}
+				>
+					<Space direction="vertical">
+						{
+							[0, 1, 2, 3].map((answer) => {
+								return (
+									<Radio key={'answer' + answer} value={answer}>
+										{testMilTerms[currentProblem.questions[answer]].title}
+									</Radio>
+								);
+							})
+						}
+					</Space>
+				</Radio.Group>
+			</Form.Item>
 			<Form.Item>
 				{
 					(currentPhase === 9)
@@ -97,7 +100,7 @@ function MilExam(props) {
 						<Button
 							type="primary"
 							onClick={() => {
-								console.log([...problemAnswers, currentAnswer])
+								console.log([...userAnswers, currentAnswer])
 							}}
 						>
 							제출
@@ -107,7 +110,7 @@ function MilExam(props) {
 						<Button
 							type="primary"
 							onClick={() => {
-								setAnswers((answers) => [...answers, currentAnswer]);
+								setUserAnswers((answers) => [...answers, currentAnswer]);
 								setCurrentAnswer(undefined);
 								setPhase((curr) => (curr + 1))
 							}}
@@ -123,7 +126,7 @@ function MilExam(props) {
 							type="primary"
 							onClick={() => {
 								setPhase((curr) => {
-									setAnswers((answers) => answers.slice(0, curr - 1));
+									setUserAnswers((answers) => answers.slice(0, curr - 1));
 									setCurrentAnswer(curr - 1);
 									return (curr - 1);
 								})

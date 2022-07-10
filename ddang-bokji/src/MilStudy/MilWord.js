@@ -15,7 +15,7 @@ function MilWord(props) {
 			if(!snapshot.exists())
 				return null;
 			
-			return;
+			return snapshot.val().dailyTermIndex;
 		})
 		.catch(error => console.log(error));
 	}, [user]);
@@ -23,9 +23,10 @@ function MilWord(props) {
 	try {
 		useEffect(() => {
 			if(user) {
-				
 				milTerms.then((milTerm) => {
-					setTodayMilTerm(milTerm[randInt]);
+					todayMilTermIndex.then((termIndex) => {
+						setTodayMilTerm(milTerm[termIndex]);
+					});
 				});
 			}
 		}, [milTerms, user]);

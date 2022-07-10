@@ -43,16 +43,16 @@ function TouristSpotInfo({ match }) {
 	
 	return (
 		<Layout style={styles.infoLayout}>
-			<Layout.Header style={styles.headerLayout}>
-				<Button
-					type="ghost"
-					shape="circle"
-					size="large"
-					icon={<RollbackOutlined />}
-				/>
-			</Layout.Header>
 			<Layout style={styles.mainLayout}>
 				<Layout.Content style={styles.contentLayout}>
+					<Layout.Header style={styles.headerLayout}>
+						<Button
+							type="ghost"
+							shape="circle"
+							size="large"
+							icon={<RollbackOutlined />}
+						/>
+					</Layout.Header>
 					<Image
 						width="100%"
 						height="100%"
@@ -100,18 +100,20 @@ const styles = {
 	infoLayout: {
 		height: '100%',
 		margin: 0,
-		padding: 0
+		padding: 0,
+		background: '#fff'
 	},
 	headerLayout: {
 		backgroundColor: '#fff',
 	},
 	mainLayout: {
 		height: '100%',
-		marginTop: '12px'
+		marginTop: '12px',
+		backgroundColor: '#fff'
 	},
 	contentLayout: {
 		height: '100%',
-		padding: '3%'
+		padding: '25px'
 	},
 	siderLayout: {
 		height: '100%',
@@ -119,6 +121,6 @@ const styles = {
 	},
 	spotMap: {
 		width: '100%',
-		height: '100vh'
+		height: '25vh'
 	}
 }

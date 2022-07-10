@@ -27,7 +27,13 @@ function TouristSpotInfo(props) {
 		}
 		setDoc(doc(firestore, "comments", spotInfo.rel_instltnnm), {
 			commentsList: [...spotComments, newComment]
-		}).then(() => setCurrentComment(''));
+		})
+			.then(() => setCurrentComment(''))
+			.then(() => {
+				getDoc(doc(firestore, "comments", spotInfo.rel_instltnnm)).then((doc) => {
+						setSpotComments(doc.data().commentsList);
+					});
+			});
 	}, []);
 	
 	try {

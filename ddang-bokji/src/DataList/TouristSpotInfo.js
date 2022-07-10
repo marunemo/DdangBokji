@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Layout, Image, Typography, List, Comment, Avatar, Button } from 'antd';
+import { Layout, Image, Typography, List, Comment, Avatar, Button, Input } from 'antd';
 import { UserOutlined, RollbackOutlined } from '@ant-design/icons';
 import { useParams, useNavigate } from 'react-router-dom';
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import axios from 'axios';
 import { firestore } from '../Utility/Firebase';
 import LoadingSpin from '../Utility/LoadingSpin';
@@ -10,12 +10,25 @@ import KakaoMap from '../Utility/KakaoMap';
 import emptyImg from '../Assets/no-pictures.png';
 
 function TouristSpotInfo(props) {
+	const { currentUser } = props;
 	const { id } = useParams();
 	const navigate = useNavigate();
 	const [spotInfo, setSpotInfo] = useState(null);
 	const [spotComments, setSpotComments] = useState(null);
+	const [currentComment, setCurrentComment] = useState('');
 	const backToHome = useCallback(() => navigate('/'), [navigate]);
-	const { currentUser } = props;
+	const sendComment = useCallback((content) => {
+		const newComment = {
+			uid: currentUser.uid,
+			author: currentUser.displayName,
+			avatar: currentUser.photoURL,
+			content: content,
+			datetime: new Date()
+		}
+		setDoc(doc(firestore, "comments", spotInfo.rel_instltnnm), {
+			commentsList: [...spotComments, newComment]
+		}).then(() => setCurrentComment(''));
+	});
 	
 	try {
 		useEffect(() => {
@@ -23,10 +36,15 @@ function TouristSpotInfo(props) {
 				axios.get(`/${process.env.REACT_APP_MND_TOKEN}/json/DS_MND_GUN_WLFRINSTLTN_SRNDT/${id}/${id}/`)
 					.then((fetchData) => {
 						setSpotInfo(fetchData.data.DS_MND_GUN_WLFRINSTLTN_SRNDT.row[0]);
-				});
+						if(currentUser && !spotComments) {
+							getDoc(doc(firestore, "comments", spotInfo.rel_instltnnm)).then((doc) => {
+								setSpotComments(doc.data().commentsList);
+							});
+						}
+					});
 			}
 			
-			if(currentUser) {
+			if(currentUser && !spotComments) {
 				getDoc(doc(firestore, "comments", spotInfo.rel_instltnnm)).then((doc) => {
 					setSpotComments(doc.data().commentsList);
 				});
@@ -75,8 +93,29 @@ function TouristSpotInfo(props) {
 					width="50%"
 					style={styles.commentListLayout}
 				>
+					<Comment
+						avatar={<Avatar src={currentUser.photoURL} />}
+						content={
+							<Input.Group compact>
+								<Input.TextArea
+									style={styles.commentEditor}
+									placeholder="댓글을 입력해주세요."
+									autoSize={true}
+									allowClear={true}
+									value={currentComment}
+									onChange={(event) => setCurrentComment(event.target.value)}
+								/>
+								<Button
+									type="primary"
+									onClick={() => sendComment(currentComment)}
+								>
+									등록
+								</Button>
+							</Input.Group>
+						}
+					/>
 					<List
-						header={"2개의 댓글이 있습니다."}
+						header={spotComments.length.toString() + "개의 댓글이 있습니다."}
 						itemLayout="horizontal"
 						dataSource={spotComments}
 						renderItem={(item) => (
@@ -128,5 +167,8 @@ const styles = {
 	spotMap: {
 		width: '100%',
 		height: '25vh'
+	},
+	commentEditor: {
+		width: 'calc(100% - 60px)'
 	}
 }

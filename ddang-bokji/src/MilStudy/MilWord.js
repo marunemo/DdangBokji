@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Layout, Typography } from 'antd';
+import { Layout, Typography, Space } from 'antd';
 import { getDatabase, set, ref, get, child } from "firebase/database";
 import LoadingSpin from '../Utility/LoadingSpin';
 
@@ -40,11 +40,30 @@ function MilWord(props) {
 	
 	return (
 		<Layout style={styles.bodyLayout}>
-			<Typography>
-				<Typography.Title>{todayMilTerm.title}</Typography.Title>
-				<Typography.Title level={3}>{todayMilTerm.type}</Typography.Title>
-				<Typography.Paragraph>{todayMilTerm.desc}</Typography.Paragraph>
-			</Typography>
+			<Space
+				direction="vertical"
+			>
+				<Space
+					style={styles.milTerm}
+					align="center"
+				>
+					{todayMilTerm.title}
+				</Space>
+				<Space style={styles.rightAlign} direction="vertical" align="end">
+					<Space
+						style={styles.termType}
+						align="center"
+					>
+						{todayMilTerm.type}
+					</Space>
+				</Space>
+				<Space
+					style={styles.termDesc}
+					align="center"
+				>
+					{todayMilTerm.desc}
+				</Space>
+			</Space>
 		</Layout>
 	);
 }
@@ -56,5 +75,32 @@ const styles = {
 		minHeight: '100%',
 		padding: 0,
 		margin: 0,
+	},
+	rightAlign: {
+		width: '100%',
+		marginRight: '45px'
+	},
+	milTerm: {
+		width: 'calc(100% - 50px)',
+		padding: '15px',
+		margin: '15px 25px 5px',
+		border: '1px solid #000',
+		borderRadius: 25,
+		fontSize: '36px',
+		fontWeight: 'bold'
+	},
+	termType: {
+		padding: '10px',
+		border: '1px solid #000',
+		borderRadius: 25,
+		fontSize: '24px',
+		fontWeight: 'bold'
+	},
+	termDesc: {
+		padding: '25px',
+		margin: '5px 15px',
+		border: '1px solid #000',
+		borderRadius: 25,
+		fontSize: '16px'
 	}
 }

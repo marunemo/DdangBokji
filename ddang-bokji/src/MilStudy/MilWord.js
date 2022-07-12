@@ -77,8 +77,7 @@ const styles = {
 		margin: 0,
 	},
 	rightAlign: {
-		width: '100%',
-		marginRight: '45px'
+		width: '100%'
 	},
 	milTerm: {
 		width: 'calc(100% - 50px)',
@@ -91,6 +90,7 @@ const styles = {
 	},
 	termType: {
 		padding: '10px',
+		marginRight: '45px',
 		border: '1px solid #000',
 		borderRadius: 25,
 		fontSize: '24px',

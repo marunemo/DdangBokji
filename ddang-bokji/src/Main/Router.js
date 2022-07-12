@@ -37,7 +37,7 @@ function MainRouter() {
 			dailyTermIndex: Math.floor(Math.random() * 700),
 			problemQuestionList,
 			problemAnswerList,
-			isFinishedExam: false
+			examSubmmitted: false
 		});
 	}, [database]);
 	

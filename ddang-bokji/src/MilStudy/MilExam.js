@@ -9,7 +9,8 @@ function MilExam(props) {
 	const [currentAnswer, setCurrentAnswer] = useState(undefined);
 	const [currentPhase, setPhase] = useState(0);
 	const [userAnswers, setUserAnswers] = useState([]);
-	const [isFinishedExam, setFinishedExam] = useState(false);
+	const [examSubmmitted, setExamSubmitted] = useState(false);
+	const [examResult, setExamResult] = useState(null);
 	const { milTerms, user } = props;
 	
 	const problemList = useMemo(() => {
@@ -39,7 +40,7 @@ function MilExam(props) {
 		}).then((currentAnswerCount) => {
 			update(ref(getDatabase(), 'users/' + user.uid), {
 				userAnswers,
-				isFinishedExam: true,
+				examSubmmitted: true,
 				point: currentAnswerCount
 			})
 		});
@@ -62,23 +63,73 @@ function MilExam(props) {
 				});
 			}
 			
-			if(!isFinishedExam) {
+			if(!examSubmmitted) {
 				get(child(ref(getDatabase()), 'users/' + user.uid)).then((snapshot) => {
 					if(!snapshot.exists())
 						return null;
 
-					setFinishedExam(snapshot.val().isFinishedExam);
+					setExamSubmitted(snapshot.val().examSubmmitted);
 				});
 			}
-			else {
+			else if(user) {
 				get(child(ref(getDatabase()), 'users/' + user.uid)).then((snapshot) => {
 					if(!snapshot.exists())
 						return null;
-
-					setUserAnswers(snapshot.val().userAnswers);
+					
+					setUserAnswers(snapshot.val().userAnswers).then(() => {
+						problemList.then((problems) => {
+							const ResultComponents = userAnswers.map((userAnswer, problemIndex) => {
+									return(
+										<Space
+											key={'examResult' + problemIndex}
+											style={{ marginBottom: '20pt' }}
+											direction="vertical"
+										>
+											<Divider
+												orientation="left"
+												style={styles.problemPhase}
+											>
+												{'문제' + problemIndex}
+											</Divider>
+											<Form.Item>
+												<Space style={styles.problemQuestion}>
+													{testMilTerms[problems.answerList[problemIndex]].desc}
+												</Space>
+											</Form.Item>
+											<Form.Item>
+												<Radio.Group
+													style={styles.problemAnswers}
+													size="large"
+													value={userAnswers[problemIndex]}
+												>
+													<Space direction="vertical">
+														{
+															[0, 1, 2, 3].map((answer) => {
+																return (
+																	<Radio
+																		key={'answer' + problemIndex + '-' + answer}
+																		style={styles.problemAnswerResult(
+																			answer === userAnswer,
+																			problems.questions[problemIndex][answer] === problems.answer[answer])
+																		}
+																	>
+																		{testMilTerms[currentProblem.questions[problemIndex][answer]].title}
+																	</Radio>
+																);
+															})
+														}
+													</Space>
+												</Radio.Group>
+											</Form.Item>
+										</Space>
+									);
+							});
+							setExamResult(ResultComponents);
+						});
+					});
 				});
 			}
-		}, [milTerms, user, currentPhase, isFinishedExam]);
+		}, [milTerms, user, currentPhase, examSubmmitted]);
 	}
 	catch(e) {
 		console.log(e);
@@ -87,43 +138,12 @@ function MilExam(props) {
 	if(testMilTerms === null || currentProblem === null)
 		return <LoadingSpin />;
 	
-	if(isFinishedExam) {
+	if(examResult !== null) {
 		<Form
 			layout="vertical"
 			style={styles.bodyLayout}
 		>
-			{
-				userAnswers.map((userAnswer) => {
-					return(
-						<></>
-					);	
-				})
-			}
-			<Form.Item>
-				<Space style={styles.problemQuestion}>
-					{testMilTerms[currentProblem.answer].desc}
-				</Space>
-			</Form.Item>
-			<Form.Item>
-				<Radio.Group
-					style={styles.problemAnswers}
-					size="large"
-					value={currentAnswer}
-					onChange={(event) => setCurrentAnswer(event.target.value)}
-				>
-					<Space direction="vertical">
-						{
-							[0, 1, 2, 3].map((answer) => {
-								return (
-									<Radio key={'answer' + answer} value={answer}>
-										{testMilTerms[currentProblem.questions[answer]].title}
-									</Radio>
-								);
-							})
-						}
-					</Space>
-				</Radio.Group>
-			</Form.Item>
+			{examResult}
 		</Form>
 	}
 	
@@ -241,7 +261,7 @@ const styles = {
 		marginRight: '35px'
 	},
 	problemPhase: {
-		fontSize: '20px',
+		fontSize: '15px',
 		fontWeight: 'bold'
 	},
 	problemQuestion: {
@@ -254,4 +274,8 @@ const styles = {
 	problemAnswers: {
 		marginLeft: '25px',
 	},
+	problemAnswerResult: (isUserAnswer, isCurrectAnswer) => ({
+		fontWeight: isUserAnswer ? 'bold' : 'normal',
+		color: isCurrectAnswer ? ( isUserAnswer ? 'blue' : 'red' ) : 'black'
+	})
 }

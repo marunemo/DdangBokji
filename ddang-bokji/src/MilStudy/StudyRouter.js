@@ -1,6 +1,6 @@
 import React, { useMemo, useCallback } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-import { Layout, Menu, Button } from 'antd';
+import { Layout, Space, Menu, Button } from 'antd';
 import { RollbackOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import MilWord from './MilWord';
@@ -41,6 +41,27 @@ function StudyRouter(props) {
 			label: '단어 시험',
 		},
 	];
+	
+	if(!props.currentUser) {
+		return (
+			<Layout style={styles.authBlock}>
+				<Space
+					style={styles.authBlockLayout}
+					direction="vertical"
+					align="center"
+				>
+					로그인 후 이용 가능한 페이지입니다.
+					<Button
+						type="primary"
+						size="large"
+						onClick={backToHome}
+					>
+						돌아가기
+					</Button>
+				</Space>
+			</Layout>
+		)
+	}
 	
 	return (
 		<Layout style={styles.studyLayout}>
@@ -90,7 +111,7 @@ const styles = {
 		padding: '0px 25px'
 	},
 	sider: {
-		height: '100vh - 64px',
+		height: 'cakc(100vh - 64px)',
 		background: '#fff',
 	},
 	sideMenu: {
@@ -102,4 +123,15 @@ const styles = {
 		padding: '16px',
 		margin: 0,
 	},
+	authBlock: {
+		height: '100%',
+		padding: 0,
+		margin: 0,
+		textAlign: 'center',
+		justifyContent: 'center',
+	},
+	authBlockLayout: {
+		fontSize: '24pt',
+		fontWeight: 'bold'
+	}
 }

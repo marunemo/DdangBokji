@@ -87,6 +87,7 @@ function TouristSpotInfo(props) {
 					</Typography>
 					<KakaoMap
 						style={styles.spotMap}
+						name={spotInfo.rel_instltnnm}
 						address={spotInfo.instltnpstn}
 					/>
 				</Layout.Content>

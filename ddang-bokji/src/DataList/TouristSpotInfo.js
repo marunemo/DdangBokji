@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Layout, Image, Typography, List, Comment, Avatar, Button, Input } from 'antd';
+import { Layout, Image, Typography, List, Comment, Avatar, Button, Input, Space } from 'antd';
 import { UserOutlined, RollbackOutlined } from '@ant-design/icons';
 import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, setDoc } from "firebase/firestore";
@@ -56,7 +56,7 @@ function TouristSpotInfo(props) {
 		console.log(e);
 	}
 	
-	if(spotInfo === null || spotComments === null)
+	if(spotInfo === null)
 		return <LoadingSpin />;
 	
 	return (
@@ -90,46 +90,65 @@ function TouristSpotInfo(props) {
 						address={spotInfo.instltnpstn}
 					/>
 				</Layout.Content>
-				<Layout.Sider
-					width="50%"
-					style={styles.commentListLayout}
-				>
-					<Comment
-						avatar={<Avatar src={currentUser.photoURL} />}
-						content={
-							<Input.Group compact>
-								<Input.TextArea
-									style={styles.commentEditor}
-									placeholder="댓글을 입력해주세요."
-									autoSize={true}
-									allowClear={true}
-									value={currentComment}
-									onChange={(event) => setCurrentComment(event.target.value, currentUser, spotInfo, spotComments)}
+					{
+						currentUser
+						? (
+							<Layout.Sider
+								width="50%"
+								style={styles.commentListLayout}
+							>
+								<Comment
+									avatar={<Avatar src={currentUser.photoURL} />}
+									content={
+										<Input.Group compact>
+											<Input.TextArea
+												style={styles.commentEditor}
+												placeholder="댓글을 입력해주세요."
+												autoSize={true}
+												allowClear={true}
+												value={currentComment}
+												onChange={(event) => setCurrentComment(event.target.value, currentUser, spotInfo, spotComments)}
+											/>
+											<Button
+												type="primary"
+												onClick={() => sendComment(currentComment, currentUser, spotInfo, spotComments)}
+											>
+												등록
+											</Button>
+										</Input.Group>
+									}
 								/>
-								<Button
-									type="primary"
-									onClick={() => sendComment(currentComment, currentUser, spotInfo, spotComments)}
+								<List
+									header={spotComments.length.toString() + "개의 댓글이 있습니다."}
+									itemLayout="horizontal"
+									dataSource={spotComments}
+									renderItem={(item) => (
+										<Comment
+											avatar={<Avatar src={item.avatar} icon={<UserOutlined />} />}
+											// set icon as fallback for image
+											author={item.author}
+											content={item.content}
+											datetime={new Date(item.datetime.seconds * 1000).toLocaleString()}
+										/>
+									)}
+								/>
+							</Layout.Sider>
+						)
+						: (
+							<Layout.Sider
+								width="50%"
+								style={{ ...styles.commentListLayout, textAlign: 'center' }}
+							>
+								<Space
+									style={styles.authBlockLayout}
+									direction="vertical"
+									align="center"
 								>
-									등록
-								</Button>
-							</Input.Group>
-						}
-					/>
-					<List
-						header={spotComments.length.toString() + "개의 댓글이 있습니다."}
-						itemLayout="horizontal"
-						dataSource={spotComments}
-						renderItem={(item) => (
-							<Comment
-								avatar={<Avatar src={item.avatar} icon={<UserOutlined />} />}
-								// set icon as fallback for image
-								author={item.author}
-								content={item.content}
-								datetime={new Date(item.datetime.seconds * 1000).toLocaleString()}
-							/>
-						)}
-					/>
-				</Layout.Sider>
+									로그인 후 이용 가능한 페이지입니다.
+								</Space>
+							</Layout.Sider>
+						)
+					}
 			</Layout>
 		</Layout>
 	);
@@ -172,5 +191,14 @@ const styles = {
 	},
 	commentEditor: {
 		width: 'calc(100% - 60px)'
+	},
+	authBlockLayout: {
+		height: '100%',
+		padding: 0,
+		margin: 0,
+		textAlign: 'center',
+		justifyContent: 'center',
+		fontSize: '24pt',
+		fontWeight: 'bold'
 	}
 }

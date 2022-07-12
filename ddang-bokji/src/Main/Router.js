@@ -36,7 +36,8 @@ function MainRouter() {
 			accessDate: todayDateFormat(new Date()),
 			dailyTermIndex: Math.floor(Math.random() * 700),
 			problemQuestionList,
-			problemAnswerList
+			problemAnswerList,
+			isFinishedExam: false
 		});
 	}, [database]);
 	

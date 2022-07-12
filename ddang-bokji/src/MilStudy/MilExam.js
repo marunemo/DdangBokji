@@ -9,6 +9,7 @@ function MilExam(props) {
 	const [currentAnswer, setCurrentAnswer] = useState(undefined);
 	const [currentPhase, setPhase] = useState(0);
 	const [userAnswers, setUserAnswers] = useState([]);
+	const [isFinishedExam, setFinishedExam] = useState(false);
 	const { milTerms, user } = props;
 	
 	const problemList = useMemo(() => {
@@ -28,11 +29,21 @@ function MilExam(props) {
 	}, [user]);
 	
 	const submitResult = useCallback((userAnswers) => {
-		update(ref(getDatabase(), 'users/' + user.uid), {
-			userAnswers,
-			isFinishExam: true
-		})
-	}, [user]);
+		problemList.then((problems) => {
+			let currectAnswerCount = 0;
+			for(const i in userAnswers) {
+				if(problems.answerList[i] === problems.questionList[i][userAnswers[i]])
+					currectAnswerCount += 1;
+			}
+			return currectAnswerCount;
+		}).then((currentAnswerCount) => {
+			update(ref(getDatabase(), 'users/' + user.uid), {
+				userAnswers,
+				isFinishedExam: true,
+				point: currentAnswerCount
+			})
+		});
+	}, [user, problemList]);
 
 	try {
 		useEffect(() => {
@@ -50,7 +61,24 @@ function MilExam(props) {
 					})
 				});
 			}
-		}, [milTerms, user, currentPhase]);
+			
+			if(!isFinishedExam) {
+				get(child(ref(getDatabase()), 'users/' + user.uid)).then((snapshot) => {
+					if(!snapshot.exists())
+						return null;
+
+					setFinishedExam(snapshot.val().isFinishedExam);
+				});
+			}
+			else {
+				get(child(ref(getDatabase()), 'users/' + user.uid)).then((snapshot) => {
+					if(!snapshot.exists())
+						return null;
+
+					setUserAnswers(snapshot.val().userAnswers);
+				});
+			}
+		}, [milTerms, user, currentPhase, isFinishedExam]);
 	}
 	catch(e) {
 		console.log(e);
@@ -58,6 +86,46 @@ function MilExam(props) {
 	
 	if(testMilTerms === null || currentProblem === null)
 		return <LoadingSpin />;
+	
+	if(isFinishedExam) {
+		<Form
+			layout="vertical"
+			style={styles.bodyLayout}
+		>
+			{
+				userAnswers.map((userAnswer) => {
+					return(
+						<></>
+					);	
+				})
+			}
+			<Form.Item>
+				<Space style={styles.problemQuestion}>
+					{testMilTerms[currentProblem.answer].desc}
+				</Space>
+			</Form.Item>
+			<Form.Item>
+				<Radio.Group
+					style={styles.problemAnswers}
+					size="large"
+					value={currentAnswer}
+					onChange={(event) => setCurrentAnswer(event.target.value)}
+				>
+					<Space direction="vertical">
+						{
+							[0, 1, 2, 3].map((answer) => {
+								return (
+									<Radio key={'answer' + answer} value={answer}>
+										{testMilTerms[currentProblem.questions[answer]].title}
+									</Radio>
+								);
+							})
+						}
+					</Space>
+				</Radio.Group>
+			</Form.Item>
+		</Form>
+	}
 	
 	return (
 		<Form

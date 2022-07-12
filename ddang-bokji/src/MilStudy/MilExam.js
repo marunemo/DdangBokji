@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Form, Typography, Radio, Space, Steps, Button, Divider } from 'antd';
-import { getDatabase, set, ref, get, child } from "firebase/database";
+import { getDatabase, ref, get, child, update } from "firebase/database";
 import LoadingSpin from '../Utility/LoadingSpin';
 
 function MilExam(props) {
@@ -25,6 +25,13 @@ function MilExam(props) {
 			});
 		})
 		.catch(error => console.log(error));
+	}, [user]);
+	
+	const submitResult = useCallback((userAnswers) => {
+		update(ref(getDatabase(), 'users/' + user.uid), {
+			userAnswers,
+			isFinishExam: true
+		})
 	}, [user]);
 
 	try {
@@ -125,7 +132,7 @@ function MilExam(props) {
 								<Button
 									type="primary"
 									onClick={() => {
-										console.log([...userAnswers, currentAnswer])
+										submitResult([...userAnswers, currentAnswer]);
 									}}
 								>
 									제출

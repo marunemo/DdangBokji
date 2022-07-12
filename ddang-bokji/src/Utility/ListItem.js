@@ -1,18 +1,20 @@
 import React from 'react';
 import { Card, Image } from 'antd';
+import emptyImg from '../Assets/no-pictures.png';
 
 function ItemCard(props) {
 	return (
 		<Card
-			style={{
-				width: '100%'
-			}}
+			className="cardLayout"
 			cover={
 				<Image
+					className="cardImage"
+					width="100%"
+					height="100%"
 					alt={props.imageDesc}
 					src={props.photoImage}
-					// Empty icons created by LAFS - Flaticon
-					fallback="https://cdn-icons.flaticon.com/png/512/3586/premium/3586675.png?token=exp=1656836791~hmac=9ab5c8883e35964c0a42820f9065b528"
+					fallback={emptyImg}
+					preview={false}
 				/>
 			}
 			hoverable

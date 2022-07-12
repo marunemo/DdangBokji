@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Form, Typography, Radio, Space, Steps, Button } from 'antd';
+import { Form, Typography, Radio, Space, Steps, Button, Divider } from 'antd';
 import { getDatabase, set, ref, get, child } from "firebase/database";
 import LoadingSpin from '../Utility/LoadingSpin';
 
@@ -57,7 +57,13 @@ function MilExam(props) {
 			layout="vertical"
 			style={styles.bodyLayout}
 		>
-			<Form.Item label="문제 단계">
+			<Form.Item>
+				<Divider
+					orientation="left"
+					style={styles.problemPhase}
+				>
+					문제 단계
+				</Divider>
 				<Steps current={currentPhase}>
 					{
 						[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((problemPhase) => {
@@ -68,13 +74,15 @@ function MilExam(props) {
 					}
 				</Steps>
 			</Form.Item>
-			<Form.Item label="문제">
-				<Typography>
-					<Typography.Paragraph>{testMilTerms[currentProblem.answer].desc}</Typography.Paragraph>
-				</Typography>
+			<Form.Item>
+				<Space style={styles.problemQuestion}>
+					{testMilTerms[currentProblem.answer].desc}
+				</Space>
 			</Form.Item>
-			<Form.Item label="답">
+			<Form.Item>
 				<Radio.Group
+					style={styles.problemAnswers}
+					size="large"
 					value={currentAnswer}
 					onChange={(event) => setCurrentAnswer(event.target.value)}
 				>
@@ -92,48 +100,52 @@ function MilExam(props) {
 				</Radio.Group>
 			</Form.Item>
 			<Form.Item>
-				{
-					(currentPhase === 9)
-					? (
-						<Button
-							type="primary"
-							onClick={() => {
-								console.log([...userAnswers, currentAnswer])
-							}}
-						>
-							제출
-						</Button>
-					)
-					: (
-						<Button
-							type="primary"
-							onClick={() => {
-								setUserAnswers((answers) => [...answers, currentAnswer]);
-								setCurrentAnswer(undefined);
-								setPhase((curr) => (curr + 1))
-							}}
-						>
-							다음 문제
-						</Button>
-					)
-				}
-				{
-					(currentPhase !== 0) &&
-					(
-						<Button
-							type="primary"
-							onClick={() => {
-								setPhase((curr) => {
-									setUserAnswers((answers) => answers.slice(0, curr - 1));
-									setCurrentAnswer(curr - 1);
-									return (curr - 1);
-								})
-							}}
-						>
-							이전 문제
-						</Button>
-					)
-				}
+				<Space style={styles.rightAlign} direction="vertical" align="end">
+					<Space style={styles.submitButtonGroup}>
+						{
+							(currentPhase !== 0) &&
+							(
+								<Button
+									type="dashed"
+									onClick={() => {
+										setPhase((curr) => {
+											setUserAnswers((answers) => answers.slice(0, curr - 1));
+											setCurrentAnswer(curr - 1);
+											return (curr - 1);
+										})
+									}}
+								>
+									이전 문제
+								</Button>
+							)
+						}
+						{
+							(currentPhase === 9)
+							? (
+								<Button
+									type="primary"
+									onClick={() => {
+										console.log([...userAnswers, currentAnswer])
+									}}
+								>
+									제출
+								</Button>
+							)
+							: (
+								<Button
+									type="primary"
+									onClick={() => {
+										setUserAnswers((answers) => [...answers, currentAnswer]);
+										setCurrentAnswer(undefined);
+										setPhase((curr) => (curr + 1))
+									}}
+								>
+									다음 문제
+								</Button>
+							)
+						}
+					</Space>
+				</Space>
 			</Form.Item>
 		</Form>
 	);
@@ -146,5 +158,25 @@ const styles = {
 		minHeight: '100%',
 		padding: 0,
 		margin: 0,
-	}
+	},
+	rightAlign: {
+		width: '100%'
+	},
+	submitButtonGroup: {
+		marginRight: '35px'
+	},
+	problemPhase: {
+		fontSize: '20px',
+		fontWeight: 'bold'
+	},
+	problemQuestion: {
+		padding: '25px',
+		margin: '5px 15px',
+		border: '1px solid #000',
+		borderRadius: 25,
+		fontSize: '16px'
+	},
+	problemAnswers: {
+		marginLeft: '25px',
+	},
 }

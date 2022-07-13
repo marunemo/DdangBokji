@@ -224,6 +224,7 @@ const styles = {
         right: 0,
         top: '64px',
         bottom: 0,
+		zIndex: 1,
 		backgroundColor: '#fff',
 		border: '1px solid #000'
 	},

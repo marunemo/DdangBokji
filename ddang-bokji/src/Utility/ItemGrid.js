@@ -10,6 +10,7 @@ function ItemGrid(props) {
 		gridList.push(
 			<Row
 				key={'itemRow' + index}
+				style={{ marginBottom: '3%' }}
 				gutter={16}
 			>
 				{[0, 1, 2, 3].map((colIndex) => {
@@ -29,6 +30,7 @@ function ItemGrid(props) {
 		gridList.push(
 			<Row
 				key={'itemRow' + lastFullBundle}
+				style={{ marginBottom: '3%' }}
 				gutter={16}
 			>
 				{Array.from(Array(items.length - lastFullBundle).keys()).map((colIndex) => {

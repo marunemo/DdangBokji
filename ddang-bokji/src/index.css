@@ -19,16 +19,6 @@ div#root {
 	height: 100%;
 }
 
-.cardLayout {
-	width: '100%';
-	border-radius: '30pt';
-}
-
-.cardImage {
-	border-radius: '30pt';
-	object-fit: 'cover';
-}
-
 .ant-spin-dot-item {
   background-color: red;
 }

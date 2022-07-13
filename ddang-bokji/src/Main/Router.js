@@ -157,7 +157,7 @@ const styles = {
 		zIndex: 1,
 	},
 	mainContentLayout: {
-		minHeight: '100vh - 64px',
+		minHeight: 'calc(100vh - 64px)',
 		marginTop: '64px'
 	},
 	signInButton: {

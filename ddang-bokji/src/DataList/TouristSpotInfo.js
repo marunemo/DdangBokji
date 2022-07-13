@@ -16,6 +16,7 @@ function TouristSpotInfo(props) {
 	const [spotInfo, setSpotInfo] = useState(null);
 	const [spotComments, setSpotComments] = useState(null);
 	const [currentComment, setCurrentComment] = useState('');
+	const [isSiderCollapsed, setSiderColapsed] = useState(false);
 	const backToHome = useCallback(() => navigate('/'), [navigate]);
 	const sendComment = useCallback((content, currentUser, spotInfo, spotComments) => {
 		const newComment = {
@@ -62,7 +63,7 @@ function TouristSpotInfo(props) {
 	return (
 		<Layout style={styles.infoLayout}>
 			<Layout style={styles.mainLayout}>
-				<Layout.Content style={styles.contentLayout}>
+				<Layout.Content style={styles.contentLayout(isSiderCollapsed)}>
 					<Layout.Header style={styles.headerLayout}>
 						<Button
 							type="ghost"
@@ -97,6 +98,8 @@ function TouristSpotInfo(props) {
 							<Layout.Sider
 								width="50%"
 								style={styles.commentListLayout}
+								collapsedWidth={0}
+								breakpoint="md"
 							>
 								<Comment
 									avatar={<Avatar src={currentUser.photoURL} />}
@@ -139,6 +142,9 @@ function TouristSpotInfo(props) {
 							<Layout.Sider
 								width="50%"
 								style={{ ...styles.commentListLayout, textAlign: 'center' }}
+								collapsedWidth={0}
+								breakpoint="md"
+								onCollapse={(collapsed) => setSiderColapsed(collapsed)}
 							>
 								<Space
 									style={styles.authBlockLayout}
@@ -172,11 +178,11 @@ const styles = {
 	headerLayout: {
 		backgroundColor: '#fff',
 	},
-	contentLayout: {
+	contentLayout: (isSiderCollapsed) => ({
 		height: '100%',
 		padding: '25px',
-		marginRight: '50%'
-	},
+		marginRight: isSiderCollapsed ? '0%' : '50%'
+	}),
 	commentListLayout: {
 		overflow: 'auto',
         height: '100vh',
@@ -185,6 +191,7 @@ const styles = {
         top: '64px',
         bottom: 0,
 		backgroundColor: '#fff',
+		border: '1px solid #000'
 	},
 	spotMap: {
 		width: '100%',

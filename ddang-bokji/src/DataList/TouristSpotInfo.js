@@ -112,7 +112,7 @@ function TouristSpotInfo(props) {
 									isBroken &&
 									<Button
 										type="primary"
-										style={{ height: '100vh' }}
+										style={styles.commentShowingButton}
 										icon={isCollapsed ? <LeftOutlined /> : <RightOutlined />}
 										onClick={() => setCollpased(collapsed => !collapsed)}
 									/>
@@ -171,7 +171,7 @@ function TouristSpotInfo(props) {
 									isBroken &&
 									<Button
 										type="primary"
-										style={{ height: '100vh' }}
+										style={styles.commentShowingButton}
 										icon={isCollapsed ? <LeftOutlined /> : <RightOutlined />}
 										onClick={() => setCollpased(collapsed => !collapsed)}
 									/>
@@ -226,7 +226,7 @@ const styles = {
         bottom: 0,
 		zIndex: 1,
 		backgroundColor: '#fff',
-		border: '1px solid #000'
+		borderLeft: '1px solid #000'
 	},
 	commentListSpace: {
 		width: '100%',
@@ -251,7 +251,9 @@ const styles = {
 		fontWeight: 'bold'
 	},
 	commentShowingButton: {
-		height: '100%',
-		backgroundColor: '#000'
+		height: '100vh',
+		backgroundColor: '#000',
+		borderColor: '#000',
+		borderRadius: 0
 	}
 }

@@ -154,7 +154,7 @@ const styles = {
 	mainHeaderLayout: {
 		width: '100%',
 		position: 'fixed',
-		zIndex: 1,
+		zIndex: 2,
 	},
 	mainContentLayout: {
 		minHeight: 'calc(100vh - 64px)',

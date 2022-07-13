@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Layout, Menu, Row, Col, Button } from 'antd';
 import { onAuthStateChanged, signOut } from "firebase/auth";
-import { getDatabase, set, ref, get, child } from "firebase/database";
+import { getDatabase, set, ref, get, child, update } from "firebase/database";
 import HomeContainer from './Home';
 import TouristSpotInfo from '../DataList/TouristSpotInfo';
 import StudyRouter from '../MilStudy/StudyRouter';
@@ -20,7 +20,7 @@ function MainRouter() {
 		return today.getFullYear().toString() + '/' + (today.getMonth() + 1).toString() + '/' + today.getDate().toString();
 	};
 	
-	const saveUserStatus = useCallback((user) => {
+	const saveUserStatus = useCallback((user, isNewUser) => {
 		let totalProblem = [...Array(700).keys()];	
 		totalProblem.sort(() => Math.random() - 0.5);
 		let problemQuestionList = [];
@@ -32,21 +32,33 @@ function MainRouter() {
 			problemQuestionList.push(problemQuestion);
 		}
 		
-		set(ref(database, 'users/' + user.uid), {
-			accessDate: todayDateFormat(new Date()),
-			dailyTermIndex: Math.floor(Math.random() * 700),
-			problemQuestionList,
-			problemAnswerList,
-			examSubmmitted: false
-		});
+		if(isNewUser) {
+			set(ref(database, 'users/' + user.uid), {
+				accessDate: todayDateFormat(new Date()),
+				dailyTermIndex: Math.floor(Math.random() * 700),
+				problemQuestionList,
+				problemAnswerList,
+				examSubmmitted: false,
+				point: 0
+			});
+		}
+		else {
+			update(ref(database, 'users/' + user.uid), {
+				accessDate: todayDateFormat(new Date()),
+				dailyTermIndex: Math.floor(Math.random() * 700),
+				problemQuestionList,
+				problemAnswerList,
+				examSubmmitted: false
+			});
+		}
 	}, [database]);
 	
-	const getLastUserAccessDate = useCallback((user) => {
+	const getUserData = useCallback((user) => {
 		return get(child(ref(database), 'users/' + user.uid)).then((snapshot) => {
 			if(!snapshot.exists())
 				return null;
 			
-			return snapshot.val().accessDate;
+			return snapshot.val();
 		})
 		.catch(error => console.log(error));
 	}, [database]);
@@ -55,15 +67,20 @@ function MainRouter() {
 		onAuthStateChanged(auth, (user) => {
 			if(user) {
 				setCurrentUser(user);
-				getLastUserAccessDate(user).then((accessDate) => {
-					const today = todayDateFormat(new Date());
-					if(accessDate !== today) {
-						saveUserStatus(user);
+				getUserData(user).then((userData) => {
+					if(userData === null) {
+						saveUserStatus(user, true);
+					}
+					else {
+						const today = todayDateFormat(new Date());
+						if(userData.accessDate !== today) {
+							saveUserStatus(user, false);
+						}
 					}
 				});
 			}
 		})
-	}, [saveUserStatus, getLastUserAccessDate]);
+	}, [saveUserStatus, getUserData]);
 	
 	const headerMenu = currentUser
 		? [

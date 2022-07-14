@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Form, Typography, Radio, Space, Steps, Button, Divider } from 'antd';
+import { Form, Radio, Space, Steps, Button, Divider } from 'antd';
 import { getDatabase, ref, get, child, update } from "firebase/database";
 import LoadingSpin from '../Utility/LoadingSpin';
 
@@ -71,67 +71,65 @@ function MilExam(props) {
 					setExamSubmitted(snapshot.val().examSubmmitted);
 				});
 			}
-			else if(user && milTerms) {
+			else if(user && testMilTerms) {
 				get(child(ref(getDatabase()), 'users/' + user.uid)).then((snapshot) => {
 					if(!snapshot.exists())
 						return null;
 					
 					setUserAnswers(snapshot.val().userAnswers);
-					milTerms.then((milTerm) => {
-						problemList.then((problems) => {
-							const ResultComponents = snapshot.val().userAnswers.map((userAnswer, problemIndex) => {
-								return(
-									<Space
-										key={'examResult' + problemIndex}
-										style={{ marginBottom: '20pt' }}
-										direction="vertical"
+					problemList.then((problems) => {
+						const ResultComponents = snapshot.val().userAnswers.map((userAnswer, problemIndex) => {
+							return(
+								<Space
+									key={'examResult' + problemIndex}
+									style={{ marginBottom: '20pt' }}
+									direction="vertical"
+								>
+									<Divider
+										orientation="left"
+										style={styles.problemPhase}
 									>
-										<Divider
-											orientation="left"
-											style={styles.problemPhase}
+										{'문제 ' + (problemIndex + 1)}
+									</Divider>
+									<Form.Item>
+										<Space style={styles.problemQuestion}>
+											{testMilTerms[problems.answerList[problemIndex]].desc}
+										</Space>
+									</Form.Item>
+									<Form.Item>
+										<Radio.Group
+											style={styles.problemAnswers}
+											size="large"
+											value={userAnswer}
 										>
-											{'문제' + problemIndex}
-										</Divider>
-										<Form.Item>
-											<Space style={styles.problemQuestion}>
-												{milTerm[problems.answerList[problemIndex]].desc}
+											<Space direction="vertical">
+												{
+													[0, 1, 2, 3].map((answer) => {
+														return (
+															<Radio
+																key={'answer' + problemIndex + '-' + answer}
+																style={styles.problemAnswerResult(
+																	answer === userAnswer,
+																	problems.questionList[problemIndex][answer] === problems.answerList[problemIndex])
+																}
+																value={answer}
+															>
+																{testMilTerms[problems.questionList[problemIndex][answer]].title}
+															</Radio>
+														);
+													})
+												}
 											</Space>
-										</Form.Item>
-										<Form.Item>
-											<Radio.Group
-												style={styles.problemAnswers}
-												size="large"
-												value={userAnswer}
-											>
-												<Space direction="vertical">
-													{
-														[0, 1, 2, 3].map((answer) => {
-															return (
-																<Radio
-																	key={'answer' + problemIndex + '-' + answer}
-																	style={styles.problemAnswerResult(
-																		answer === userAnswer,
-																		problems.questionList[problemIndex][answer] === problems.answerList[problemIndex])
-																	}
-																	value={answer}
-																>
-																	{milTerm[problems.questionList[problemIndex][answer]].title}
-																</Radio>
-															);
-														})
-													}
-												</Space>
-											</Radio.Group>
-										</Form.Item>
-									</Space>
-								);
-							});
-							setExamResult(ResultComponents);
+										</Radio.Group>
+									</Form.Item>
+								</Space>
+							);
 						});
+						setExamResult(ResultComponents);
 					});
 				});
 			}
-		}, [milTerms, user, currentPhase, examSubmmitted]);
+		}, [milTerms, user, currentPhase, examSubmmitted, problemList, testMilTerms]);
 	}
 	catch(e) {
 		console.log(e);

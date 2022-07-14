@@ -94,7 +94,7 @@ function TouristSpotInfo(props) {
 					/>
 				</Layout.Content>
 				<Layout.Sider
-					width="50%"
+					width={isBroken ? '80%' : '50%'}
 					style={styles.commentListLayout}
 					collapsedWidth={25}
 					breakpoint="md"
@@ -102,12 +102,9 @@ function TouristSpotInfo(props) {
 					onBreakpoint={setBroken}
 				>
 					{
-						currentUser
+						spotComments
 						? (
-							<Space
-								style={styles.commentListSpace}
-								align="center"
-							>
+							<div>
 								{
 									isBroken &&
 									<Button
@@ -119,10 +116,7 @@ function TouristSpotInfo(props) {
 								}
 								{
 									(!isCollapsed || !isBroken) &&
-									<Space
-										style={{ width: '100%', height: '100%' }}
-										direction="vertical"
-									>
+									<div>
 										<Comment
 											avatar={<Avatar src={currentUser.photoURL} />}
 											content={
@@ -158,9 +152,9 @@ function TouristSpotInfo(props) {
 												/>
 											)}
 										/>
-									</Space>
+									</div>
 								}
-							</Space>
+							</div>
 						)
 						: (
 							<Space

@@ -37,7 +37,6 @@ function MilExam(props) {
 				if(problems.answerList[i] === problems.questionList[i][userAnswers[i]])
 					currectAnswerCount += 1;
 			}
-			console.log(userAnswers);
 			return problems.currentUserPoint + currectAnswerCount;
 		}).then((currentUserPoint) => {
 			update(ref(getDatabase(), 'users/' + user.uid), {

@@ -24,6 +24,7 @@ function MilExam(props) {
 			return ({
 				questionList: snapshot.val().problemQuestionList,
 				answerList: snapshot.val().problemAnswerList,
+				currentUserPoint: snapshot.val().point
 			});
 		})
 		.catch(error => console.log(error));
@@ -36,12 +37,13 @@ function MilExam(props) {
 				if(problems.answerList[i] === problems.questionList[i][userAnswers[i]])
 					currectAnswerCount += 1;
 			}
-			return currectAnswerCount;
-		}).then((currentAnswerCount) => {
+			console.log(userAnswers);
+			return problems.currentUserPoint + currectAnswerCount;
+		}).then((currentUserPoint) => {
 			update(ref(getDatabase(), 'users/' + user.uid), {
 				userAnswers,
 				examSubmmitted: true,
-				point: currentAnswerCount
+				point: currentUserPoint
 			})
 		}).then(() => setExamSubmitted(true));
 	}, [user, problemList]);
@@ -232,7 +234,7 @@ function MilExam(props) {
 								<Button
 									type="primary"
 									onClick={() => {
-										setUserAnswers((answers) => [...answers, currentAnswer]);
+										setUserAnswers((answers) => [...answers, (currentAnswer ? currentAnswer : -1)]);
 										setCurrentAnswer(undefined);
 										setPhase((curr) => (curr + 1))
 									}}

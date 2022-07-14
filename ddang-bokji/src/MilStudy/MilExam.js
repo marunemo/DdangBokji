@@ -101,7 +101,7 @@ function MilExam(props) {
 											<Radio.Group
 												style={styles.problemAnswers}
 												size="large"
-												value={userAnswers[problemIndex]}
+												value={userAnswer}
 											>
 												<Space direction="vertical">
 													{
@@ -113,6 +113,7 @@ function MilExam(props) {
 																		answer === userAnswer,
 																		problems.questionList[problemIndex][answer] === problems.answerList[problemIndex])
 																	}
+																	value={answer}
 																>
 																	{milTerm[problems.questionList[problemIndex][answer]].title}
 																</Radio>

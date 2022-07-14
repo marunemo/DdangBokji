@@ -43,7 +43,7 @@ function MilExam(props) {
 				examSubmmitted: true,
 				point: currentAnswerCount
 			})
-		});
+		}).then(() => setExamSubmitted(true));
 	}, [user, problemList]);
 
 	try {

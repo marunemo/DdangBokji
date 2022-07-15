@@ -207,13 +207,13 @@ const styles = {
 		backgroundColor: '#fff',
 	},
 	contentLayout: (isBroken) => ({
+		overflow: 'initial',
 		height: '100%',
 		padding: '25px',
 		marginRight: isBroken ? '0%' : '50%'
 	}),
 	commentListLayout: {
 		overflow: 'auto',
-        minHeight: '100vh',
         position: 'fixed',
         right: 0,
         top: '64px',

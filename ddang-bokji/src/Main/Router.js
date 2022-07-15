@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { Layout, Menu, Row, Col, Button } from 'antd';
+import { Layout, Menu, Grid, Row, Col, Button } from 'antd';
+import { EllipsisOutlined } from '@ant-design/icons';
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { getDatabase, set, ref, get, child, update } from "firebase/database";
 import HomeContainer from './Home';
@@ -11,6 +12,7 @@ import auth, { signInGoogle } from '../Utility/Firebase';
 function MainRouter() {
 	const [currentUser, setCurrentUser] = useState(null);
 	const database = getDatabase();
+	const screenWidth = Grid.useBreakpoint();
 	
 	const logOut = useCallback(() => {
 		signOut(auth).then(() => setCurrentUser(null)).catch(error => console.log(error))
@@ -116,6 +118,47 @@ function MainRouter() {
 			}
 		]
 	
+	const collapsedHeaderMenu = currentUser
+		? [
+			{
+				key: 'EllipsisOutlined',
+				label: <EllipsisOutlined />,
+				chlidren: [
+					{
+						key: 'userSetting',
+						label: currentUser.displayName + '님 반갑습니다.',
+						type: 'group'
+					},
+					{
+						key: 'signOutButton',
+						label: (
+							<Button
+								style={styles.signInButton}
+								type="link"
+								onClick={logOut}
+							>
+								로그아웃
+							</Button>
+						),
+						type: 'group'
+					}
+				]
+			}
+		]
+		: [
+			{
+				key: 'signInButton',
+				label: (
+					<Button
+						style={styles.signInButton}
+						type="link"
+						onClick={signInGoogle}
+					>
+						로그인
+					</Button>
+				)
+			}
+		]
 	
 	return (
 		<BrowserRouter>
@@ -129,18 +172,33 @@ function MainRouter() {
 							<p style={{ color: '#fff' }}>Logo</p>
 						</Col>
 						<Col>
-							<Menu
-								style={styles.userMenu(currentUser)}
-								theme="dark"
-								mode="horizontal"
-								defaultSelectedKeys={undefined}
-								items={headerMenu}
-							/>
+							{
+								screenWidth.md
+								? (
+									<Menu
+										style={styles.userMenu(currentUser)}
+										theme="dark"
+										mode="horizontal"
+										defaultSelectedKeys={undefined}
+										items={headerMenu}
+									/>
+								)
+								: (
+									<Menu
+										style={styles.collapsedUserMenu(currentUser)}
+										theme="dark"
+										mode="incline"
+										triggerSubMenuAction="click"
+										defaultSelectedKeys={undefined}
+										items={collapsedHeaderMenu}
+									/>
+								)
+							}
 						</Col>
 					</Row>
 				</Layout.Header>
 				<Layout style={styles.mainContentLayout}>
-					<Routes>
+					<Routes>	
 						<Route
 							path="/"
 							element={<HomeContainer />}
@@ -185,5 +243,8 @@ const styles = {
 	},
 	userMenu: (currentUser) => ({
 		minWidth: currentUser ? '305px' : '115px'
+	}),
+	collapsedUserMenu: (currentUser) => ({
+		minWidth: currentUser ? '65px' : '115px'
 	})
 }

@@ -116,7 +116,7 @@ function TouristSpotInfo(props) {
 								}
 								{
 									(!isCollapsed || !isBroken) &&
-									<div>
+									<div style={styles.commentLayout}>
 										<Comment
 											avatar={<Avatar src={currentUser.photoURL} />}
 											content={
@@ -213,7 +213,7 @@ const styles = {
 	}),
 	commentListLayout: {
 		overflow: 'auto',
-        height: '100vh',
+        minHeight: '100vh',
         position: 'fixed',
         right: 0,
         top: '64px',
@@ -233,7 +233,7 @@ const styles = {
 		height: '25vh'
 	},
 	commentEditor: {
-			width: 'calc(100% - 60px)'
+		width: 'calc(100% - 60px)'
 	},
 	authBlockLayout: {
 		height: '100%',
@@ -245,9 +245,16 @@ const styles = {
 		fontWeight: 'bold'
 	},
 	commentShowingButton: {
+		overflow: 'auto',
+		position: 'fixed',
 		height: '100vh',
+		zIndex: 2,
 		backgroundColor: '#000',
 		borderColor: '#000',
 		borderRadius: 0
+	},
+	commentLayout: {
+		marginLeft: '25pt',
+		padding: '5pt 10pt'
 	}
 }

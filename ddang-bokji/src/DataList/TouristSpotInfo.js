@@ -59,7 +59,18 @@ function TouristSpotInfo(props) {
 	}
 	
 	if(spotInfo === null)
-		return <LoadingSpin />;
+		return (
+			<Space
+				style={{
+					width: '100vw',
+					height: '100vh',
+					justifyContent: 'center'
+				}}
+				align="center"
+			>
+				<LoadingSpin />
+			</Space>
+		);
 	
 	return (
 		<Layout style={styles.infoLayout}>

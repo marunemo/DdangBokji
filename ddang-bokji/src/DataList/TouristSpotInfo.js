@@ -6,7 +6,7 @@ import { doc, getDoc, setDoc } from "firebase/firestore";
 import axios from 'axios';
 import { firestore } from '../Utility/Firebase';
 import LoadingSpin from '../Utility/LoadingSpin';
-import KakaoMap from '../Utility/KakaoMap';
+import KakaoMap, { kakaoMapURL } from '../Utility/KakaoMap';
 import emptyImg from '../Assets/no-pictures.png';
 
 function TouristSpotInfo(props) {
@@ -16,6 +16,7 @@ function TouristSpotInfo(props) {
 	const [spotInfo, setSpotInfo] = useState(null);
 	const [spotComments, setSpotComments] = useState(null);
 	const [currentComment, setCurrentComment] = useState('');
+	const [mapURL, setMapURL] = useState(null)
 	const [isBroken, setBroken] = useState(false);
 	const [isCollapsed, setCollpased] = useState(true);
 	const backToHome = useCallback(() => navigate('/'), [navigate]);
@@ -44,6 +45,7 @@ function TouristSpotInfo(props) {
 				axios.get(`/${process.env.REACT_APP_MND_TOKEN}/json/DS_MND_GUN_WLFRINSTLTN_SRNDT/${id}/${id}/`)
 					.then((fetchData) => {
 						setSpotInfo(fetchData.data.DS_MND_GUN_WLFRINSTLTN_SRNDT.row[0]);
+						kakaoMapURL(fetchData.data.DS_MND_GUN_WLFRINSTLTN_SRNDT.row[0].rel_instltnnm, setMapURL)
 					});
 			}
 			
@@ -103,6 +105,11 @@ function TouristSpotInfo(props) {
 						name={spotInfo.rel_instltnnm}
 						address={spotInfo.instltnpstn}
 					/>
+					<Button
+						href={mapURL}
+					>
+						카카오맵으로 열기
+					</Button>
 				</Layout.Content>
 				<Layout.Sider
 					width={isBroken ? '80%' : '50%'}

@@ -113,7 +113,7 @@ function TouristSpotInfo(props) {
 					onBreakpoint={setBroken}
 				>
 					{
-						spotComments
+						currentUser
 						? (
 							<div>
 								{
@@ -149,20 +149,34 @@ function TouristSpotInfo(props) {
 												</Input.Group>
 											}
 										/>
-										<List
-											header={spotComments.length.toString() + "개의 댓글이 있습니다."}
-											itemLayout="horizontal"
-											dataSource={spotComments}
-											renderItem={(item) => (
-												<Comment
-													avatar={<Avatar src={item.avatar} icon={<UserOutlined />} />}
-													// set icon as fallback for image
-													author={item.author}
-													content={item.content}
-													datetime={new Date(item.datetime.seconds * 1000).toLocaleString()}
+										{
+											!spotComments
+											? (
+												<Space
+													style={styles.commentListSpace}
+													align="center"
+												>
+													댓글이 없습니다.
+													댓글을 작성해주세요.
+												</Space>
+											)
+											: (
+												<List
+													header={spotComments.length.toString() + "개의 댓글이 있습니다."}
+													itemLayout="horizontal"
+													dataSource={spotComments}
+													renderItem={(item) => (
+														<Comment
+															avatar={<Avatar src={item.avatar} icon={<UserOutlined />} />}
+															// set icon as fallback for image
+															author={item.author}
+															content={item.content}
+															datetime={new Date(item.datetime.seconds * 1000).toLocaleString()}
+														/>
+													)}
 												/>
-											)}
-										/>
+											)
+										}
 									</div>
 								}
 							</div>

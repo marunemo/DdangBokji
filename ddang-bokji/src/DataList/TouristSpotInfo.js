@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Layout, Image, Typography, List, Comment, Avatar, Button, Input, Space } from 'antd';
-import { UserOutlined, RollbackOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { Layout, Image, Typography, List, Comment, Avatar, Button, Input, Space, Divider } from 'antd';
+import { UserOutlined, LeftOutlined, RightOutlined, PhoneFilled, EnvironmentFilled } from '@ant-design/icons';
 import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import axios from 'axios';
@@ -76,29 +76,54 @@ function TouristSpotInfo(props) {
 	
 	return (
 		<Layout style={styles.infoLayout}>
-			<Layout style={styles.mainLayout}>
-				<Layout.Content style={styles.contentLayout(isBroken)}>
-					<Layout.Header style={styles.headerLayout}>
-						<Button
-							type="ghost"
-							shape="circle"
-							size="large"
-							icon={<RollbackOutlined />}
-							onClick={backToHome}
-						/>
-					</Layout.Header>
-					<Image
-						width="100%"
-						height="100%"
-						style={styles.sampleImage}
-						alt={spotInfo.phototitle}
-						src={spotInfo.image_file}
-						fallback={emptyImg}
+			<Layout.Content style={styles.contentLayout(isBroken)}>
+				<Layout.Header style={styles.headerLayout}>
+					<Button
+						style={styles.goBackButton}
+						shape="circle"
+						size="large"
+						icon={<LeftOutlined />}
+						onClick={backToHome}
 					/>
+				</Layout.Header>
+				<Image
+					width="100%"
+					height="100%"
+					style={styles.sampleImage}
+					alt={spotInfo.phototitle}
+					src={spotInfo.image_file}
+					fallback={emptyImg}
+				/>
+				<div style={{ padding: '10px 25px 25px' }}>
 					<Typography>
-						<Typography.Text>이름 : {spotInfo.rel_instltnnm}</Typography.Text><br />
-						<Typography.Text>주소 : {spotInfo.instltnpstn}</Typography.Text><br />
-						<Typography.Text>전화 : {spotInfo.cntadr}</Typography.Text><br />
+						<Typography.Title
+							style={{ ...styles.inlineDisplay, margin: '0px 10px'}}
+						>
+							{spotInfo.rel_instltnnm}
+						</Typography.Title>
+						<Typography.Title
+							style={styles.inlineDisplay}
+							level={3}
+						>
+							{spotInfo.rgnnm}
+						</Typography.Title>
+						<div style={{...styles.infoText, marginTop: '15px'}}>
+							<EnvironmentFilled />
+							<Typography.Text> {spotInfo.instltnpstn}</Typography.Text>
+						</div>
+						<div style={styles.infoText}>
+							<PhoneFilled />
+							<Typography.Text> {spotInfo.cntadr}</Typography.Text>
+						</div>
+						<Divider />
+						<Typography.Text
+							style={{
+								fontSize: '15pt',
+								marginLeft: '10pt',
+							}}
+						>
+							찾아가는 길
+						</Typography.Text>
 					</Typography>
 					<KakaoMap
 						style={styles.spotMap}
@@ -106,117 +131,118 @@ function TouristSpotInfo(props) {
 						address={spotInfo.instltnpstn}
 					/>
 					<Button
+						style={{ width: '100%' }}
 						href={mapURL}
 					>
 						카카오맵으로 열기
 					</Button>
-				</Layout.Content>
-				<Layout.Sider
-					width={isBroken ? '80%' : '50%'}
-					style={styles.commentListLayout}
-					collapsedWidth={25}
-					breakpoint="md"
-					collapsed={isCollapsed && isBroken}
-					onBreakpoint={setBroken}
-				>
-					{
-						currentUser
-						? (
-							<div>
-								{
-									isBroken &&
-									<Button
-										type="primary"
-										style={styles.commentShowingButton}
-										icon={isCollapsed ? <LeftOutlined /> : <RightOutlined />}
-										onClick={() => setCollpased(collapsed => !collapsed)}
-									/>
-								}
-								{
-									(!isCollapsed || !isBroken) &&
-									<div style={styles.commentLayout}>
-										<Comment
-											avatar={<Avatar src={currentUser.photoURL} />}
-											content={
-												<Input.Group compact>
-													<Input.TextArea
-														style={styles.commentEditor}
-														placeholder="댓글을 입력해주세요."
-														autoSize={true}
-														allowClear={true}
-														value={currentComment}
-														onChange={(event) => setCurrentComment(event.target.value, currentUser, spotInfo, spotComments)}
-													/>
-													<Button
-														type="primary"
-														onClick={() => sendComment(currentComment, currentUser, spotInfo, spotComments)}
-													>
-														등록
-													</Button>
-												</Input.Group>
-											}
-										/>
-										{
-											!spotComments
-											? (
-												<Space
-													style={styles.commentListSpace}
-													align="center"
-												>
-													댓글이 없습니다.
-													댓글을 작성해주세요.
-												</Space>
-											)
-											: (
-												<List
-													header={spotComments.length.toString() + "개의 댓글이 있습니다."}
-													itemLayout="horizontal"
-													dataSource={spotComments}
-													renderItem={(item) => (
-														<Comment
-															avatar={<Avatar src={item.avatar} icon={<UserOutlined />} />}
-															// set icon as fallback for image
-															author={item.author}
-															content={item.content}
-															datetime={new Date(item.datetime.seconds * 1000).toLocaleString()}
-														/>
-													)}
+				</div>
+			</Layout.Content>
+			<Layout.Sider
+				width={isBroken ? '80%' : '50%'}
+				style={styles.commentListLayout}
+				collapsedWidth={25}
+				breakpoint="md"
+				collapsed={isCollapsed && isBroken}
+				onBreakpoint={setBroken}
+			>
+				{
+					currentUser
+					? (
+						<div>
+							{
+								isBroken &&
+								<Button
+									type="primary"
+									style={styles.commentShowingButton}
+									icon={isCollapsed ? <LeftOutlined /> : <RightOutlined />}
+									onClick={() => setCollpased(collapsed => !collapsed)}
+								/>
+							}
+							{
+								(!isCollapsed || !isBroken) &&
+								<div style={styles.commentLayout}>
+									<Comment
+										avatar={<Avatar src={currentUser.photoURL} />}
+										content={
+											<Input.Group compact>
+												<Input.TextArea
+													style={styles.commentEditor}
+													placeholder="댓글을 입력해주세요."
+													autoSize={true}
+													allowClear={true}
+													value={currentComment}
+													onChange={(event) => setCurrentComment(event.target.value, currentUser, spotInfo, spotComments)}
 												/>
-											)
+												<Button
+													type="primary"
+													onClick={() => sendComment(currentComment, currentUser, spotInfo, spotComments)}
+												>
+													등록
+												</Button>
+											</Input.Group>
 										}
-									</div>
-								}
-							</div>
-						)
-						: (
-							<Space
-								style={styles.commentListSpace}
-								align="center"
-							>
-								{
-									isBroken &&
-									<Button
-										type="primary"
-										style={styles.commentShowingButton}
-										icon={isCollapsed ? <LeftOutlined /> : <RightOutlined />}
-										onClick={() => setCollpased(collapsed => !collapsed)}
 									/>
-								}
-								{
-									(!isCollapsed || !isBroken) &&
-									<Space
-										style={styles.authBlockLayout}
-										direction="vertical"
-										align="center"
-									>
-										로그인 후 이용 가능한 페이지입니다.
-									</Space>
-								}
-							</Space>
-						)
-					}
-				</Layout.Sider>
-			</Layout>
+									{
+										!spotComments
+										? (
+											<Space
+												style={styles.commentListSpace}
+												align="center"
+											>
+												댓글이 없습니다.
+												댓글을 작성해주세요.
+											</Space>
+										)
+										: (
+											<List
+												header={spotComments.length.toString() + "개의 댓글이 있습니다."}
+												itemLayout="horizontal"
+												dataSource={spotComments}
+												renderItem={(item) => (
+													<Comment
+														avatar={<Avatar src={item.avatar} icon={<UserOutlined />} />}
+														// set icon as fallback for image
+														author={item.author}
+														content={item.content}
+														datetime={new Date(item.datetime.seconds * 1000).toLocaleString()}
+													/>
+												)}
+											/>
+										)
+									}
+								</div>
+							}
+						</div>
+					)
+					: (
+						<Space
+							style={styles.commentListSpace}
+							align="center"
+						>
+							{
+								isBroken &&
+								<Button
+									type="primary"
+									style={styles.commentShowingButton}
+									icon={isCollapsed ? <LeftOutlined /> : <RightOutlined />}
+									onClick={() => setCollpased(collapsed => !collapsed)}
+								/>
+							}
+							{
+								(!isCollapsed || !isBroken) &&
+								<Space
+									style={styles.authBlockLayout}
+									direction="vertical"
+									align="center"
+								>
+									로그인 후 이용 가능한 페이지입니다.
+								</Space>
+							}
+						</Space>
+					)
+				}
+			</Layout.Sider>
 		</Layout>
 	);
 }
@@ -230,18 +256,19 @@ const styles = {
 		padding: 0,
 		background: '#fff'
 	},
-	mainLayout: {
-		height: '100%',
-		marginTop: '12px',
-		backgroundColor: '#fff'
-	},
 	headerLayout: {
+		margin: 0,
+		padding: '0px 30px',
 		backgroundColor: '#fff',
+	},
+	goBackButton: {
+		backgroundColor: 'transparent',
+		border: '0px'
 	},
 	contentLayout: (isBroken) => ({
 		overflow: 'initial',
 		height: '100%',
-		padding: '25px',
+		padding: 0,
 		marginRight: isBroken ? '0%' : '50%'
 	}),
 	commentListLayout: {
@@ -262,7 +289,8 @@ const styles = {
 	},
 	spotMap: {
 		width: '100%',
-		height: '25vh'
+		height: '25vh',
+		marginTop: '8px'
 	},
 	commentEditor: {
 		width: 'calc(100% - 60px)'
@@ -288,5 +316,12 @@ const styles = {
 	commentLayout: {
 		marginLeft: '25pt',
 		padding: '5pt 10pt'
+	},
+	inlineDisplay: {
+		display: 'inline'
+	},
+	infoText: {
+		marginBottom: '12px',
+		fontSize: '12pt'
 	}
 }

@@ -20,6 +20,7 @@ function KakaoMap(props) {
 					map,
 					position
 				})
+				return map;
 			}
 			
 			// 장소 검색에 실패했을 경우, 이름으로 검색
@@ -36,6 +37,7 @@ function KakaoMap(props) {
 						map,
 						position
 					})
+					return map;
 				}
 				
 				// 이름 검색도 실패했을 경우 아무거나 출력
@@ -43,7 +45,8 @@ function KakaoMap(props) {
 					center: new kakao.maps.LatLng(33.450701, 126.570667),
 					level: 13
 				};
-				new kakao.maps.Map(container, options);
+				const map = new kakao.maps.Map(container, options);
+				return map;
 			});
 		});
 	}
@@ -59,7 +62,7 @@ function kakaoMapURL(name, setState) {
 	
 	placeSearcher.keywordSearch(name, function(data, status, pagination) {
 		if (status === kakao.maps.services.Status.OK) {
-			setState("https://place.map.kakao.com/" + data[0].id);
+			setState(data[0].place_url);
 		}
 	});
 };

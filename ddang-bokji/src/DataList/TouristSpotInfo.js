@@ -29,7 +29,7 @@ function TouristSpotInfo(props) {
 			datetime: new Date()
 		}
 		setDoc(doc(firestore, "comments", spotInfo.rel_instltnnm), {
-			commentsList: [...spotComments, newComment]
+			commentsList: spotComments ? [...spotComments, newComment] : [newComment]
 		})
 			.then(() => setCurrentComment(''))
 			.then(() => {
@@ -51,7 +51,8 @@ function TouristSpotInfo(props) {
 			
 			if(!spotComments && spotInfo) {
 				getDoc(doc(firestore, "comments", spotInfo.rel_instltnnm)).then((doc) => {
-					setSpotComments(doc.data().commentsList);
+					if(doc.data() !== undefined)
+						setSpotComments(doc.data().commentsList);
 				});
 			}
 		}, [id, spotInfo, spotComments]);
@@ -190,8 +191,7 @@ function TouristSpotInfo(props) {
 												style={styles.commentListSpace}
 												align="center"
 											>
-												댓글이 없습니다.
-												댓글을 작성해주세요.
+												댓글이 없습니다. 새 댓글을 작성해주세요.
 											</Space>
 										)
 										: (

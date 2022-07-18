@@ -1,6 +1,26 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Layout, Image, Typography, List, Comment, Avatar, Button, Input, Space, Divider, Card, Rate } from 'antd';
-import { UserOutlined, LeftOutlined, RightOutlined, PhoneFilled, EnvironmentFilled } from '@ant-design/icons';
+import {
+	Layout,
+	Image,
+	Typography,
+	List,
+	Comment,
+	Avatar,
+	Button,
+	Input,
+	Space,
+	Divider,
+	Card,
+	Rate
+} from 'antd';
+import {
+	UserOutlined,
+	LeftOutlined,
+	RightOutlined,
+	PhoneFilled,
+	EnvironmentFilled,
+	StarFilled
+} from '@ant-design/icons';
 import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import axios from 'axios';
@@ -36,8 +56,14 @@ function TouristSpotInfo(props) {
 			.then(() => setCurrentComment(''))
 			.then(() => {
 				getDoc(doc(firestore, "comments", spotInfo.rel_instltnnm)).then((doc) => {
-						setSpotComments(doc.data().commentsList);
+					const commentsList = doc.data().commentsList;
+					commentsList.sort(function(a, b) {
+						if(a.datetime.seconds > b.datetime.seconds) return -1;
+						else if(a.datetime.seconds < b.datetime.seconds) return 1;
+						else return 0;
 					});
+					setSpotComments(commentsList);
+				});
 			});
 	}, []);
 	
@@ -174,10 +200,22 @@ function TouristSpotInfo(props) {
 								(!isCollapsed || !isBroken) &&
 								<div style={styles.commentLayout}>
 									<Card style={styles.commentEditCard}>
-										<p>해당 시설에 대한 평가를 남겨주세요!</p>
+										<p
+											style={{
+												fontSize: '22pt',
+												fontWeight: 'bold'
+											}}
+										>
+											해당 시설에 대한 평가를 남겨주세요!
+										</p>
 										<Rate
+											style={{
+												display: 'block',
+												fontSize: '22pt'
+											}}
 											value={currentRate}
 											onChange={setCurrentRate}
+											character={<StarFilled />}
 										/>
 										<Comment
 											avatar={<Avatar src={currentUser.photoURL} />}
@@ -225,8 +263,9 @@ function TouristSpotInfo(props) {
 															<div>
 																<Rate
 																	style={styles.ratingStyle}
-																	defaultValue={item.rating}
+																	value={item.rating}
 																	disabled={true}
+																	character={<StarFilled />}
 																/>
 																<p>{item.content.replace(/\\n/g, '<br />')}</p>
 															</div>
@@ -362,6 +401,7 @@ const styles = {
 		textAlign: 'end'
 	},
 	ratingStyle: {
-		display: 'block'
+		display: 'block',
+		fontSize: '18pt'
 	}
 }

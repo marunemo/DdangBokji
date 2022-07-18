@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { Layout, Image, Typography, List, Comment, Avatar, Button, Input, Space, Divider } from 'antd';
+import { Layout, Image, Typography, List, Comment, Avatar, Button, Input, Space, Divider, Card, Rate } from 'antd';
 import { UserOutlined, LeftOutlined, RightOutlined, PhoneFilled, EnvironmentFilled } from '@ant-design/icons';
 import { useParams, useNavigate } from 'react-router-dom';
 import { doc, getDoc, setDoc } from "firebase/firestore";
@@ -16,16 +16,18 @@ function TouristSpotInfo(props) {
 	const [spotInfo, setSpotInfo] = useState(null);
 	const [spotComments, setSpotComments] = useState(null);
 	const [currentComment, setCurrentComment] = useState('');
+	const [currentRate, setCurrentRate] = useState(3);
 	const [mapURL, setMapURL] = useState(null)
 	const [isBroken, setBroken] = useState(false);
 	const [isCollapsed, setCollpased] = useState(true);
 	const backToHome = useCallback(() => navigate('/'), [navigate]);
-	const sendComment = useCallback((content, currentUser, spotInfo, spotComments) => {
+	const sendComment = useCallback((content, rating, currentUser, spotInfo, spotComments) => {
 		const newComment = {
 			uid: currentUser.uid,
 			author: currentUser.displayName,
 			avatar: currentUser.photoURL,
 			content: content,
+			rating: rating,
 			datetime: new Date()
 		}
 		setDoc(doc(firestore, "comments", spotInfo.rel_instltnnm), {
@@ -51,8 +53,15 @@ function TouristSpotInfo(props) {
 			
 			if(!spotComments && spotInfo) {
 				getDoc(doc(firestore, "comments", spotInfo.rel_instltnnm)).then((doc) => {
-					if(doc.data() !== undefined)
-						setSpotComments(doc.data().commentsList);
+					if(doc.data() !== undefined) {
+						const commentsList = doc.data().commentsList;
+						commentsList.sort(function(a, b) {
+							if(a.datetime.seconds > b.datetime.seconds) return -1;
+							else if(a.datetime.seconds < b.datetime.seconds) return 1;
+							else return 0;
+						});
+						setSpotComments(commentsList)
+					}
 				});
 			}
 		}, [id, spotInfo, spotComments]);
@@ -108,6 +117,7 @@ function TouristSpotInfo(props) {
 						>
 							{spotInfo.rgnnm}
 						</Typography.Title>
+						<Divider />
 						<div style={{...styles.infoText, marginTop: '15px'}}>
 							<EnvironmentFilled />
 							<Typography.Text> {spotInfo.instltnpstn}</Typography.Text>
@@ -163,10 +173,15 @@ function TouristSpotInfo(props) {
 							{
 								(!isCollapsed || !isBroken) &&
 								<div style={styles.commentLayout}>
-									<Comment
-										avatar={<Avatar src={currentUser.photoURL} />}
-										content={
-											<Input.Group compact>
+									<Card style={styles.commentEditCard}>
+										<p>해당 시설에 대한 평가를 남겨주세요!</p>
+										<Rate
+											value={currentRate}
+											onChange={setCurrentRate}
+										/>
+										<Comment
+											avatar={<Avatar src={currentUser.photoURL} />}
+											content={
 												<Input.TextArea
 													style={styles.commentEditor}
 													placeholder="댓글을 입력해주세요."
@@ -175,15 +190,17 @@ function TouristSpotInfo(props) {
 													value={currentComment}
 													onChange={(event) => setCurrentComment(event.target.value, currentUser, spotInfo, spotComments)}
 												/>
-												<Button
-													type="primary"
-													onClick={() => sendComment(currentComment, currentUser, spotInfo, spotComments)}
-												>
-													등록
-												</Button>
-											</Input.Group>
-										}
-									/>
+											}
+										/>
+										<div style={styles.submitButtonLayout}>
+											<Button
+												type="primary"
+												onClick={() => sendComment(currentComment, currentRate, currentUser, spotInfo, spotComments)}
+											>
+												등록
+											</Button>
+										</div>
+									</Card>
 									{
 										!spotComments
 										? (
@@ -204,7 +221,16 @@ function TouristSpotInfo(props) {
 														avatar={<Avatar src={item.avatar} icon={<UserOutlined />} />}
 														// set icon as fallback for image
 														author={item.author}
-														content={item.content}
+														content={
+															<div>
+																<Rate
+																	style={styles.ratingStyle}
+																	defaultValue={item.rating}
+																	disabled={true}
+																/>
+																<p>{item.content.replace(/\\n/g, '<br />')}</p>
+															</div>
+														}
 														datetime={new Date(item.datetime.seconds * 1000).toLocaleString()}
 													/>
 												)}
@@ -293,7 +319,7 @@ const styles = {
 		marginTop: '8px'
 	},
 	commentEditor: {
-		width: 'calc(100% - 60px)'
+		width: '100%',
 	},
 	authBlockLayout: {
 		height: '100%',
@@ -323,5 +349,19 @@ const styles = {
 	infoText: {
 		marginBottom: '12px',
 		fontSize: '12pt'
+	},
+	commentEditCard: {
+		width: '100%',
+		marginBottom: '10px',
+		borderRadius: '25px',
+		boxShadow: '0px 5px 6px 1px rgba(0, 0, 0, 0.2)',
+		textAlign: 'center',
+		justifyContent: 'center'
+	},
+	submitButtonLayout: {
+		textAlign: 'end'
+	},
+	ratingStyle: {
+		display: 'block'
 	}
 }

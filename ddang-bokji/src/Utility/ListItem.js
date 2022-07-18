@@ -18,8 +18,20 @@ function ItemCard(props) {
 			hoverable
 		>
 			<Card.Meta
-				title={props.title}
-				description={props.description}
+				title={
+					<div
+						style={{
+							fontSize: '16pt',
+							fontWeight: 'bold'
+						}}>
+					   {props.title}
+					</div>
+				}
+				description={
+					<div style={{ fontSize: '12pt' }}>
+						{props.description}
+					</div>
+				}
 			/>
 		</Card>
 	);
@@ -36,6 +48,7 @@ const styles = {
 	cardImage: {
 		width: '100%',
 		height: '100%',
+		padding: '12px 12px 0px',
 		borderRadius: '30pt',
 		objectFit: 'cover',
 	}

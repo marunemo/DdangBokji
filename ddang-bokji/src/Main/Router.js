@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
 import { Layout, Menu, Grid, Row, Col, Button } from 'antd';
 import { EllipsisOutlined } from '@ant-design/icons';
 import { onAuthStateChanged, signOut } from "firebase/auth";
@@ -8,6 +8,25 @@ import HomeContainer from './Home';
 import TouristSpotInfo from '../DataList/TouristSpotInfo';
 import StudyRouter from '../MilStudy/StudyRouter';
 import auth, { signInGoogle } from '../Utility/Firebase';
+import logo from '../Assets/main-logo.png';
+
+function HomeLogoButton() {
+	const navigate = useNavigate();
+	const backToHome = useCallback(() => navigate('/'), [navigate]);
+	
+	return (
+		<Button
+			style={styles.logoButton}
+			onClick={backToHome}
+		>
+			<img
+				style={{ height: '54px' }}
+				src={logo}
+				alt="logo"
+			/>
+		</Button>
+	);
+}
 
 function MainRouter() {
 	const [currentUser, setCurrentUser] = useState(null);
@@ -170,7 +189,7 @@ function MainRouter() {
 						justify="space-between"
 					>
 						<Col>
-							<p style={{ color: '#fff' }}>Logo</p>
+							<HomeLogoButton />
 						</Col>
 						<Col>
 							{
@@ -247,5 +266,11 @@ const styles = {
 	}),
 	collapsedUserMenu: (currentUser) => ({
 		minWidth: currentUser ? '65px' : '115px'
-	})
+	}),
+	logoButton: {
+		height: '64px',
+		padding: '5px',
+		backgroundColor: 'transparent',
+		border: 'none'
+	}
 }

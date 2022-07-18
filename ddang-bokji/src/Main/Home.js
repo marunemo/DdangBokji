@@ -21,7 +21,10 @@ function HomeContainer() {
 	return (
 		<Layout style={styles.homeLayout}>
 			<Layout style={styles.bodyLayout}>
-				<Layout.Sider style={styles.sider}>
+				<Layout.Sider
+					style={styles.sider}
+					width="225px"
+				>
 					<Menu
 						style={styles.sideMenu}
 						mode="inline"
@@ -56,12 +59,19 @@ const styles = {
 		minHeight: '100%'
 	},
 	sider: {
-		background: '#fff',
+		background: 'transparent',
 	},
 	sideMenu: {
-		minHeight: '100%',
+		position: 'fixed',
+		top: '80px',
+		left: '25px',
+		width: '200px',
+		minHeight: 'calc(100vh - 64px - 30px)',
+		padding: '30px 0px',
 		borderRight: 0,
-		fontSize: '12pt'
+		borderRadius: '30px',
+		fontSize: '12pt',
+		boxShadow: '3px 4px 6px rgba(0, 0, 0, 0.1)'
 	},
 	contentLayout: {
 		minHeight: '100%',
@@ -71,7 +81,7 @@ const styles = {
 	},
 	content: {
 		background: '#e3e3e3',
-		padding: '16px',
+		padding: 0,
 		margin: 0,
 	},
 	floatingButton: {

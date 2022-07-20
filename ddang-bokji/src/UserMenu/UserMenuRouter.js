@@ -2,23 +2,24 @@ import React, { useCallback } from 'react';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import { Layout, Space, Menu, Button } from 'antd';
 import { RollbackOutlined } from '@ant-design/icons';
+import Setting from './Setting';
 import PointShop from './PointShop';
 
 function UserMenuRouter(props) {
 	const navigate = useNavigate();
 	const backToHome = useCallback(() => navigate('/'), [navigate]);
 	const linkToSelect = useCallback(({ key }) => {
-		if(key === 'Point')
-			navigate('/MilStudy')
+		if(key === 'Setting')
+			navigate('/UserMenu/')
 		else if(key === 'PointShop')
 			navigate('/UserMenu/PointShop')
 	}, [navigate]);
 	
 	const sideMenu = [
 		{
-			key: 'MilWord',
+			key: 'Setting',
 			icon: null,
-			label: '오늘의 단어',
+			label: '내 설정',
 		},
 		{
 			key: 'PointShop',
@@ -69,6 +70,10 @@ function UserMenuRouter(props) {
 			</Layout.Sider>
 			<Layout.Content style={styles.content}>
 				<Routes>
+					<Route
+						path="/"
+						element={<Setting user={props.currentUser} logOut={props.logOut} />}
+					/>
 					<Route
 						path="/PointShop"
 						element={<PointShop user={props.currentUser} />}

@@ -273,7 +273,7 @@ function MainRouter() {
 						/>
 						<Route
 							path="/UserMenu/*"
-							element={<UserMenuRouter currentUser={currentUser} />}
+							element={<UserMenuRouter currentUser={currentUser} logOut={logOut} />}
 						/>
 					</Routes>
 				</Layout>

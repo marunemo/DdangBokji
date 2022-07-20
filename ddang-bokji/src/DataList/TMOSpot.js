@@ -40,4 +40,4 @@ function TMOSpotList() {
 	return <ItemGrid items={spotData} />;
 }
 
-export default DiscountSpotList;
+export default TMOSpotList;

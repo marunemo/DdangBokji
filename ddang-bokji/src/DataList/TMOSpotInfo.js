@@ -328,7 +328,7 @@ function TMOSpotInfo(props) {
 	);
 }
 
-export default DiscountSpotInfo;
+export default TMOSpotInfo;
 
 const styles = {
 	infoLayout: {

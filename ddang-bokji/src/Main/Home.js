@@ -49,24 +49,10 @@ function HomeContainer() {
 				</Layout.Sider>
 				<Layout style={styles.contentLayout}>
 					<Layout.Content style={styles.content}>
-						{
-							switch(selectedSpot) {
-								case 'tourist':
-									<TouristSpotList />
-									break;
-								case 'resort':
-									<ResortSpotList />
-									break;
-								case 'discount':
-									<DiscountSpotList />
-									break;
-								case 'tmo':
-									<TMOSpotList />
-									break;
-								default:
-									break;
-							}
-						}
+						{ selectedSpot === 'tourist' && <TouristSpotList /> }
+						{ selectedSpot === 'resort' && <ResortSpotList /> }
+						{ selectedSpot === 'discount' && <DiscountSpotList /> }
+						{ selectedSpot === 'tmo' && <TMOSpotList /> }
 					</Layout.Content>
 				</Layout>
 			</Layout>

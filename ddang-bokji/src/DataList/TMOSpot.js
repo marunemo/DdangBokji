@@ -11,21 +11,21 @@ function DiscountSpotList() {
 	
 	try {
 		useEffect(() => {
-			axios.get(`/${process.env.REACT_APP_MND_TOKEN}/json/DS_MND_ENLSTMN_DCNT_BEF_INF/1/89/`)
+			axios.get(`/${process.env.REACT_APP_MND_TOKEN}/json/DS_TB_MND_TMO_INFO/1/89/`)
 				.then((fetchData) => {
-					const discountSpots = fetchData.data.DS_MND_ENLSTMN_DCNT_BEF_INF.row.map((discountSpot) => {
+					const tmoSpots = fetchData.data.DS_TB_MND_TMO_INFO.row.map((tmoSpot) => {
 						return (
-							<Link to={'/TouristSpot/' + discountSpot.rowno}>
+							<Link to={'/TouristSpot/' + tmoSpot.rowno}>
 								<ItemCard
-									title={discountSpot.instltnnm}
-									description={discountSpot.rgn}
+									title={tmoSpot.tmo_nm + "TMO"}
+									description={tmoSpot.pstnexpln}
 									photoImage={null}
-									imageDesc={discountSpot.instltnnm}
+									imageDesc={tmoSpot.tmo_nm}
 								/>
 							</Link>
 						)
 					})
-					setSpotData(discountSpots);
+					setSpotData(tmoSpots);
 					setLoading(true);
 			});
 		}, []);

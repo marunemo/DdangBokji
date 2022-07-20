@@ -15,7 +15,7 @@ function DiscountSpotList() {
 				.then((fetchData) => {
 					const discountSpots = fetchData.data.DS_MND_ENLSTMN_DCNT_BEF_INF.row.map((discountSpot) => {
 						return (
-							<Link to={'/TouristSpot/' + discountSpot.rowno}>
+							<Link to={'/DiscountSpot/' + discountSpot.rowno}>
 								<ItemCard
 									title={discountSpot.instltnnm}
 									description={discountSpot.rgn}

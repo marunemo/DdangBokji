@@ -146,27 +146,23 @@ function TMOSpotInfo(props) {
 						<Divider />
 						<div style={{...styles.infoText, marginTop: '15px'}}>
 							<EnvironmentFilled />
-							<Typography.Text> {spotInfo.rgn}</Typography.Text>
+							<Typography.Text> {spotInfo.pstnexpln}</Typography.Text>
 						</div>
 						<div style={styles.infoText}>
 							<PhoneFilled />
-							<Typography.Text> {spotInfo.cntadr}</Typography.Text>
+							<Typography.Text> {spotInfo.gnrltelno}</Typography.Text>
 						</div>
 						<div style={styles.infoText}>
 							<PhoneFilled />
-							<Typography.Text> {spotInfo.dcntenatvnm}</Typography.Text>
+							<Typography.Text> {spotInfo.wkday_strtm + " ~ " + spotInfo.wkday_endtm}</Typography.Text>
 						</div>
 						<div style={styles.infoText}>
 							<PhoneFilled />
-							<Typography.Text> {spotInfo.startday + " ~ " + spotInfo.fnshday}</Typography.Text>
+							<Typography.Text> {spotInfo.wkend_strtm + " ~ " + spotInfo.wkend_endtm}</Typography.Text>
 						</div>
 						<div style={styles.infoText}>
 							<PhoneFilled />
-							<Typography.Text> {spotInfo.dtlexpln}</Typography.Text>
-						</div>
-						<div style={styles.infoText}>
-							<PhoneFilled />
-							<Typography.Text> {spotInfo.hmpg}</Typography.Text>
+							<Typography.Text> {spotInfo.etc}</Typography.Text>
 						</div>
 						<Divider />
 						<Typography.Text
@@ -180,8 +176,8 @@ function TMOSpotInfo(props) {
 					</Typography>
 					<KakaoMap
 						style={styles.spotMap}
-						name={spotInfo.instltnnm}
-						address={spotInfo.rgn}
+						name={spotInfo.tmo_nm + "역"}
+						address={spotInfo.pstnexpln}
 					/>
 					<Button
 						style={{ width: '100%' }}

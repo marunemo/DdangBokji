@@ -11,11 +11,11 @@ function TMOSpotList() {
 	
 	try {
 		useEffect(() => {
-			axios.get(`/${process.env.REACT_APP_MND_TOKEN}/json/DS_TB_MND_TMO_INFO/1/89/`)
+			axios.get(`/${process.env.REACT_APP_MND_TOKEN}/json/DS_TB_MND_TMO_INFO/1/48/`)
 				.then((fetchData) => {
-					const tmoSpots = fetchData.data.DS_TB_MND_TMO_INFO.row.map((tmoSpot) => {
+					const tmoSpots = fetchData.data.DS_TB_MND_TMO_INFO.row.map((tmoSpot, index) => {
 						return (
-							<Link to={'/TouristSpot/' + tmoSpot.rowno}>
+							<Link to={'/TMOSpot/' + (index + 1)}>
 								<ItemCard
 									title={tmoSpot.tmo_nm + "TMO"}
 									description={tmoSpot.pstnexpln}

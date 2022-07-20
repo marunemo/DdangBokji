@@ -15,7 +15,7 @@ function ResortSpotList() {
 				.then((fetchData) => {
 					const resortSpots = fetchData.data.DS_WHLAM_WLFR_VCTNINSTLT.row.map((resortSpot) => {
 						return (
-							<Link to={'/ResortSpot/' + resortSpot.rowno}>
+							<Link to={'/ResortSpot/' + resortSpot.seq}>
 								<ItemCard
 									title={resortSpot.instltn_nm}
 									description={resortSpot.pstn_addr}

@@ -8,7 +8,7 @@ import PointShop from './PointShop';
 function UserMenuRouter(props) {
 	const location = useLocation();
 	const navigate = useNavigate();
-	const backToHome = useCallback(() => navigate('/'), [navigate]);
+	const backToHome = useCallback(() => navigate(-1), [navigate]);
 	const linkToSelect = useCallback(({ key }) => {
 		if(key === 'Setting')
 			navigate('/UserMenu/')

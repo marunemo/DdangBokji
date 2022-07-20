@@ -10,6 +10,7 @@ import ResortSpotInfo from '../DataList/ResortSpotInfo';
 import DiscountSpotInfo from '../DataList/DiscountSpotInfo';
 import TMOSpotInfo from '../DataList/TMOSpotInfo';
 import StudyRouter from '../MilStudy/StudyRouter';
+import UserMenuRouter from '../UserMenu/UserMenuRouter';
 import auth, { signInGoogle } from '../Utility/Firebase';
 import logo from '../Assets/main-logo.png';
 
@@ -30,6 +31,22 @@ function HomeLogoButton() {
 		</Button>
 	);
 }
+
+function UserMenuButton(props) {
+	const navigate = useNavigate();
+	const gotoUserMenu = useCallback(() => navigate('/UserMenu/'), [navigate]);
+	
+	return (
+		<Button
+			style={styles.signInButton}
+			type="link"
+			onClick={gotoUserMenu}
+		>
+			{props.userName + '님 반갑습니다.'}
+		</Button>
+	);
+}
+
 
 function MainRouter() {
 	const [currentUser, setCurrentUser] = useState(null);
@@ -63,7 +80,7 @@ function MainRouter() {
 				problemQuestionList,
 				problemAnswerList,
 				examSubmmitted: false,
-				point: 0
+				point: 0,
 			});
 		}
 		else {
@@ -111,7 +128,7 @@ function MainRouter() {
 		? [
 			{
 				key: 'userSetting',
-				label: currentUser.displayName + '님 반갑습니다.'
+				label: <UserMenuButton userName={currentUser.displayName} />
 			},
 			{
 				key: 'signOutButton',
@@ -149,7 +166,15 @@ function MainRouter() {
 				chlidren: [
 					{
 						key: 'userSetting',
-						label: currentUser.displayName + '님 반갑습니다.',
+						label: (
+							<Button
+								style={styles.signInButton}
+								type="link"
+								onClick={logOut}
+							>
+								{currentUser.displayName + '님 반갑습니다.'}
+							</Button>
+						),
 						type: 'group'
 					},
 					{
@@ -245,6 +270,10 @@ function MainRouter() {
 						<Route
 							path="/MilStudy/*"
 							element={<StudyRouter currentUser={currentUser} />}
+						/>
+						<Route
+							path="/UserMenu/*"
+							element={<UserMenuRouter currentUser={currentUser} />}
 						/>
 					</Routes>
 				</Layout>

@@ -17,7 +17,7 @@ function HomeContainer() {
 	const sideMenu = [
 		{
 			key: 'tourist',
-			label: '군 복지시설 주변 관광지'
+			label: '군 복지시설 관광지'
 		},
 		{
 			key: 'resort',

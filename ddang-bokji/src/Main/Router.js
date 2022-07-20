@@ -308,7 +308,7 @@ const styles = {
 		width: '100%'
 	},
 	userMenu: (currentUser) => ({
-		minWidth: currentUser ? '305px' : '115px'
+		minWidth: currentUser ? '325px' : '115px'
 	}),
 	collapsedUserMenu: (currentUser) => ({
 		minWidth: currentUser ? '65px' : '115px'

@@ -57,12 +57,15 @@ function MilWord(props) {
 						{todayMilTerm.type}
 					</Space>
 				</Space>
-				<Space
-					style={styles.termDesc}
-					align="center"
-				>
-					{todayMilTerm.desc}
-				</Space>
+				<div style={styles.termDesc}>
+					{
+						todayMilTerm.desc.split('<br/>').map((text) => {
+							if(text)
+								return (<p style={{ textIndent: '10pt' }}>{text}<br /></p>);
+							return <span />;
+						})
+					}
+				</div>
 			</Space>
 		</Layout>
 	);

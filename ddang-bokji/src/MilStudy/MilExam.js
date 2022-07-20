@@ -93,9 +93,15 @@ function MilExam(props) {
 										{'문제 ' + (problemIndex + 1)}
 									</Divider>
 									<Form.Item>
-										<Space style={styles.problemQuestion}>
-											{testMilTerms[problems.answerList[problemIndex]].desc}
-										</Space>
+										<div style={styles.problemQuestion}>
+											{
+												testMilTerms[problems.answerList[problemIndex]].desc.split('<br/>').map((text) => {
+													if(text)
+														return (<p style={{ textIndent: '10pt' }}>{text}<br /></p>);
+													return <span />;
+												})
+											}
+										</div>
 									</Form.Item>
 									<Form.Item>
 										<Radio.Group
@@ -173,9 +179,15 @@ function MilExam(props) {
 				</Steps>
 			</Form.Item>
 			<Form.Item>
-				<Space style={styles.problemQuestion}>
-					{testMilTerms[currentProblem.answer].desc}
-				</Space>
+				<div style={styles.problemQuestion}>
+					{
+						testMilTerms[currentProblem.answer].desc.split('<br/>').map((text) => {
+							if(text)
+								return (<p style={{ textIndent: '10pt' }}>{text}<br /></p>);
+							return <span />;
+						})
+					}
+				</div>
 			</Form.Item>
 			<Form.Item>
 				<Radio.Group

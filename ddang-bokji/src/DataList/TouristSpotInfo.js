@@ -267,7 +267,11 @@ function TouristSpotInfo(props) {
 																	disabled={true}
 																	character={<StarFilled />}
 																/>
-																<p>{item.content.replace(/\\n/g, '<br />')}</p>
+																{
+																	item.content.split('\n').map((text) => {
+																		return (<p>{text}<br /></p>);
+																	})
+																}
 															</div>
 														}
 														datetime={new Date(item.datetime.seconds * 1000).toLocaleString()}

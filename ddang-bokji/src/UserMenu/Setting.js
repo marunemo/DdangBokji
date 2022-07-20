@@ -1,16 +1,14 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Layout, Divider, Button, Avatar, Select } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import { getDatabase, ref, get, child } from "firebase/database";
+import { getDatabase, ref, get, child, update } from "firebase/database";
 import LoadingSpin from '../Utility/LoadingSpin';
-
-import img_private from '../Assets/private.png';
-import img_private_first_class from '../Assets/private-first-class.png';
-import img_corporal from '../Assets/corporal.png';
-import img_sergeant from '../Assets/sergeant.png';
+import badgeMap from '../Utility/BadgeMap';
 
 function PointShop(props) {
 	const [userInfo, setUserInfo] = useState(null);
+	const [userBadges, setUserBadges] = useState(null);
+	const [currentUserBadge, setCurrentUserBadge] = useState(null);
 	const { user, logOut } = props;
 
 	const promiseUserInfo = useMemo(() => {
@@ -25,11 +23,38 @@ function PointShop(props) {
 		})
 		.catch(error => console.log(error));
 	}, [user]);
+	
+	
+	const saveUserSetting = useCallback((userBadge) => {
+		update(ref(getDatabase(), 'users/' + user.uid), {
+			badge: userBadge
+		});
+	}, [user]);
 
 	try {
 		useEffect(() => {
 			if(promiseUserInfo) {
-				promiseUserInfo.then(setUserInfo);
+				promiseUserInfo.then((info) => {
+					setUserInfo(info);
+					setCurrentUserBadge(info.badge);
+					
+					const badges = info.badgeList.map((badge) => {
+						return (
+							<Select.Option key={badge} value={badge}>
+								{
+									(badge !== 'none') &&
+									<img
+										style={styles.badgeImage}
+										src={badgeMap[badge].image}
+										alt={badge}
+									/>
+								}
+								<p style={styles.badgeFont}>{badgeMap[badge].title}</p>
+							</Select.Option>
+						);
+					});
+					setUserBadges(badges);
+				});
 			}
 		}, [promiseUserInfo]);
 	}
@@ -63,12 +88,21 @@ function PointShop(props) {
 				<p style={styles.userBadge}>
 					{'내 뱃지 : '}
 				</p>
-					<Select
-						style={{ width: '360px' }}
-						defaultValue="none"
+				<Select
+					style={{ width: '360px' }}
+					value={currentUserBadge}
+					onChange={setCurrentUserBadge}
+				>
+					{userBadges}
+				</Select>
+				<div style={styles.saveButtonLayout}>
+					<Button
+						size="large"
+						onClick={() => saveUserSetting(currentUserBadge)}
 					>
-						<Select.Option value="none">없음</Select.Option>
-					</Select>
+						<b>저장</b>
+					</Button>
+				</div>
 			</div>
 		</Layout>
 	);
@@ -105,5 +139,19 @@ const styles = {
 	userBadge: {
 		fontSize: '16pt',
 		display: 'inline'
-	}
+	},
+	badgeImage: {
+		width: '25pt',
+		maxHeight: '15pt',
+		display: 'inline',
+		margin: '0 5pt 0 0',
+	},
+	badgeFont: {
+		fontSize: '15pt',
+		fontWeight: 'bold',
+		display: 'inline'
+	},
+	saveButtonLayout: {
+		textAlign: 'end'
+	},
 }

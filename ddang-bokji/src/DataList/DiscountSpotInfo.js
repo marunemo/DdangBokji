@@ -50,7 +50,7 @@ function DiscountSpotInfo(props) {
 			rating: rating,
 			datetime: new Date()
 		}
-		setDoc(doc(firestore, "comments", spotInfo.rel_instltnnm.replace(/\//g, '·')), {
+		setDoc(doc(firestore, "comments", spotInfo.instltnnm.replace(/\//g, '·')), {
 			commentsList: spotComments ? [...spotComments, newComment] : [newComment]
 		})
 			.then(() => setCurrentComment(''))

@@ -39,7 +39,7 @@ function PointShop(props) {
 	
 	if(user === null || userInfo === null)
 		return <LoadingSpin />
-console.log(user)
+
 	return (
 		<Layout style={styles.bodyLayout}>
 			<div style={styles.userAuthLayout}>
@@ -62,13 +62,13 @@ console.log(user)
 				<p style={styles.userPoint}>내 땡포인트 : <b>{userInfo.point}</b></p>
 				<p style={styles.userBadge}>
 					{'내 뱃지 : '}
+				</p>
 					<Select
 						style={{ width: '360px' }}
 						defaultValue="none"
 					>
 						<Select.Option value="none">없음</Select.Option>
 					</Select>
-				</p>
 			</div>
 		</Layout>
 	);
@@ -103,6 +103,7 @@ const styles = {
 		fontSize: '16pt'
 	},
 	userBadge: {
-		fontSize: '16pt'
+		fontSize: '16pt',
+		display: 'inline'
 	}
 }

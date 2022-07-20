@@ -81,6 +81,8 @@ function MainRouter() {
 				problemAnswerList,
 				examSubmmitted: false,
 				point: 0,
+				badge: 'none',
+				badgeList: ['none']
 			});
 		}
 		else {

@@ -6,6 +6,9 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 import { getDatabase, set, ref, get, child, update } from "firebase/database";
 import HomeContainer from './Home';
 import TouristSpotInfo from '../DataList/TouristSpotInfo';
+import ResortSpotInfo from '../DataList/ResortSpotInfo';
+import DiscountSpotInfo from '../DataList/DiscountSpotInfo';
+import TMOSpotInfo from '../DataList/TMOSpotInfo';
 import StudyRouter from '../MilStudy/StudyRouter';
 import auth, { signInGoogle } from '../Utility/Firebase';
 import logo from '../Assets/main-logo.png';
@@ -226,6 +229,18 @@ function MainRouter() {
 						<Route
 							path="/TouristSpot/:id"
 							element={<TouristSpotInfo currentUser={currentUser} />}
+						/>
+						<Route
+							path="/ResortSpot/:id"
+							element={<ResortSpotInfo currentUser={currentUser} />}
+						/>
+						<Route
+							path="/DiscountSpot/:id"
+							element={<DiscountSpotInfo currentUser={currentUser} />}
+						/>
+						<Route
+							path="/TMOSpot/:id"
+							element={<TMOSpotInfo currentUser={currentUser} />}
 						/>
 						<Route
 							path="/MilStudy/*"

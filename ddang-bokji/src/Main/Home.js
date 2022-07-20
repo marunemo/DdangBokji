@@ -1,22 +1,37 @@
-import React, { useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useNavigate } from "react-router-dom";
 import { Layout, Menu, Button } from 'antd';
 import { BulbFilled } from '@ant-design/icons';
 import TouristSpotList from '../DataList/TouristSpot';
+import ResortSpotList from '../DataList/ResortSpot';
+import DiscountSpotList from '../DataList/DiscountSpot';
+import TMOSpotList from '../DataList/TMOSpot';
 
 function HomeContainer() {
+	const [selectedSpot, selectSpotMenu] = useState()
 	const navigate = useNavigate();
 	const gotoMilStudy = useCallback(() => {
 		navigate('/MilStudy')
 	}, [navigate]);
 	
-	const sideMenu = ["Test"].map((option, key) => {
-		return ({
-			key: String(key),
-			icon: null,
-			label: option,
-		});
-	})
+	const sideMenu = [
+		{
+			key: 'tourist',
+			label: '군 복지시설 주변 관광지'
+		},
+		{
+			key: 'resort',
+			label: '군 운영 휴양시설'
+		},
+		{
+			key: 'discount',
+			label: '병사 할인 혜택시설'
+		},
+		{
+			key: 'tmo',
+			label: 'TMO(여행장병 안내소)'
+		}
+	]
 	
 	return (
 		<Layout style={styles.homeLayout}>
@@ -29,11 +44,29 @@ function HomeContainer() {
 						style={styles.sideMenu}
 						mode="inline"
 						items={sideMenu}
+						onSelect={({ key }) => selectSpotMenu(key)}
 					/>
 				</Layout.Sider>
 				<Layout style={styles.contentLayout}>
 					<Layout.Content style={styles.content}>
-						<TouristSpotList />
+						{
+							switch(selectedSpot) {
+								case 'tourist':
+									<TouristSpotList />
+									break;
+								case 'resort':
+									<ResortSpotList />
+									break;
+								case 'discount':
+									<DiscountSpotList />
+									break;
+								case 'tmo':
+									<TMOSpotList />
+									break;
+								default:
+									break;
+							}
+						}
 					</Layout.Content>
 				</Layout>
 			</Layout>

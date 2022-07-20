@@ -29,7 +29,7 @@ import LoadingSpin from '../Utility/LoadingSpin';
 import KakaoMap, { kakaoMapURL } from '../Utility/KakaoMap';
 import emptyImg from '../Assets/no-pictures.png';
 
-function DiscountSpotInfo(props) {
+function TMOSpotInfo(props) {
 	const { currentUser } = props;
 	const { id } = useParams();
 	const navigate = useNavigate();

@@ -5,7 +5,7 @@ import ItemCard from '../Utility/ListItem';
 import ItemGrid from '../Utility/ItemGrid';
 import LoadingSpin from '../Utility/LoadingSpin';
 
-function DiscountSpotList() {
+function TMOSpotList() {
 	const [spotData, setSpotData] = useState([]);
 	const [isLoaded, setLoading] = useState(false);
 	

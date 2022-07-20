@@ -78,7 +78,7 @@ const styles = {
 		minHeight: '100%'
 	},
 	sider: {
-		background: 'transparent',
+		backgroundColor: '#e3e3e3',
 	},
 	sideMenu: {
 		position: 'fixed',
@@ -94,12 +94,12 @@ const styles = {
 	},
 	contentLayout: {
 		minHeight: '100%',
-		background: '#e3e3e3',
+		backgroundColor: '#e3e3e3',
 		padding: '24px',
 		margin: '0',
 	},
 	content: {
-		background: '#e3e3e3',
+		backgroundColor: '#e3e3e3',
 		padding: 0,
 		margin: 0,
 	},

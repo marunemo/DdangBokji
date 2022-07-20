@@ -119,7 +119,7 @@ const styles = {
 		fontSize: '12pt'
 	},
 	content: {
-		background: '#e3e3e3',
+		backgroundColor: '#e3e3e3',
 		padding: '16px',
 		margin: 0,
 	},

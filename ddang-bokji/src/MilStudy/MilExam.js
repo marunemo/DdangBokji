@@ -158,7 +158,7 @@ function MilExam(props) {
 			<Form.Item>
 				<Divider
 					orientation="left"
-					style={styles.problemPhase}
+					style={styles.phaseInfo}
 				>
 					문제 단계
 				</Divider>
@@ -263,6 +263,10 @@ const styles = {
 	submitButtonGroup: {
 		marginRight: '35px'
 	},
+	phaseInfo: {
+		fontSize: '18px',
+		fontWeight: 'bold'
+	},
 	problemPhase: {
 		fontSize: '15px',
 		fontWeight: 'bold'
@@ -270,9 +274,10 @@ const styles = {
 	problemQuestion: {
 		padding: '25px',
 		margin: '5px 15px',
-		border: '1px solid #000',
+		backgroundColor: '#fff',
 		borderRadius: 25,
-		fontSize: '16px'
+		fontSize: '16px',
+		boxShadow: '3px 4px 6px rgba(0, 0, 0, 0.1)'
 	},
 	problemAnswers: {
 		marginLeft: '25px',

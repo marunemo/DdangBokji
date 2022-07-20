@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Layout, Space, Modal, Image } from 'antd';
+import { Layout, Space, Modal, Image, message } from 'antd';
 import { getDatabase, ref, get, child, update } from "firebase/database";
 import ShopItem from '../Utility/ShopItem';
 import ItemGrid from '../Utility/ItemGrid';
@@ -29,34 +29,61 @@ function PointShop(props) {
 	}, [user]);
 	
 	const buyItem = useCallback((currentItem, currentPoint, currentBadge) => {
+		if((currentPoint - currentItem.price) < 0) {
+			message.error({
+				content: '포인트가 부족합니다!',
+				key: 'pointError'
+			});
+			return;
+		}
+		
 		update(ref(getDatabase(), 'users/' + user.uid), {
 			point: currentPoint - currentItem.price,
 			badgeList: [...currentBadge, currentItem.itemCode]
 		})
 		.then(() => {
-			if(userStatus) {
-				userStatus.then(({ point, badgeList }) => {
-					setDdangPoint(point);
-					const items = shopItemList.map((item) => {
-						return (
-							<ShopItem
-								title={item.name}
-								description={item.desc}
-								photoImage={item.image}
-								imageDesc={item.itemCode}
-								price={item.price}
-								isActived={!(badgeList.includes(item.itemCode))}
-								onClick={() => setSelectedItem(item)}
-							/>
-						);
-					});
-					setShopItems(items);
+			message.loading({
+				content: '구매 중...',
+				key: 'buyLoading',
+				duration: 0
+			});
+			
+			get(child(ref(getDatabase()), 'users/' + user.uid)).then((snapshot) => {
+				if(!snapshot.exists())
+					return null;
+
+				return ({
+					point: snapshot.val().point,
+					badgeList: snapshot.val().badgeList,
 				});
-			}
+			})
+			.then(({ point, badgeList }) => {
+				setDdangPoint(point);
+				const items = shopItemList.map((item) => {
+					return (
+						<ShopItem
+							title={item.name}
+							description={item.desc}
+							photoImage={item.image}
+							imageDesc={item.itemCode}
+							price={item.price}
+							isActived={!(badgeList.includes(item.itemCode))}
+							onClick={() => setSelectedItem(item)}
+						/>
+					);
+				});
+				setShopItems(items);
+			})
+			.then(() => {
+				message.success({
+					content: '구매 완료!',
+					key: 'buyLoading'
+				});
+			});
 		});
 		
 		setSelectedItem(null);
-	}, [user, userStatus]);
+	}, [user]);
 
 	try {
 		useEffect(() => {

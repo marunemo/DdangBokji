@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
 	Layout,
 	Image,
@@ -22,12 +22,14 @@ import {
 	StarFilled
 } from '@ant-design/icons';
 import { useParams, useNavigate } from 'react-router-dom';
+import { getDatabase, ref, get, child } from "firebase/database";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import axios from 'axios';
 import { firestore } from '../Utility/Firebase';
 import LoadingSpin from '../Utility/LoadingSpin';
 import KakaoMap, { kakaoMapURL } from '../Utility/KakaoMap';
 import emptyImg from '../Assets/no-pictures.png';
+import badgeMap from '../Utility/BadgeMap';
 
 function ResortSpotInfo(props) {
 	const { currentUser } = props;
@@ -41,9 +43,24 @@ function ResortSpotInfo(props) {
 	const [isBroken, setBroken] = useState(false);
 	const [isCollapsed, setCollpased] = useState(true);
 	const backToHome = useCallback(() => navigate('/'), [navigate]);
-	const sendComment = useCallback((content, rating, currentUser, spotInfo, spotComments) => {
+	
+	const userBadge = useMemo(() => {
+		if(!currentUser)
+			return null;
+		
+		return get(child(ref(getDatabase()), 'users/' + currentUser.uid)).then((snapshot) => {
+			if(!snapshot.exists())
+				return null;
+			
+			return snapshot.val().badge;
+		})
+		.catch(error => console.log(error));
+	}, [currentUser]);
+	
+	const sendComment = useCallback((content, rating, badge, currentUser, spotInfo, spotComments) => {
 		const newComment = {
 			uid: currentUser.uid,
+			badge: badge,
 			author: currentUser.displayName,
 			avatar: currentUser.photoURL,
 			content: content,
@@ -249,7 +266,11 @@ function ResortSpotInfo(props) {
 										<div style={styles.submitButtonLayout}>
 											<Button
 												type="primary"
-												onClick={() => sendComment(currentComment, currentRate, currentUser, spotInfo, spotComments)}
+												onClick={() => { 
+													userBadge.then((badge) => {
+														sendComment(currentComment, currentRate, badge, currentUser, spotInfo, spotComments);
+													});
+												}}
 											>
 												등록
 											</Button>
@@ -274,7 +295,20 @@ function ResortSpotInfo(props) {
 													<Comment
 														avatar={<Avatar src={item.avatar} icon={<UserOutlined />} />}
 														// set icon as fallback for image
-														author={item.author}
+														author={
+															item.badge === 'none' ?
+																item.author :
+																(
+																	<span>
+																		<img
+																			 style={{ width: '20pt', maxHeight: '12pt' }}
+																			 src={badgeMap[item.badge].image}
+																			 alt={item.badge}
+																		 />
+																		{item.badge + ' ' + item.author}
+																	</span>
+																)
+														}
 														content={
 															<div>
 																<Rate

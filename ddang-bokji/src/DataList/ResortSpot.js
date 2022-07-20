@@ -13,9 +13,9 @@ function ResortSpotList() {
 		useEffect(() => {
 			axios.get(`/${process.env.REACT_APP_MND_TOKEN}/json/DS_WHLAM_WLFR_VCTNINSTLT/1/13/`)
 				.then((fetchData) => {
-					const resortSpots = fetchData.data.DS_WHLAM_WLFR_VCTNINSTLT.row.map((resortSpot) => {
+					const resortSpots = fetchData.data.DS_WHLAM_WLFR_VCTNINSTLT.row.map((resortSpot, index) => {
 						return (
-							<Link to={'/ResortSpot/' + resortSpot.seq}>
+							<Link to={'/ResortSpot/' + (index + 1)}>
 								<ItemCard
 									title={resortSpot.instltn_nm}
 									description={resortSpot.pstn_addr}

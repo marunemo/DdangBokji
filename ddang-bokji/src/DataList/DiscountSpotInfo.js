@@ -50,12 +50,12 @@ function DiscountSpotInfo(props) {
 			rating: rating,
 			datetime: new Date()
 		}
-		setDoc(doc(firestore, "comments", spotInfo.rel_instltnnm), {
+		setDoc(doc(firestore, "comments", spotInfo.rel_instltnnm.replace(/\//g, '·')), {
 			commentsList: spotComments ? [...spotComments, newComment] : [newComment]
 		})
 			.then(() => setCurrentComment(''))
 			.then(() => {
-				getDoc(doc(firestore, "comments", spotInfo.instltnnm)).then((doc) => {
+				getDoc(doc(firestore, "comments", spotInfo.instltnnm.replace(/\//g, '·'))).then((doc) => {
 					const commentsList = doc.data().commentsList;
 					commentsList.sort(function(a, b) {
 						if(a.datetime.seconds > b.datetime.seconds) return -1;
@@ -78,7 +78,7 @@ function DiscountSpotInfo(props) {
 			}
 			
 			if(!spotComments && spotInfo) {
-				getDoc(doc(firestore, "comments", spotInfo.instltnnm)).then((doc) => {
+				getDoc(doc(firestore, "comments", spotInfo.instltnnm.replace(/\//g, '·'))).then((doc) => {
 					if(doc.data() !== undefined) {
 						const commentsList = doc.data().commentsList;
 						commentsList.sort(function(a, b) {

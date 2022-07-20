@@ -13,9 +13,9 @@ function DiscountSpotList() {
 		useEffect(() => {
 			axios.get(`/${process.env.REACT_APP_MND_TOKEN}/json/DS_MND_ENLSTMN_DCNT_BEF_INF/1/89/`)
 				.then((fetchData) => {
-					const discountSpots = fetchData.data.DS_MND_ENLSTMN_DCNT_BEF_INF.row.map((discountSpot) => {
+					const discountSpots = fetchData.data.DS_MND_ENLSTMN_DCNT_BEF_INF.row.map((discountSpot, index) => {
 						return (
-							<Link to={'/DiscountSpot/' + discountSpot.rowno}>
+							<Link to={'/DiscountSpot/' + (index + 1)}>
 								<ItemCard
 									title={discountSpot.instltnnm}
 									description={discountSpot.rgn}

@@ -13,9 +13,9 @@ function TouristSpotList() {
 		useEffect(() => {
 			axios.get(`/${process.env.REACT_APP_MND_TOKEN}/json/DS_MND_GUN_WLFRINSTLTN_SRNDT/1/17/`)
 				.then((fetchData) => {
-					const tourSpots = fetchData.data.DS_MND_GUN_WLFRINSTLTN_SRNDT.row.map((tourSpot) => {
+					const tourSpots = fetchData.data.DS_MND_GUN_WLFRINSTLTN_SRNDT.row.map((tourSpot, index) => {
 						return (
-							<Link to={'/TouristSpot/' + tourSpot.rowno}>
+							<Link to={'/TouristSpot/' + (index + 1)}>
 								<ItemCard
 									title={tourSpot.rel_instltnnm}
 									description={tourSpot.instltnpstn}

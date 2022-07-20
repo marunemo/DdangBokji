@@ -1,5 +1,35 @@
 import React from 'react';
 
+function locationNameSearch(locationNames, index, kakao, placeSearcher, container) {
+	if(index === locationNames.length) {
+		// 이름 부분 검색도 실패했을 경우 아무거나 출력
+		const options = {
+			center: new kakao.maps.LatLng(33.450701, 126.570667),
+			level: 13
+		};
+		const map = new kakao.maps.Map(container, options);
+		return map;
+	}
+	
+	placeSearcher.keywordSearch(locationNames[index], function(data, status, pagination) {
+		if (status === kakao.maps.services.Status.OK) {
+			const position = new kakao.maps.LatLng(data[0].y, data[0].x);
+			const options = {
+				center: position,
+				level: 3
+			};
+			const map = new kakao.maps.Map(container, options);
+			new kakao.maps.Marker({
+				map,
+				position
+			})
+			return map;
+		}
+		
+		locationNameSearch(locationNames, index + 1, kakao, placeSearcher, container);
+	});
+}
+
 function KakaoMap(props) {
 	const { kakao } = window;
 	const { name, address, style } = props;
@@ -25,29 +55,13 @@ function KakaoMap(props) {
 			
 			// 장소 검색에 실패했을 경우, 이름으로 검색
 			const placeSearcher = new kakao.maps.services.Places();
-			placeSearcher.keywordSearch(name, function(data, status, pagination) {
-				if (status === kakao.maps.services.Status.OK) {
-					const position = new kakao.maps.LatLng(data[0].y, data[0].x);
-					const options = {
-						center: position,
-						level: 3
-					};
-					const map = new kakao.maps.Map(container, options);
-					new kakao.maps.Marker({
-						map,
-						position
-					})
-					return map;
-				}
-				
-				// 이름 검색도 실패했을 경우 아무거나 출력
-				const options = {
-					center: new kakao.maps.LatLng(33.450701, 126.570667),
-					level: 13
-				};
-				const map = new kakao.maps.Map(container, options);
-				return map;
-			});
+			locationNameSearch(
+				[name, name.slice(0, name.indexOf('(')), name.slice(0, name.indexOf('/')), name.slice(0, name.indexOf(' '))],
+				0,
+				kakao,
+				placeSearcher,
+				container
+			);
 		});
 	}
 	

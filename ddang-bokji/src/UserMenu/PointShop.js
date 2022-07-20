@@ -20,7 +20,7 @@ function PointShop(props) {
 			
 			return ({
 				point: snapshot.val().point,
-				badge: snapshot.val().badge,
+				badgeList: snapshot.val().badgeList,
 			})
 		})
 		.catch(error => console.log(error));
@@ -29,7 +29,7 @@ function PointShop(props) {
 	try {
 		useEffect(() => {
 			if(userStatus) {
-				userStatus.then(({ point, badge }) => {
+				userStatus.then(({ point, badgeList }) => {
 					setDdangPoint(point);
 					const items = shopItemList.map((item) => {
 						return (
@@ -37,8 +37,9 @@ function PointShop(props) {
 								title={item.name}
 								description={item.desc}
 								photoImage={item.image}
-								imageDesc={item.name}
-								isActived={badge === undefined || !(item.name in badge)}
+								imageDesc={item.itemCode}
+								price={item.price}
+								isActived={!(badgeList.includes(item.itemCode))}
 							/>
 						);
 					});

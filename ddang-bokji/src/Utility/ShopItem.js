@@ -32,6 +32,7 @@ function ItemCard(props) {
 				description={
 					<div style={{ fontSize: '12pt' }}>
 						{props.description}
+						<div style={{ textAlign: 'end', color: '#f99' }}>{props.price}</div>
 					</div>
 				}
 			/>

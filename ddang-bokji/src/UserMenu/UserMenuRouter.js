@@ -1,11 +1,12 @@
 import React, { useCallback } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { Layout, Space, Menu, Button } from 'antd';
 import { RollbackOutlined } from '@ant-design/icons';
 import Setting from './Setting';
 import PointShop from './PointShop';
 
 function UserMenuRouter(props) {
+	const location = useLocation();
 	const navigate = useNavigate();
 	const backToHome = useCallback(() => navigate('/'), [navigate]);
 	const linkToSelect = useCallback(({ key }) => {
@@ -14,6 +15,13 @@ function UserMenuRouter(props) {
 		else if(key === 'PointShop')
 			navigate('/UserMenu/PointShop')
 	}, [navigate]);
+	const currentSelect = useCallback((path) => {
+		if(path === '/UserMenu/')
+			return 'Setting';
+		if(path === '/UserMenu/PointShop')
+			return 'PointShop';
+		return undefined;
+	}, []);
 	
 	const sideMenu = [
 		{
@@ -64,6 +72,7 @@ function UserMenuRouter(props) {
 				<Menu
 					style={styles.sideMenu}
 					mode="inline"
+					defaultSelectedKeys={currentSelect(location.pathname)}
 					items={sideMenu}
 					onSelect={linkToSelect}
 				/>

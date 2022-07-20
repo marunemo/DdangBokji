@@ -8,7 +8,7 @@ import DiscountSpotList from '../DataList/DiscountSpot';
 import TMOSpotList from '../DataList/TMOSpot';
 
 function HomeContainer() {
-	const [selectedSpot, selectSpotMenu] = useState()
+	const [selectedSpot, selectSpotMenu] = useState('tourist')
 	const navigate = useNavigate();
 	const gotoMilStudy = useCallback(() => {
 		navigate('/MilStudy')
@@ -43,6 +43,7 @@ function HomeContainer() {
 					<Menu
 						style={styles.sideMenu}
 						mode="inline"
+						defaultSelectedKeys="tourist"
 						items={sideMenu}
 						onSelect={({ key }) => selectSpotMenu(key)}
 					/>

@@ -1,5 +1,5 @@
 import React, { useMemo, useCallback } from 'react';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 import { Layout, Space, Menu, Button } from 'antd';
 import { RollbackOutlined } from '@ant-design/icons';
 import axios from 'axios';
@@ -7,6 +7,7 @@ import MilWord from './MilWord';
 import MilExam from './MilExam';
 
 function StudyRouter(props) {
+	const location = useLocation();
 	const navigate = useNavigate();
 	const backToHome = useCallback(() => navigate('/'), [navigate]);
 	const linkToSelect = useCallback(({ key }) => {
@@ -15,6 +16,13 @@ function StudyRouter(props) {
 		else if(key === 'MilExam')
 			navigate('/MilStudy/Exam')
 	}, [navigate]);
+	const currentSelect = useCallback((path) => {
+		if(path === '/MilStudy')
+			return 'MilWord';
+		if(path === '/MilStudy/Exam')
+			return 'MilExam';
+		return undefined;
+	}, []);
 	
 	const milTerms = useMemo(() => {
 			return axios.get(`/${process.env.REACT_APP_MND_TOKEN}/json/DS_WARHSTR_MILAFRTERMNLG/1/700/`)
@@ -78,6 +86,7 @@ function StudyRouter(props) {
 				<Menu
 					style={styles.sideMenu}
 					mode="inline"
+					defaultSelectedKeys={currentSelect(location.pathname)}
 					items={sideMenu}
 					onSelect={linkToSelect}
 				/>

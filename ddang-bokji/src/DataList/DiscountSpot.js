@@ -5,27 +5,27 @@ import ItemCard from '../Utility/ListItem';
 import ItemGrid from '../Utility/ItemGrid';
 import LoadingSpin from '../Utility/LoadingSpin';
 
-function ResortSpotList() {
+function DiscountSpotList() {
 	const [spotData, setSpotData] = useState([]);
 	const [isLoaded, setLoading] = useState(false);
 	
 	try {
 		useEffect(() => {
-			axios.get(`/${process.env.REACT_APP_MND_TOKEN}/json/DS_WHLAM_WLFR_VCTNINSTLT/1/13/`)
+			axios.get(`/${process.env.REACT_APP_MND_TOKEN}/json/DS_MND_ENLSTMN_DCNT_BEF_INF/1/13/`)
 				.then((fetchData) => {
-					const resortSpots = fetchData.data.DS_WHLAM_WLFR_VCTNINSTLT.row.map((resortSpot) => {
+					const discountSpots = fetchData.data.DS_MND_ENLSTMN_DCNT_BEF_INF.row.map((discountSpot) => {
 						return (
-							<Link to={'/TouristSpot/' + resortSpot.rowno}>
+							<Link to={'/TouristSpot/' + discountSpot.rowno}>
 								<ItemCard
-									title={resortSpot.instltn_nm}
-									description={resortSpot.pstn_addr}
+									title={discountSpot.instltnnm}
+									description={discountSpot.rgn}
 									photoImage={null}
-									imageDesc={resortSpot.instltn_nm}
+									imageDesc={discountSpot.instltnnm}
 								/>
 							</Link>
 						)
 					})
-					setSpotData(resortSpots);
+					setSpotData(discountSpots);
 					setLoading(true);
 			});
 		}, []);
@@ -40,4 +40,4 @@ function ResortSpotList() {
 	return <ItemGrid items={spotData} />;
 }
 
-export default ResortSpotList;
+export default DiscountSpotList;

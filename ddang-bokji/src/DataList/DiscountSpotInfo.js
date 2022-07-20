@@ -29,7 +29,7 @@ import LoadingSpin from '../Utility/LoadingSpin';
 import KakaoMap, { kakaoMapURL } from '../Utility/KakaoMap';
 import emptyImg from '../Assets/no-pictures.png';
 
-function ResortSpotInfo(props) {
+function DiscountSpotInfo(props) {
 	const { currentUser } = props;
 	const { id } = useParams();
 	const navigate = useNavigate();
@@ -55,7 +55,7 @@ function ResortSpotInfo(props) {
 		})
 			.then(() => setCurrentComment(''))
 			.then(() => {
-				getDoc(doc(firestore, "comments", spotInfo.instltn_nm)).then((doc) => {
+				getDoc(doc(firestore, "comments", spotInfo.instltnnm)).then((doc) => {
 					const commentsList = doc.data().commentsList;
 					commentsList.sort(function(a, b) {
 						if(a.datetime.seconds > b.datetime.seconds) return -1;
@@ -70,15 +70,15 @@ function ResortSpotInfo(props) {
 	try {
 		useEffect(() => {
 			if(!spotInfo) {
-				axios.get(`/${process.env.REACT_APP_MND_TOKEN}/json/DS_WHLAM_WLFR_VCTNINSTLT/${id}/${id}/`)
+				axios.get(`/${process.env.REACT_APP_MND_TOKEN}/json/DS_MND_ENLSTMN_DCNT_BEF_INF/${id}/${id}/`)
 					.then((fetchData) => {
-						setSpotInfo(fetchData.data.DS_WHLAM_WLFR_VCTNINSTLT.row[0]);
-						kakaoMapURL(fetchData.data.DS_WHLAM_WLFR_VCTNINSTLT.row[0].instltn_nm, setMapURL)
+						setSpotInfo(fetchData.data.DS_MND_ENLSTMN_DCNT_BEF_INF.row[0]);
+						kakaoMapURL(fetchData.data.DS_MND_ENLSTMN_DCNT_BEF_INF.row[0].instltnnm, setMapURL)
 					});
 			}
 			
 			if(!spotComments && spotInfo) {
-				getDoc(doc(firestore, "comments", spotInfo.instltn_nm)).then((doc) => {
+				getDoc(doc(firestore, "comments", spotInfo.instltnnm)).then((doc) => {
 					if(doc.data() !== undefined) {
 						const commentsList = doc.data().commentsList;
 						commentsList.sort(function(a, b) {
@@ -135,18 +135,18 @@ function ResortSpotInfo(props) {
 						<Typography.Title
 							style={{ ...styles.inlineDisplay, margin: '0px 10px'}}
 						>
-							{spotInfo.instltn_nm}
+							{spotInfo.instltnnm}
 						</Typography.Title>
 						<Typography.Title
 							style={styles.inlineDisplay}
 							level={3}
 						>
-							{spotInfo.rgnnm}
+							{spotInfo.rgn}
 						</Typography.Title>
 						<Divider />
 						<div style={{...styles.infoText, marginTop: '15px'}}>
 							<EnvironmentFilled />
-							<Typography.Text> {spotInfo.pstn_addr}</Typography.Text>
+							<Typography.Text> {spotInfo.rgn}</Typography.Text>
 						</div>
 						<div style={styles.infoText}>
 							<PhoneFilled />
@@ -154,19 +154,19 @@ function ResortSpotInfo(props) {
 						</div>
 						<div style={styles.infoText}>
 							<PhoneFilled />
-							<Typography.Text> {spotInfo.scale}</Typography.Text>
+							<Typography.Text> {spotInfo.dcntenatvnm}</Typography.Text>
 						</div>
 						<div style={styles.infoText}>
 							<PhoneFilled />
-							<Typography.Text> {spotInfo.room_qty}</Typography.Text>
+							<Typography.Text> {spotInfo.startday + " ~ " + spotInfo.fnshday}</Typography.Text>
 						</div>
 						<div style={styles.infoText}>
 							<PhoneFilled />
-							<Typography.Text> {spotInfo.sbsfcl}</Typography.Text>
+							<Typography.Text> {spotInfo.dtlexpln}</Typography.Text>
 						</div>
 						<div style={styles.infoText}>
 							<PhoneFilled />
-							<Typography.Text> {spotInfo.hmpg_addr}</Typography.Text>
+							<Typography.Text> {spotInfo.hmpg}</Typography.Text>
 						</div>
 						<Divider />
 						<Typography.Text
@@ -180,7 +180,7 @@ function ResortSpotInfo(props) {
 					</Typography>
 					<KakaoMap
 						style={styles.spotMap}
-						name={spotInfo.instltn_nm}
+						name={spotInfo.instltnnm}
 						address={spotInfo.pstn_addr}
 					/>
 					<Button
@@ -328,7 +328,7 @@ function ResortSpotInfo(props) {
 	);
 }
 
-export default ResortSpotInfo;
+export default DiscountSpotInfo;
 
 const styles = {
 	infoLayout: {

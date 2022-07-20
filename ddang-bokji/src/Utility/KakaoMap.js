@@ -30,6 +30,21 @@ function locationNameSearch(locationNames, index, kakao, placeSearcher, containe
 	});
 }
 
+function mapURLNameSearch(locationNames, index, kakao, placeSearcher, setState) {
+	if(index === locationNames.length) {
+		return null;
+	}
+	
+	placeSearcher.keywordSearch(locationNames[index], function(data, status, pagination) {
+		if (status === kakao.maps.services.Status.OK) {
+			setState(data[0].place_url);
+			return;
+		}
+		
+		mapURLNameSearch(locationNames, index + 1, kakao, placeSearcher, setState);
+	});
+}
+
 function KakaoMap(props) {
 	const { kakao } = window;
 	const { name, address, style } = props;
@@ -74,11 +89,13 @@ function kakaoMapURL(name, setState) {
 	const { kakao } = window;
 	const placeSearcher = new kakao.maps.services.Places();
 	
-	placeSearcher.keywordSearch(name, function(data, status, pagination) {
-		if (status === kakao.maps.services.Status.OK) {
-			setState(data[0].place_url);
-		}
-	});
+	mapURLNameSearch(
+		[name, name.slice(0, name.indexOf('(')), name.slice(0, name.indexOf('/')), name.slice(0, name.indexOf(' '))],
+		0,
+		kakao,
+		placeSearcher,
+		setState
+	);
 };
 
 export default KakaoMap;

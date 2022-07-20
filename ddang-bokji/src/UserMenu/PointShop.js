@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { Layout, Space } from 'antd';
-import { getDatabase, ref, get, child } from "firebase/database";
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import { Layout, Space, Modal, Image } from 'antd';
+import { getDatabase, ref, get, child, update } from "firebase/database";
 import ShopItem from '../Utility/ShopItem';
 import ItemGrid from '../Utility/ItemGrid';
 import LoadingSpin from '../Utility/LoadingSpin';
@@ -9,6 +9,7 @@ import shopItemList from '../Utility/ShopItemList';
 function PointShop(props) {
 	const [ddangPoint, setDdangPoint] = useState(0);
 	const [shopItems, setShopItems] = useState(null);
+	const [selectedItem, setSelectedItem] = useState(null);
 	const { user } = props;
 
 	const userStatus = useMemo(() => {
@@ -26,6 +27,36 @@ function PointShop(props) {
 		})
 		.catch(error => console.log(error));
 	}, [user]);
+	
+	const buyItem = useCallback((currentItem, currentPoint, currentBadge) => {
+		update(ref(getDatabase(), 'users/' + user.uid), {
+			point: currentPoint - currentItem.price,
+			badgeList: [...currentBadge, currentItem.itemCode]
+		})
+		.then(() => {
+			if(userStatus) {
+				userStatus.then(({ point, badgeList }) => {
+					setDdangPoint(point);
+					const items = shopItemList.map((item) => {
+						return (
+							<ShopItem
+								title={item.name}
+								description={item.desc}
+								photoImage={item.image}
+								imageDesc={item.itemCode}
+								price={item.price}
+								isActived={!(badgeList.includes(item.itemCode))}
+								onClick={() => setSelectedItem(item)}
+							/>
+						);
+					});
+					setShopItems(items);
+				});
+			}
+		});
+		
+		setSelectedItem(null);
+	}, [user, userStatus]);
 
 	try {
 		useEffect(() => {
@@ -41,6 +72,7 @@ function PointShop(props) {
 								imageDesc={item.itemCode}
 								price={item.price}
 								isActived={!(badgeList.includes(item.itemCode))}
+								onClick={() => setSelectedItem(item)}
 							/>
 						);
 					});
@@ -64,6 +96,51 @@ function PointShop(props) {
 			<Layout style={styles.contentLayout}>
 				<ItemGrid items={shopItems} />
 			</Layout>
+			<Modal
+				visible={selectedItem !== null}
+				centered={true}
+				title="아이템 구매"
+				okText="구매"
+				cancelText="취소"
+				onOk={() => userStatus.then((status) => buyItem(selectedItem, status.point, status.badgeList))}
+				onCancel={() => setSelectedItem(null)}
+			>
+				{
+					selectedItem &&
+					(
+						<div style={styles.modalContainter}>
+							<Image src={selectedItem.image} />
+							<p style={styles.selectedItemName}>{selectedItem.name}</p>
+							<p style={styles.selectedItemDesc}>{selectedItem.desc}</p>
+							<Space
+								style={{ fontSize: '12pt' }}
+								direction="horizontal"
+								size="middle"
+							>
+								<div>
+									<p><b>현재 땡포인트</b></p>
+									<p>{ddangPoint}</p>
+								</div>
+								<p style={{ fontSize: '16pt' }}> - </p>
+								<div>
+									<p><b>사용할 땡포인트</b></p>
+									<p>{selectedItem.price}</p>
+								</div>
+								<p style={{ fontSize: '16pt' }}> = </p>
+								<div>
+									<p><b>잔여 땡포인트</b></p>
+									<p
+										style={styles.restPoint(ddangPoint - selectedItem.price)}
+									>
+										{ddangPoint - selectedItem.price}
+									</p>
+								</div>
+							</Space>
+							<p style={styles.buyPrompt}>해당 아이템을 구매하시겠습니까?</p>
+						</div>
+					)
+				}
+			</Modal>
 		</Layout>
 	);
 }
@@ -92,5 +169,23 @@ const styles = {
 		borderRadius: '25px',
 		fontSize: '14pt',
 		backgroundColor: '#fff'
-	}
+	},
+	modalContainter: {
+		textAlign: 'center',
+		justifyContent: 'center'
+	},
+	selectedItemName: {
+		fontSize: '18pt',
+		fontWeight: 'bold'
+	},
+	selectedItemDesc: {
+		fontSize: '15pt'
+	},
+	buyPrompt: {
+		fontSize: '16pt',
+		fontWeight: 'bold'
+	},
+	restPoint: (point) => ({
+		color: (point < 0) ? '#f33' : '#000'
+	})
 }

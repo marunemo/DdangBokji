@@ -1,42 +1,48 @@
 import React from 'react';
-import { Card, Image } from 'antd';
+import { Card, Image, Button } from 'antd';
 import emptyImg from '../Assets/no-pictures.png';
 
 function ItemCard(props) {
 	const isActived = props.isActived;
 	
 	return (
-		<Card
-			style={styles.cardLayout(isActived)}
-			cover={
-				<Image
-					style={styles.cardImage(isActived)}
-					alt={props.imageDesc}
-					src={props.photoImage}
-					fallback={emptyImg}
-					preview={false}
-				/>
-			}
-			hoverable={isActived}
+		<Button
+			style={styles.cardButton}
+			disabled={!props.isActived}
+			onClick={props.onClick}
 		>
-			<Card.Meta
-				title={
-					<div
-						style={{
-							fontSize: '16pt',
-							fontWeight: 'bold'
-						}}>
-					   {props.title}
-					</div>
+			<Card
+				style={styles.cardLayout(isActived)}
+				cover={
+					<Image
+						style={styles.cardImage(isActived)}
+						alt={props.imageDesc}
+						src={props.photoImage}
+						fallback={emptyImg}
+						preview={false}
+					/>
 				}
-				description={
-					<div style={{ fontSize: '12pt' }}>
-						{props.description}
-						<div style={styles.priceLayout(isActived)}>{props.price}</div>
-					</div>
-				}
-			/>
-		</Card>
+				hoverable={isActived}
+			>
+				<Card.Meta
+					title={
+						<div
+							style={{
+								fontSize: '16pt',
+								fontWeight: 'bold'
+							}}>
+						   {props.title}
+						</div>
+					}
+					description={
+						<div style={{ fontSize: '12pt' }}>
+							{props.description}
+							<div style={styles.priceLayout(isActived)}>{props.price}</div>
+						</div>
+					}
+				/>
+			</Card>
+		</Button>
 	);
 }
 
@@ -59,5 +65,13 @@ const styles = {
 	priceLayout: (isActived) => ({
 		textAlign: 'end',
 		color: isActived ? '#f99' : '#333'
-	})
+	}),
+	cardButton: {
+		width: 'auto',
+		height: 'auto',
+		padding: 0,
+		border: 'transparent',
+		borderRadius: '30pt',
+		backgroundColor: 'transparent'
+	}
 }

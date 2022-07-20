@@ -65,7 +65,7 @@ function PointShop(props) {
 								description={item.desc}
 								photoImage={item.image}
 								imageDesc={item.name}
-								isActivated={badge !== undefined && item.name in badge}
+								isActived={badge === undefined || !(item.name in badge)}
 							/>
 						);
 					});

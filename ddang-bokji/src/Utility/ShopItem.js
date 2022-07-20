@@ -51,8 +51,7 @@ const styles = {
 	cardImage: (isActived) => ({
 		width: '100%',
 		height: '100%',
-		padding: '12px 12px 0px',
-		borderRadius: '30pt',
+		padding: '15px 15px 0px',
 		objectFit: 'cover',
 		filter: isActived ? 'none' : 'grayscale(100%)'
 	})

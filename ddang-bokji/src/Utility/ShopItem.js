@@ -32,7 +32,7 @@ function ItemCard(props) {
 				description={
 					<div style={{ fontSize: '12pt' }}>
 						{props.description}
-						<div style={{ textAlign: 'end', color: '#f99' }}>{props.price}</div>
+						<div style={styles.priceLayout(isActived)}>{props.price}</div>
 					</div>
 				}
 			/>
@@ -55,5 +55,9 @@ const styles = {
 		padding: '15px 15px 0px',
 		objectFit: 'cover',
 		filter: isActived ? 'none' : 'grayscale(100%)'
+	}),
+	priceLayout: (isActived) => ({
+		textAlign: 'end',
+		color: isActived ? '#f99' : '#333'
 	})
 }

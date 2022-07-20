@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { Layout, Space } from 'antd';
 import { getDatabase, ref, get, child } from "firebase/database";
 import ShopItem from '../Utility/ShopItem';
 import ItemGrid from '../Utility/ItemGrid';
@@ -55,7 +56,41 @@ function PointShop(props) {
 	if(user === null || shopItems === null)
 		return <LoadingSpin />
 
-	return <ItemGrid items={shopItems} />
+	return (
+		<Layout style={styles.bodyLayout}>
+			<div style={styles.pointHeader}>
+				<Space style={styles.myPoint}>내 땡포인트 : <b>{ddangPoint}</b></Space>
+			</div>
+			<Layout style={styles.contentLayout}>
+				<ItemGrid items={shopItems} />
+			</Layout>
+		</Layout>
+	);
 }
 
 export default PointShop;
+
+const styles = {
+	bodyLayout: {
+		minHeight: '100%',
+		padding: 0,
+		margin: 0,
+		backgroundColor: 'transparent',
+	},
+	pointHeader: {
+		backgroundColor: 'transparent',
+		textAlign: 'end',
+		padding: '15px 10px'
+	},
+	contentLayout: {
+		backgroundColor: 'transparent',
+		padding: '15px 0 0'
+	},
+	myPoint: {
+		padding: '10px 20px',
+		border: '1px solid #000',
+		borderRadius: '25px',
+		fontSize: '14pt',
+		backgroundColor: '#fff'
+	}
+}

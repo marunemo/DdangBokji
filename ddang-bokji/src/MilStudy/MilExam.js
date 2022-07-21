@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
-import { Form, Radio, Space, Steps, Button, Divider } from 'antd';
+import { Form, Radio, Space, Steps, Button, Divider, message } from 'antd';
 import { getDatabase, ref, get, child, update } from "firebase/database";
 import LoadingSpin from '../Utility/LoadingSpin';
+import ddangLogo from '../Assets/ddang-logo.png';
 
 function MilExam(props) {
 	const [testMilTerms, setTestMilTerms] = useState(null);
@@ -37,14 +38,35 @@ function MilExam(props) {
 				if(problems.answerList[i] === problems.questionList[i][userAnswers[i]])
 					currectAnswerCount += 1;
 			}
-			return problems.currentUserPoint + currectAnswerCount;
-		}).then((currentUserPoint) => {
+			return ({
+				currentUserPoint: problems.currentUserPoint + currectAnswerCount * 5,
+				problemUserPoint: currectAnswerCount * 5
+			});
+		})
+		.then(({ currentUserPoint, problemUserPoint }) => {
 			update(ref(getDatabase(), 'users/' + user.uid), {
 				userAnswers,
 				examSubmmitted: true,
 				point: currentUserPoint
 			})
-		}).then(() => setExamSubmitted(true));
+			.then(() => {
+				message.success({
+					content: (
+						<div>
+							<div>오늘의 단어시험을 완료하였습니다!</div>
+							<div>
+								<img style={{ width: '12pt', height: '12pt' }} src={ddangLogo} alt='땡'/>
+								포인트
+								<b>+{problemUserPoint}</b>
+							</div>
+						</div>
+					),
+					key: 'dailyWordChecked',
+					duration: 7
+				});
+			});
+		})
+		.then(() => setExamSubmitted(true));
 	}, [user, problemList]);
 
 	try {

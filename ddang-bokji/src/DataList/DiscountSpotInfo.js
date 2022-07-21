@@ -19,7 +19,11 @@ import {
 	RightOutlined,
 	PhoneFilled,
 	EnvironmentFilled,
-	StarFilled
+	StarFilled,
+	LinkOutlined,
+	ClockCircleFilled,
+	ShopFilled,
+	ShoppingFilled
 } from '@ant-design/icons';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getDatabase, ref, get, child } from "firebase/database";
@@ -152,37 +156,37 @@ function DiscountSpotInfo(props) {
 						<Typography.Title
 							style={{ ...styles.inlineDisplay, margin: '0px 10px'}}
 						>
-							{spotInfo.instltnnm}
+							&nbsp;{spotInfo.instltnnm}
 						</Typography.Title>
 						<Typography.Title
 							style={styles.inlineDisplay}
 							level={3}
 						>
-							{spotInfo.rgn}
+							&nbsp;{spotInfo.rgn}
 						</Typography.Title>
 						<Divider />
 						<div style={{...styles.infoText, marginTop: '15px'}}>
-							<EnvironmentFilled />
-							<Typography.Text> {spotInfo.rgn}</Typography.Text>
+							<EnvironmentFilled style={styles.iconMargin} />
+							<Typography.Text>&nbsp;{spotInfo.rgn}</Typography.Text>
 						</div>
 						<div style={styles.infoText}>
-							<PhoneFilled />
-							<Typography.Text> {spotInfo.cntadr}</Typography.Text>
+							<PhoneFilled style={styles.iconMargin} />
+							<Typography.Text>&nbsp;{spotInfo.cntadr}</Typography.Text>
 						</div>
 						<div style={styles.infoText}>
-							<PhoneFilled />
-							<Typography.Text> {spotInfo.dcntenatvnm}</Typography.Text>
+							<ShopFilled style={styles.iconMargin} />
+							<Typography.Text>&nbsp;{spotInfo.dcntenatvnm}</Typography.Text>
 						</div>
 						<div style={styles.infoText}>
-							<PhoneFilled />
-							<Typography.Text> {spotInfo.startday + " ~ " + spotInfo.fnshday}</Typography.Text>
+							<ClockCircleFilled style={styles.iconMargin} />
+							<Typography.Text>&nbsp;{spotInfo.startday + " ~ " + spotInfo.fnshday}</Typography.Text>
 						</div>
 						<div style={styles.infoText}>
-							<PhoneFilled />
-							<Typography.Text> {spotInfo.dtlexpln}</Typography.Text>
+							<ShoppingFilled style={styles.iconMargin} />
+							<Typography.Text>&nbsp;{spotInfo.dtlexpln}</Typography.Text>
 						</div>
 						<div style={styles.infoText}>
-							<PhoneFilled />
+							<LinkOutlined style={styles.iconMargin} />
 							<Typography.Text> {spotInfo.hmpg}</Typography.Text>
 						</div>
 						<Divider />
@@ -457,5 +461,8 @@ const styles = {
 	ratingStyle: {
 		display: 'block',
 		fontSize: '18pt'
+	},
+	iconMargin: {
+		margin: '0 5pt 0 0'
 	}
 }

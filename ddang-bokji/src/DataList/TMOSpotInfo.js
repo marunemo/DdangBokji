@@ -19,7 +19,9 @@ import {
 	RightOutlined,
 	PhoneFilled,
 	EnvironmentFilled,
-	StarFilled
+	StarFilled,
+	ClockCircleFilled,
+	MessageFilled
 } from '@ant-design/icons';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getDatabase, ref, get, child } from "firebase/database";
@@ -152,34 +154,41 @@ function TMOSpotInfo(props) {
 						<Typography.Title
 							style={{ ...styles.inlineDisplay, margin: '0px 10px'}}
 						>
-							{spotInfo.tmo_nm + "TMO"}
+							&nbsp;{spotInfo.tmo_nm + "TMO"}
 						</Typography.Title>
 						<Typography.Title
 							style={styles.inlineDisplay}
 							level={3}
 						>
-							{spotInfo.tmo_nm}
+							&nbsp;{spotInfo.tmo_nm}
 						</Typography.Title>
 						<Divider />
 						<div style={{...styles.infoText, marginTop: '15px'}}>
-							<EnvironmentFilled />
-							<Typography.Text> {spotInfo.pstnexpln}</Typography.Text>
+							<EnvironmentFilled style={styles.iconMargin} />
+							<Typography.Text>&nbsp;{spotInfo.pstnexpln}</Typography.Text>
 						</div>
 						<div style={styles.infoText}>
-							<PhoneFilled />
-							<Typography.Text> {spotInfo.gnrltelno}</Typography.Text>
+							<PhoneFilled style={styles.iconMargin} />
+							<Typography.Text>&nbsp;{spotInfo.gnrltelno}</Typography.Text>
 						</div>
 						<div style={styles.infoText}>
-							<PhoneFilled />
-							<Typography.Text> {spotInfo.wkday_strtm + " ~ " + spotInfo.wkday_endtm}</Typography.Text>
+							<Space>
+								<ClockCircleFilled style={styles.iconMargin} />
+								<Space direction="vertical">
+									{
+										spotInfo.wkday_strtm &&
+										<Typography.Text>평일 : {spotInfo.wkday_strtm + " ~ " + spotInfo.wkday_endtm}</Typography.Text>
+									}
+									{
+										spotInfo.wkend_strtm &&
+										<Typography.Text>주말 : {spotInfo.wkend_strtm + " ~ " + spotInfo.wkend_endtm}</Typography.Text>
+									}
+								</Space>
+							</Space>
 						</div>
 						<div style={styles.infoText}>
-							<PhoneFilled />
-							<Typography.Text> {spotInfo.wkend_strtm + " ~ " + spotInfo.wkend_endtm}</Typography.Text>
-						</div>
-						<div style={styles.infoText}>
-							<PhoneFilled />
-							<Typography.Text> {spotInfo.etc}</Typography.Text>
+							<MessageFilled style={styles.iconMargin} />
+							<Typography.Text>&nbsp;{spotInfo.etc}</Typography.Text>
 						</div>
 						<Divider />
 						<Typography.Text
@@ -453,5 +462,8 @@ const styles = {
 	ratingStyle: {
 		display: 'block',
 		fontSize: '18pt'
+	},
+	iconMargin: {
+		margin: '0 5pt 0 0'
 	}
 }

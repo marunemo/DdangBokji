@@ -19,7 +19,10 @@ import {
 	RightOutlined,
 	PhoneFilled,
 	EnvironmentFilled,
-	StarFilled
+	StarFilled,
+	LinkOutlined,
+	ShopFilled,
+	ShoppingFilled
 } from '@ant-design/icons';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getDatabase, ref, get, child } from "firebase/database";
@@ -152,38 +155,34 @@ function ResortSpotInfo(props) {
 						<Typography.Title
 							style={{ ...styles.inlineDisplay, margin: '0px 10px'}}
 						>
-							{spotInfo.instltn_nm}
+							&nbsp;{spotInfo.instltn_nm}
 						</Typography.Title>
 						<Typography.Title
 							style={styles.inlineDisplay}
 							level={3}
 						>
-							{spotInfo.rgnnm}
+							&nbsp;{spotInfo.rgnnm}
 						</Typography.Title>
 						<Divider />
 						<div style={{...styles.infoText, marginTop: '15px'}}>
-							<EnvironmentFilled />
-							<Typography.Text> {spotInfo.pstn_addr}</Typography.Text>
+							<EnvironmentFilled style={styles.iconMargin} />
+							<Typography.Text>&nbsp;{spotInfo.pstn_addr}</Typography.Text>
 						</div>
 						<div style={styles.infoText}>
-							<PhoneFilled />
-							<Typography.Text> {spotInfo.cntadr}</Typography.Text>
+							<PhoneFilled style={styles.iconMargin} />
+							<Typography.Text>&nbsp;{spotInfo.cntadr}</Typography.Text>
 						</div>
 						<div style={styles.infoText}>
-							<PhoneFilled />
-							<Typography.Text> {spotInfo.scale}</Typography.Text>
+							<ShopFilled style={styles.iconMargin} />
+							<Typography.Text>&nbsp;{spotInfo.scale}, {spotInfo.room_qty}</Typography.Text>
 						</div>
 						<div style={styles.infoText}>
-							<PhoneFilled />
-							<Typography.Text> {spotInfo.room_qty}</Typography.Text>
+							<ShoppingFilled style={styles.iconMargin} />
+							<Typography.Text>&nbsp;{spotInfo.sbsfcl}</Typography.Text>
 						</div>
 						<div style={styles.infoText}>
-							<PhoneFilled />
-							<Typography.Text> {spotInfo.sbsfcl}</Typography.Text>
-						</div>
-						<div style={styles.infoText}>
-							<PhoneFilled />
-							<Typography.Text> {spotInfo.hmpg_addr}</Typography.Text>
+							<LinkOutlined style={styles.iconMargin} />
+							<Typography.Text>&nbsp;{spotInfo.hmpg_addr}</Typography.Text>
 						</div>
 						<Divider />
 						<Typography.Text
@@ -248,7 +247,7 @@ function ResortSpotInfo(props) {
 											}}
 											value={currentRate}
 											onChange={setCurrentRate}
-											character={<StarFilled />}
+											character={<StarFilled style={styles.iconMargin} />}
 										/>
 										<Comment
 											avatar={<Avatar src={currentUser.photoURL} />}
@@ -457,5 +456,8 @@ const styles = {
 	ratingStyle: {
 		display: 'block',
 		fontSize: '18pt'
+	},
+	iconMargin: {
+		margin: '0 5pt 0 0'
 	}
 }

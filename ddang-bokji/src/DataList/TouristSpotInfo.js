@@ -152,22 +152,22 @@ function TouristSpotInfo(props) {
 						<Typography.Title
 							style={{ ...styles.inlineDisplay, margin: '0px 10px'}}
 						>
-							{spotInfo.rel_instltnnm}
+							&nbsp;{spotInfo.rel_instltnnm}
 						</Typography.Title>
 						<Typography.Title
 							style={styles.inlineDisplay}
 							level={3}
 						>
-							{spotInfo.rgnnm}
+							&nbsp;{spotInfo.rgnnm}
 						</Typography.Title>
 						<Divider />
 						<div style={{...styles.infoText, marginTop: '15px'}}>
-							<EnvironmentFilled />
-							<Typography.Text> {spotInfo.instltnpstn}</Typography.Text>
+							<EnvironmentFilled style={styles.iconMargin} />
+							<Typography.Text>&nbsp;{spotInfo.instltnpstn}</Typography.Text>
 						</div>
 						<div style={styles.infoText}>
-							<PhoneFilled />
-							<Typography.Text> {spotInfo.cntadr}</Typography.Text>
+							<PhoneFilled style={styles.iconMargin} />
+							<Typography.Text>&nbsp;{spotInfo.cntadr}</Typography.Text>
 						</div>
 						<Divider />
 						<Typography.Text
@@ -441,5 +441,8 @@ const styles = {
 	ratingStyle: {
 		display: 'block',
 		fontSize: '18pt'
+	},
+	iconMargin: {
+		margin: '0 5pt 0 0'
 	}
 }

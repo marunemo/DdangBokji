@@ -1,12 +1,15 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-import { Layout, Space, Menu, Button } from 'antd';
-import { RollbackOutlined } from '@ant-design/icons';
+import { Layout, Space, Menu, Button, Drawer, Grid } from 'antd';
+import { RollbackOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import MilWord from './MilWord';
 import MilExam from './MilExam';
 
 function StudyRouter(props) {
+	const screenWidth = Grid.useBreakpoint();
+	const [drawerVisible, setDrawerVisible] = useState(false);
+	
 	const location = useLocation();
 	const navigate = useNavigate();
 	const backToHome = useCallback(() => navigate('/'), [navigate]);
@@ -73,24 +76,64 @@ function StudyRouter(props) {
 	
 	return (
 		<Layout style={styles.studyLayout}>
-			<Layout.Sider style={styles.sider}>
-				<Layout.Header style={styles.headerLayout}>
-					<Button
-						type="ghost"
-						shape="circle"
-						size="large"
-						icon={<RollbackOutlined />}
-						onClick={backToHome}
-					/>
-				</Layout.Header>
-				<Menu
-					style={styles.sideMenu}
-					mode="inline"
-					defaultSelectedKeys={currentSelect(location.pathname)}
-					items={sideMenu}
-					onSelect={linkToSelect}
-				/>
-			</Layout.Sider>
+			{
+				screenWidth.md ?
+				(
+					<Layout.Sider style={styles.sider}>
+						<Layout.Header style={styles.headerLayout}>
+							<Button
+								type="ghost"
+								shape="circle"
+								size="large"
+								icon={<RollbackOutlined />}
+								onClick={backToHome}
+							/>
+						</Layout.Header>
+						<Menu
+							style={styles.sideMenu}
+							mode="inline"
+							defaultSelectedKeys={currentSelect(location.pathname)}
+							items={sideMenu}
+							onSelect={linkToSelect}
+						/>
+					</Layout.Sider>
+				) :
+				(
+					<Layout.Header style={{ backgroundColor: '#e3e3e3' }}>
+						<Drawer
+							visible={drawerVisible}
+							onClose={() => setDrawerVisible(false)}
+							placement="left"
+							width={190}
+							headerStyle={{ textAlign: 'right' }}
+							title={
+								<Button
+									type="ghost"
+									shape="circle"
+									size="large"
+									icon={<RollbackOutlined />}
+									onClick={backToHome}
+								/>
+							}
+						>
+							<Menu
+								style={styles.sideMenu}
+								mode="inline"
+								defaultSelectedKeys={currentSelect(location.pathname)}
+								items={sideMenu}
+								onSelect={linkToSelect}
+							/>
+						</Drawer>
+						<Button
+							type="ghost"
+							shape="circle"
+							size="large"
+							onClick={() => setDrawerVisible(true)}
+							icon={<MenuUnfoldOutlined />}
+						/>
+					</Layout.Header>
+				)
+			}
 			<Layout.Content style={styles.content}>
 				<Routes>
 					<Route

@@ -5,7 +5,7 @@ import ItemCard from '../Utility/ListItem';
 import ItemGrid from '../Utility/ItemGrid';
 import LoadingSpin from '../Utility/LoadingSpin';
 
-function TMOSpotList() {
+function TMOSpotList(props) {
 	const [spotData, setSpotData] = useState([]);
 	const [isLoaded, setLoading] = useState(false);
 	
@@ -37,7 +37,7 @@ function TMOSpotList() {
 	if(!isLoaded)
 		return <LoadingSpin />
 		
-	return <ItemGrid items={spotData} />;
+	return <ItemGrid items={spotData} isBroken={props.isBroken} />;
 }
 
 export default TMOSpotList;

@@ -3,21 +3,22 @@ import { Col, Row } from 'antd';
 
 function ItemGrid(props) {
 	const { items } = props;
+	const divider = props.isBroken ? 2 : 4;
 
 	const gridList = [];
-	var lastFullBundle = Math.floor(items.length / 4) * 4;
-	for(let index = 0; index < lastFullBundle; index += 4) {
+	var lastFullBundle = Math.floor(items.length / divider) * divider;
+	for(let index = 0; index < lastFullBundle; index += divider) {
 		gridList.push(
 			<Row
 				key={'itemRow' + index}
 				style={{ marginBottom: '3%' }}
 				gutter={16}
 			>
-				{[0, 1, 2, 3].map((colIndex) => {
+				{(props.isBroken ? [0, 1] : [0, 1, 2, 3]).map((colIndex) => {
 					return (
 						<Col
 							key={'itemCol' + (index + colIndex)}
-							span={6}
+							span={props.isBroken ? 12 : 6}
 						>
 							{items[index + colIndex]}
 						</Col>
@@ -26,7 +27,7 @@ function ItemGrid(props) {
 			</Row>
 		);
 	}
-	if(items.length % 4 !== 0) {
+	if(items.length % divider !== 0) {
 		gridList.push(
 			<Row
 				key={'itemRow' + lastFullBundle}
@@ -37,7 +38,7 @@ function ItemGrid(props) {
 					return (
 						<Col
 							key={'itemCol' + (lastFullBundle + colIndex)}
-							span={6}
+							span={props.isBroken ? 12 : 6}
 						>
 							{items[lastFullBundle + colIndex]}
 						</Col>

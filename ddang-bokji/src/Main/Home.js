@@ -1,14 +1,16 @@
 import React, { useState, useCallback } from 'react';
 import { useNavigate } from "react-router-dom";
-import { Layout, Menu, Button } from 'antd';
-import { BulbFilled } from '@ant-design/icons';
+import { Layout, Menu, Button, Drawer, Grid } from 'antd';
+import { BulbFilled, MenuUnfoldOutlined } from '@ant-design/icons';
 import TouristSpotList from '../DataList/TouristSpot';
 import ResortSpotList from '../DataList/ResortSpot';
 import DiscountSpotList from '../DataList/DiscountSpot';
 import TMOSpotList from '../DataList/TMOSpot';
 
 function HomeContainer() {
-	const [selectedSpot, selectSpotMenu] = useState('tourist')
+	const [selectedSpot, selectSpotMenu] = useState('tourist');
+	const [drawerVisible, setDrawerVisible] = useState(false);
+	const screenWidth = Grid.useBreakpoint();
 	const navigate = useNavigate();
 	const gotoMilStudy = useCallback(() => {
 		navigate('/MilStudy')
@@ -36,24 +38,52 @@ function HomeContainer() {
 	return (
 		<Layout style={styles.homeLayout}>
 			<Layout style={styles.bodyLayout}>
-				<Layout.Sider
-					style={styles.sider}
-					width="225px"
-				>
-					<Menu
-						style={styles.sideMenu}
-						mode="inline"
-						defaultSelectedKeys="tourist"
-						items={sideMenu}
-						onSelect={({ key }) => selectSpotMenu(key)}
-					/>
-				</Layout.Sider>
+				{
+					screenWidth.md ?
+					(
+						<Layout.Sider
+							style={styles.sider}
+							width="225px"
+						>
+							<Menu
+								style={styles.sideMenu}
+								mode="inline"
+								defaultSelectedKeys="tourist"
+								items={sideMenu}
+								onSelect={({ key }) => selectSpotMenu(key)}
+							/>
+						</Layout.Sider>
+					) :
+					(
+						<Layout.Header style={{ backgroundColor: '#e3e3e3' }}>
+							<Drawer
+								visible={drawerVisible}
+								onClose={() => setDrawerVisible(false)}
+								placement="left"
+							>
+								<Menu
+									mode="inline"
+									defaultSelectedKeys="tourist"
+									items={sideMenu}
+									onSelect={({ key }) => selectSpotMenu(key)}
+								/>
+							</Drawer>
+							<Button
+								type="ghost"
+								shape="circle"
+								size="large"
+								onClick={() => setDrawerVisible(true)}
+								icon={<MenuUnfoldOutlined />}
+							/>
+						</Layout.Header>
+					)
+				}
 				<Layout style={styles.contentLayout}>
 					<Layout.Content style={styles.content}>
-						{ selectedSpot === 'tourist' && <TouristSpotList /> }
-						{ selectedSpot === 'resort' && <ResortSpotList /> }
-						{ selectedSpot === 'discount' && <DiscountSpotList /> }
-						{ selectedSpot === 'tmo' && <TMOSpotList /> }
+						{ selectedSpot === 'tourist' && <TouristSpotList isBroken={!screenWidth.md} /> }
+						{ selectedSpot === 'resort' && <ResortSpotList isBroken={!screenWidth.md} /> }
+						{ selectedSpot === 'discount' && <DiscountSpotList isBroken={!screenWidth.md} /> }
+						{ selectedSpot === 'tmo' && <TMOSpotList isBroken={!screenWidth.md} /> }
 					</Layout.Content>
 				</Layout>
 			</Layout>

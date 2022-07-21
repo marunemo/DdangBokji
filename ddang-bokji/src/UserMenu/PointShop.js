@@ -10,7 +10,7 @@ function PointShop(props) {
 	const [ddangPoint, setDdangPoint] = useState(0);
 	const [shopItems, setShopItems] = useState(null);
 	const [selectedItem, setSelectedItem] = useState(null);
-	const { user } = props;
+	const { user, isBroken } = props;
 
 	const userStatus = useMemo(() => {
 		if(!user)
@@ -76,6 +76,7 @@ function PointShop(props) {
 							price={item.price}
 							isActived={!(badgeList.includes(item.itemCode))}
 							onClick={() => setSelectedItem(item)}
+							isBroken={isBroken}
 						/>
 					);
 				});
@@ -90,7 +91,7 @@ function PointShop(props) {
 		});
 		
 		setSelectedItem(null);
-	}, [user]);
+	}, [user, isBroken]);
 
 	try {
 		useEffect(() => {
@@ -107,13 +108,14 @@ function PointShop(props) {
 								price={item.price}
 								isActived={!(badgeList.includes(item.itemCode))}
 								onClick={() => setSelectedItem(item)}
+								isBroken={isBroken}
 							/>
 						);
 					});
 					setShopItems(items);
 				})
 			}
-		}, [userStatus]);
+		}, [userStatus, isBroken]);
 	}
 	catch(e) {
 		console.log(e);
@@ -128,7 +130,7 @@ function PointShop(props) {
 				<Space style={styles.myPoint}>내 땡포인트 : <b>{ddangPoint}</b></Space>
 			</div>
 			<Layout style={styles.contentLayout}>
-				<ItemGrid items={shopItems} />
+				<ItemGrid items={shopItems} isBroken={props.isBroken} />
 			</Layout>
 			<Modal
 				visible={selectedItem !== null}

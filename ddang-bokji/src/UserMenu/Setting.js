@@ -89,7 +89,7 @@ function PointShop(props) {
 					{'내 뱃지 : '}
 				</p>
 				<Select
-					style={{ width: '360px' }}
+					style={{ width: (props.isBroken) ? '240px' : '360px' }}
 					value={currentUserBadge}
 					onChange={setCurrentUserBadge}
 				>

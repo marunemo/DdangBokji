@@ -12,7 +12,7 @@ function ItemCard(props) {
 			onClick={props.onClick}
 		>
 			<Card
-				style={styles.cardLayout(isActived)}
+				style={styles.cardLayout(isActived, props.isBroken)}
 				cover={
 					<Image
 						style={styles.cardImage(isActived)}
@@ -26,7 +26,6 @@ function ItemCard(props) {
 			>
 				<Card.Meta
 					style={{
-						width: '100%',
 						textAlign: 'center',
 						justifyContent: 'center'
 					}}
@@ -55,8 +54,8 @@ export default ItemCard;
 
 
 const styles = {
-	cardLayout: (isActived) => ({
-		width: '100%',
+	cardLayout: (isActived, isBroken) => ({
+		width: isBroken ? '40vw' : '100%',
 		borderRadius: '30pt',
 		backgroundColor: isActived ? '#fff' : '#ccc'
 	}),

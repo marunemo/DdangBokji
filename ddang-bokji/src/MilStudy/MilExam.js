@@ -242,7 +242,7 @@ function MilExam(props) {
 									onClick={() => {
 										setPhase((curr) => {
 											setUserAnswers((answers) => answers.slice(0, curr - 1));
-											setCurrentAnswer(curr - 1);
+											setCurrentAnswer(undefined);
 											return (curr - 1);
 										})
 									}}
@@ -267,7 +267,7 @@ function MilExam(props) {
 								<Button
 									type="primary"
 									onClick={() => {
-										setUserAnswers((answers) => [...answers, (currentAnswer ? currentAnswer : -1)]);
+										setUserAnswers((answers) => [...answers, (currentAnswer !== undefined ? currentAnswer : -1)]);
 										setCurrentAnswer(undefined);
 										setPhase((curr) => (curr + 1))
 									}}

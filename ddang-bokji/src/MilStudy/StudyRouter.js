@@ -142,7 +142,7 @@ function StudyRouter(props) {
 					/>
 					<Route
 						path="/Exam"
-						element={<MilExam milTerms={milTerms} user={props.currentUser} />}
+						element={<MilExam milTerms={milTerms} user={props.currentUser} isBroken={!screenWidth.md} />}
 					/>
 				</Routes>
 			</Layout.Content>

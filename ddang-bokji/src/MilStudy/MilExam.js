@@ -190,7 +190,12 @@ function MilExam(props) {
 				>
 					문제 단계
 				</Divider>
-				<Steps current={currentPhase}>
+				<Steps
+					direction="horizontal"
+					responsive={false}
+					size={props.isBroken ? 'small' : 'default'}
+					current={currentPhase}
+				>
 					{
 						[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((problemPhase) => {
 							return (

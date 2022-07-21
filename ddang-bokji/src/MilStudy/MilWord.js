@@ -34,29 +34,34 @@ function MilWord(props) {
 						if(!snapshot.exists())
 							return null;
 
-						return snapshot.val().point;
+						return ({
+							dailyChecked: snapshot.val().dailyChecked,
+							ddangPoint: snapshot.val().point,
+						});
 					});
 				})
-				.then((ddangPoint) => {
+				.then(({ ddangPoint, dailyChecked }) => {
+					if(dailyChecked) return;
+					
 					update(ref(getDatabase(), 'users/' + user.uid), {
 						dailyChecked: true,
 						point: ddangPoint + 5
-					});
-				})
-				.then(() => {
-					message.success({
-						content: (
-							<div>
-								<div>오늘의 단어를 확인했습니다!</div>
+					})
+					.then(() => {
+						message.success({
+							content: (
 								<div>
-									<img style={{ width: '12pt', height: '12pt' }} src={ddangLogo} alt='땡'/>
-									포인트
-									<b>+5</b>
+									<div>오늘의 단어를 확인했습니다!</div>
+									<div>
+										<img style={{ width: '12pt', height: '12pt' }} src={ddangLogo} alt='땡'/>
+										포인트
+										<b>+5</b>
+									</div>
 								</div>
-							</div>
-						),
-						key: 'dailyWordChecked',
-						duration: 7
+							),
+							key: 'dailyWordChecked',
+							duration: 7
+						});
 					});
 				});
 			}

@@ -5,6 +5,7 @@ import ShopItem from '../Utility/ShopItem';
 import ItemGrid from '../Utility/ItemGrid';
 import LoadingSpin from '../Utility/LoadingSpin';
 import shopItemList from '../Utility/ShopItemList';
+import ddangLogo from '../Assets/ddang-logo.png';
 
 function PointShop(props) {
 	const [ddangPoint, setDdangPoint] = useState(0);
@@ -127,7 +128,9 @@ function PointShop(props) {
 	return (
 		<Layout style={styles.bodyLayout}>
 			<div style={styles.pointHeader}>
-				<Space style={styles.myPoint}>내 땡포인트 : <b>{ddangPoint}</b></Space>
+				<Space style={styles.myPoint}>
+					내 <img style={{ width: '16pt', height: '16pt' }} src={ddangLogo} alt="땡"/>포인트 : <b>{ddangPoint}</b>
+				</Space>
 			</div>
 			<Layout style={styles.contentLayout}>
 				<ItemGrid items={shopItems} isBroken={props.isBroken} />
@@ -154,17 +157,17 @@ function PointShop(props) {
 								size="middle"
 							>
 								<div>
-									<p><b>현재 땡포인트</b></p>
+									<p><b>현재 <img style={{ width: '14pt', height: '14pt' }} src={ddangLogo} alt="땡"/>포인트</b></p>
 									<p>{ddangPoint}</p>
 								</div>
 								<p style={{ fontSize: '16pt' }}> - </p>
 								<div>
-									<p><b>사용할 땡포인트</b></p>
+									<p><b>사용할 <img style={{ width: '14pt', height: '14pt' }} src={ddangLogo} alt="땡"/>포인트</b></p>
 									<p>{selectedItem.price}</p>
 								</div>
 								<p style={{ fontSize: '16pt' }}> = </p>
 								<div>
-									<p><b>잔여 땡포인트</b></p>
+									<p><b>잔여 <img style={{ width: '14pt', height: '14pt' }} src={ddangLogo} alt="땡"/>포인트</b></p>
 									<p
 										style={styles.restPoint(ddangPoint - selectedItem.price)}
 									>

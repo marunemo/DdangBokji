@@ -4,6 +4,7 @@ import { UserOutlined } from '@ant-design/icons';
 import { getDatabase, ref, get, child, update } from "firebase/database";
 import LoadingSpin from '../Utility/LoadingSpin';
 import badgeMap from '../Utility/BadgeMap';
+import ddangLogo from '../Assets/ddang-logo.png';
 
 function PointShop(props) {
 	const [userInfo, setUserInfo] = useState(null);
@@ -84,7 +85,9 @@ function PointShop(props) {
 			</div>
 			<Divider />
 			<div style={styles.userInfoLayout}>
-				<p style={styles.userPoint}>내 땡포인트 : <b>{userInfo.point}</b></p>
+				<p style={styles.userPoint}>
+					내 <img style={{ width: '18pt', height: '18pt' }} src={ddangLogo} alt="땡"/>포인트 : <b>{userInfo.point}</b>
+				</p>
 				<p style={styles.userBadge}>
 					{'내 뱃지 : '}
 				</p>

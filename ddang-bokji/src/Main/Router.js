@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
-import { Layout, Menu, Grid, Row, Col, Button } from 'antd';
-import { EllipsisOutlined } from '@ant-design/icons';
+import { Layout, Menu, Grid, Row, Col, Button, Space } from 'antd';
+import { SettingFilled, LogoutOutlined } from '@ant-design/icons';
 import { onAuthStateChanged, signOut } from "firebase/auth";
 import { getDatabase, set, ref, get, child, update } from "firebase/database";
 import HomeContainer from './Home';
@@ -44,6 +44,21 @@ function UserMenuButton(props) {
 		>
 			{props.userName + '님 반갑습니다.'}
 		</Button>
+	);
+}
+
+
+function CollapsedUserMenuButton() {
+	const navigate = useNavigate();
+	const gotoUserMenu = useCallback(() => navigate('/UserMenu/'), [navigate]);
+	
+	return (
+		<Button
+			style={styles.signInButton}
+			type="link"
+			onClick={gotoUserMenu}
+			icon={<SettingFilled />}
+		/>
 	);
 }
 
@@ -162,56 +177,6 @@ function MainRouter() {
 			}
 		]
 	
-	const collapsedHeaderMenu = currentUser
-		? [
-			{
-				key: 'EllipsisOutlined',
-				label: <EllipsisOutlined />,
-				chlidren: [
-					{
-						key: 'userSetting',
-						label: (
-							<Button
-								style={styles.signInButton}
-								type="link"
-								onClick={logOut}
-							>
-								{currentUser.displayName + '님 반갑습니다.'}
-							</Button>
-						),
-						type: 'group'
-					},
-					{
-						key: 'signOutButton',
-						label: (
-							<Button
-								style={styles.signInButton}
-								type="link"
-								onClick={logOut}
-							>
-								로그아웃
-							</Button>
-						),
-						type: 'group'
-					}
-				]
-			}
-		]
-		: [
-			{
-				key: 'signInButton',
-				label: (
-					<Button
-						style={styles.signInButton}
-						type="link"
-						onClick={signInGoogle}
-					>
-						로그인
-					</Button>
-				)
-			}
-		]
-	
 	return (
 		<BrowserRouter>
 			<Layout style={styles.mainLayout}>
@@ -236,14 +201,29 @@ function MainRouter() {
 									/>
 								)
 								: (
-									<Menu
-										style={styles.collapsedUserMenu(currentUser)}
-										theme="dark"
-										mode="incline"
-										triggerSubMenuAction="click"
-										defaultSelectedKeys={undefined}
-										items={collapsedHeaderMenu}
-									/>
+									currentUser ?
+									(
+										<Space style={styles.collapsedUserMenu(currentUser)}>
+											<CollapsedUserMenuButton />
+											<Button
+												style={styles.signInButton}
+												type="link"
+												onClick={logOut}
+												icon={<LogoutOutlined />}
+											/>
+										</Space>
+									) :
+									(
+										<Space style={styles.collapsedUserMenu(currentUser)}>
+											<Button
+												style={styles.signInButton}
+												type="link"
+												onClick={signInGoogle}
+											>
+												로그인
+											</Button>
+										</Space>
+									)
 								)
 							}
 						</Col>
@@ -313,7 +293,7 @@ const styles = {
 		minWidth: currentUser ? '325px' : '115px'
 	}),
 	collapsedUserMenu: (currentUser) => ({
-		minWidth: currentUser ? '65px' : '115px'
+		minWidth: currentUser ? '70px' : '75px'
 	}),
 	logoButton: {
 		height: '64px',

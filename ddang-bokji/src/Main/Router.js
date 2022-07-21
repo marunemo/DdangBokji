@@ -77,6 +77,7 @@ function MainRouter() {
 			set(ref(database, 'users/' + user.uid), {
 				accessDate: todayDateFormat(new Date()),
 				dailyTermIndex: Math.floor(Math.random() * 700),
+				dailyChecked: false,
 				problemQuestionList,
 				problemAnswerList,
 				examSubmmitted: false,
@@ -89,6 +90,7 @@ function MainRouter() {
 			update(ref(database, 'users/' + user.uid), {
 				accessDate: todayDateFormat(new Date()),
 				dailyTermIndex: Math.floor(Math.random() * 700),
+				dailyChecked: false,
 				problemQuestionList,
 				problemAnswerList,
 				examSubmmitted: false

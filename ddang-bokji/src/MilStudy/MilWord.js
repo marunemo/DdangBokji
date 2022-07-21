@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Layout, Space } from 'antd';
-import { getDatabase, ref, get, child } from "firebase/database";
+import { Layout, Space, message } from 'antd';
+import { getDatabase, ref, get, child, update } from "firebase/database";
 import LoadingSpin from '../Utility/LoadingSpin';
+import ddangLogo from '../Assets/ddang-logo.png';
 
 function MilWord(props) {
 	const [todayMilTerm, setTodayMilTerm] = useState(null);
@@ -27,9 +28,39 @@ function MilWord(props) {
 					todayMilTermIndex.then((termIndex) => {
 						setTodayMilTerm(milTerm[termIndex]);
 					});
+				})
+				.then(() => {
+					return get(child(ref(getDatabase()), 'users/' + user.uid)).then((snapshot) => {
+						if(!snapshot.exists())
+							return null;
+
+						return snapshot.val().point;
+					});
+				})
+				.then((ddangPoint) => {
+					update(ref(getDatabase(), 'users/' + user.uid), {
+						dailyChecked: true,
+						point: ddangPoint + 5
+					});
+				})
+				.then(() => {
+					message.success({
+						content: (
+							<div>
+								<div>오늘의 단어를 확인했습니다!</div>
+								<div>
+									<img style={{ width: '12pt', height: '12pt' }} src={ddangLogo} alt='땡'/>
+									포인트
+									<b>+5</b>
+								</div>
+							</div>
+						),
+						key: 'dailyWordChecked',
+						duration: 7
+					});
 				});
 			}
-		}, [milTerms, todayMilTermIndex]);
+		}, [user, milTerms, todayMilTermIndex]);
 	}
 	catch(e) {
 		console.log(e);

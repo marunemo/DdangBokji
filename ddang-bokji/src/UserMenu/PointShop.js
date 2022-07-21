@@ -36,6 +36,13 @@ function PointShop(props) {
 			});
 			return;
 		}
+		else if(currentItem.itemCode === '야놀자' || currentItem.itemCode === '여기어때') {
+			message.error({
+				content: '개발중인 항목입니다!',
+				key: 'typeError'
+			});
+			return;
+		}
 		
 		update(ref(getDatabase(), 'users/' + user.uid), {
 			point: currentPoint - currentItem.price,

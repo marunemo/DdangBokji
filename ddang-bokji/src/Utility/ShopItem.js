@@ -25,6 +25,11 @@ function ItemCard(props) {
 				hoverable={isActived}
 			>
 				<Card.Meta
+					style={{
+						width: '100%',
+						textAlign: 'center',
+						justifyContent: 'center'
+					}}
 					title={
 						<div
 							style={{

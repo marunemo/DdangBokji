@@ -31,6 +31,20 @@ const shopItemList = [
 		image: img_sergeant,
 		itemCode: '병장',
 		price: 70
+	},
+	{
+		name: '야놀자 숙박 할인권',
+		desc: '야놀자 숙박 할인권 10,000원',
+		image: 'https://yanolja.in/static/share/share_thumb_1200x630.jpg',
+		itemCode: '야놀자',
+		price: 50000
+	},
+	{
+		name: '여기어때 숙박 할인권',
+		desc: '여기어때 30% 할인 쿠폰',
+		image: 'https://image.goodchoice.kr/images/web_v3/h1_logo_mo_share.png',
+		itemCode: '여기어때',
+		price: 50000
 	}
 ];
 

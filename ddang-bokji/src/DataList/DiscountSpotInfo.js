@@ -11,19 +11,23 @@ import {
 	Space,
 	Divider,
 	Card,
-	Rate
+	Rate,
+	Drawer,
+	Grid,
+	Row,
+	Col
 } from 'antd';
 import {
 	UserOutlined,
 	LeftOutlined,
-	RightOutlined,
 	PhoneFilled,
 	EnvironmentFilled,
 	StarFilled,
 	LinkOutlined,
 	ClockCircleFilled,
 	ShopFilled,
-	ShoppingFilled
+	ShoppingFilled,
+	MenuFoldOutlined
 } from '@ant-design/icons';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getDatabase, ref, get, child } from "firebase/database";
@@ -38,14 +42,14 @@ import badgeMap from '../Utility/BadgeMap';
 function DiscountSpotInfo(props) {
 	const { currentUser } = props;
 	const { id } = useParams();
+	const screenWidth = Grid.useBreakpoint();
 	const navigate = useNavigate();
 	const [spotInfo, setSpotInfo] = useState(null);
 	const [spotComments, setSpotComments] = useState(null);
 	const [currentComment, setCurrentComment] = useState('');
 	const [currentRate, setCurrentRate] = useState(3);
-	const [mapURL, setMapURL] = useState(null)
-	const [isBroken, setBroken] = useState(false);
-	const [isCollapsed, setCollpased] = useState(true);
+	const [mapURL, setMapURL] = useState(null);
+	const [drawerVisible, setDrawerVisible] = useState(false);
 	const backToHome = useCallback(() => navigate('/'), [navigate]);
 	
 	const userBadge = useMemo(() => {
@@ -133,15 +137,30 @@ function DiscountSpotInfo(props) {
 	
 	return (
 		<Layout style={styles.infoLayout}>
-			<Layout.Content style={styles.contentLayout(isBroken)}>
+			<Layout.Content style={styles.contentLayout(!screenWidth.md)}>
 				<Layout.Header style={styles.headerLayout}>
-					<Button
-						style={styles.goBackButton}
-						shape="circle"
-						size="large"
-						icon={<LeftOutlined />}
-						onClick={backToHome}
-					/>
+					<Row justify="space-between">
+						<Col>
+							<Button
+								style={styles.goBackButton}
+								shape="circle"
+								size="large"
+								icon={<LeftOutlined />}
+								onClick={backToHome}
+							/>
+						</Col>
+						{	!screenWidth.md &&
+							<Col>
+								<Button
+									type="ghost"
+									shape="circle"
+									size="large"
+									onClick={() => setDrawerVisible(true)}
+									icon={<MenuFoldOutlined />}
+								/>
+							</Col>	
+						}
+					</Row>
 				</Layout.Header>
 				<Image
 					width="100%"
@@ -212,29 +231,16 @@ function DiscountSpotInfo(props) {
 					</Button>
 				</div>
 			</Layout.Content>
-			<Layout.Sider
-				width={isBroken ? '80%' : '50%'}
-				style={styles.commentListLayout}
-				collapsedWidth={25}
-				breakpoint="md"
-				collapsed={isCollapsed && isBroken}
-				onBreakpoint={setBroken}
-			>
-				{
-					currentUser
-					? (
-						<div>
-							{
-								isBroken &&
-								<Button
-									type="primary"
-									style={styles.commentShowingButton}
-									icon={isCollapsed ? <LeftOutlined /> : <RightOutlined />}
-									onClick={() => setCollpased(collapsed => !collapsed)}
-								/>
-							}
-							{
-								(!isCollapsed || !isBroken) &&
+			{
+				screenWidth.md ?
+				(
+					<Layout.Sider
+						width="50%"
+						style={styles.commentListLayout}
+					>
+						{
+							currentUser
+							? (
 								<div style={styles.commentLayout}>
 									<Card style={styles.commentEditCard}>
 										<p
@@ -335,37 +341,409 @@ function DiscountSpotInfo(props) {
 										)
 									}
 								</div>
-							}
-						</div>
-					)
-					: (
-						<Space
-							style={styles.commentListSpace}
-							align="center"
-						>
-							{
-								isBroken &&
-								<Button
-									type="primary"
-									style={styles.commentShowingButton}
-									icon={isCollapsed ? <LeftOutlined /> : <RightOutlined />}
-									onClick={() => setCollpased(collapsed => !collapsed)}
-								/>
-							}
-							{
-								(!isCollapsed || !isBroken) &&
+							)
+							: (
 								<Space
-									style={styles.authBlockLayout}
-									direction="vertical"
+									style={styles.commentListSpace}
 									align="center"
 								>
-									로그인 후 이용 가능한 페이지입니다.
+									<Space
+										style={styles.authBlockLayout}
+										direction="vertical"
+										align="center"
+									>
+										로그인 후 이용 가능한 페이지입니다.
+									</Space>
 								</Space>
-							}
-						</Space>
-					)
-				}
-			</Layout.Sider>
+							)
+						}
+					</Layout.Sider>
+				) :
+				(
+					<Drawer
+						style={{ backgroundColor: '#fff' }}
+						visible={drawerVisible}
+						onClose={() => setDrawerVisible(false)}
+						placement="right"
+					>
+						{
+							currentUser
+							? (
+								<div style={styles.commentLayout}>
+									<Card style={styles.commentEditCard}>
+										<p
+											style={{
+												fontSize: '22pt',
+												fontWeight: 'bold'
+											}}
+										>
+											해당 시설에 대한 평가를 남겨주세요!
+										</p>
+										<Rate
+											style={{
+												display: 'block',
+												fontSize: '22pt'
+											}}
+											value={currentRate}
+											onChange={setCurrentRate}
+											character={<StarFilled />}
+										/>
+										<Comment
+											avatar={<Avatar src={currentUser.photoURL} />}
+											content={
+												<Input.TextArea
+													style={styles.commentEditor}
+													placeholder="댓글을 입력해주세요."
+													autoSize={true}
+													allowClear={true}
+													value={currentComment}
+													onChange={(event) => setCurrentComment(event.target.value, currentUser, spotInfo, spotComments)}
+												/>
+											}
+										/>
+										<div style={styles.submitButtonLayout}>
+											<Button
+												type="primary"
+												onClick={() => { 
+													userBadge.then((badge) => {
+														sendComment(currentComment, currentRate, badge, currentUser, spotInfo, spotComments);
+													});
+												}}
+											>
+												등록
+											</Button>
+										</div>
+									</Card>
+									{
+										!spotComments
+										? (
+											<Space
+												style={styles.commentListSpace}
+												align="center"
+											>
+												댓글이 없습니다. 새 댓글을 작성해주세요.
+											</Space>
+										)
+										: (
+											<List
+												header={spotComments.length.toString() + "개의 댓글이 있습니다."}
+												itemLayout="horizontal"
+												dataSource={spotComments}
+												renderItem={(item) => (
+													<Comment
+														avatar={<Avatar src={item.avatar} icon={<UserOutlined />} />}
+														// set icon as fallback for image
+														author={
+															item.badge === 'none' ?
+																item.author :
+																(
+																	<span>
+																		<img
+																			 style={{ width: '20pt', maxHeight: '12pt' }}
+																			 src={badgeMap[item.badge].image}
+																			 alt={item.badge}
+																		 />
+																		{item.badge + ' ' + item.author}
+																	</span>
+																)
+														}
+														content={
+															<div>
+																<Rate
+																	style={styles.ratingStyle}
+																	value={item.rating}
+																	disabled={true}
+																	character={<StarFilled />}
+																/>
+																{
+																	item.content.split('\n').map((text) => {
+																		return (<p>{text}<br /></p>);
+																	})
+																}
+															</div>
+														}
+														datetime={new Date(item.datetime.seconds * 1000).toLocaleString()}
+													/>
+												)}
+											/>
+										)
+									}
+								</div>
+							)
+							: (
+								<Space
+									style={styles.commentListSpace}
+									align="center"
+								>
+									<Space
+										style={styles.authBlockLayout}
+										direction="vertical"
+										align="center"
+									>
+										로그인 후 이용 가능한 페이지입니다.
+									</Space>
+								</Space>
+							)
+						}
+					</Drawer>
+				)
+			}{
+				screenWidth.md ?
+				(
+					<Layout.Sider
+						width="50%"
+						style={styles.commentListLayout}
+					>
+						{
+							currentUser
+							? (
+								<div style={styles.commentLayout}>
+									<Card style={styles.commentEditCard}>
+										<p
+											style={{
+												fontSize: '22pt',
+												fontWeight: 'bold'
+											}}
+										>
+											해당 시설에 대한 평가를 남겨주세요!
+										</p>
+										<Rate
+											style={{
+												display: 'block',
+												fontSize: '22pt'
+											}}
+											value={currentRate}
+											onChange={setCurrentRate}
+											character={<StarFilled />}
+										/>
+										<Comment
+											avatar={<Avatar src={currentUser.photoURL} />}
+											content={
+												<Input.TextArea
+													style={styles.commentEditor}
+													placeholder="댓글을 입력해주세요."
+													autoSize={true}
+													allowClear={true}
+													value={currentComment}
+													onChange={(event) => setCurrentComment(event.target.value, currentUser, spotInfo, spotComments)}
+												/>
+											}
+										/>
+										<div style={styles.submitButtonLayout}>
+											<Button
+												type="primary"
+												onClick={() => { 
+													userBadge.then((badge) => {
+														sendComment(currentComment, currentRate, badge, currentUser, spotInfo, spotComments);
+													});
+												}}
+											>
+												등록
+											</Button>
+										</div>
+									</Card>
+									{
+										!spotComments
+										? (
+											<Space
+												style={styles.commentListSpace}
+												align="center"
+											>
+												댓글이 없습니다. 새 댓글을 작성해주세요.
+											</Space>
+										)
+										: (
+											<List
+												header={spotComments.length.toString() + "개의 댓글이 있습니다."}
+												itemLayout="horizontal"
+												dataSource={spotComments}
+												renderItem={(item) => (
+													<Comment
+														avatar={<Avatar src={item.avatar} icon={<UserOutlined />} />}
+														// set icon as fallback for image
+														author={
+															item.badge === 'none' ?
+																item.author :
+																(
+																	<span>
+																		<img
+																			 style={{ width: '20pt', maxHeight: '12pt' }}
+																			 src={badgeMap[item.badge].image}
+																			 alt={item.badge}
+																		 />
+																		{item.badge + ' ' + item.author}
+																	</span>
+																)
+														}
+														content={
+															<div>
+																<Rate
+																	style={styles.ratingStyle}
+																	value={item.rating}
+																	disabled={true}
+																	character={<StarFilled />}
+																/>
+																{
+																	item.content.split('\n').map((text) => {
+																		return (<p>{text}<br /></p>);
+																	})
+																}
+															</div>
+														}
+														datetime={new Date(item.datetime.seconds * 1000).toLocaleString()}
+													/>
+												)}
+											/>
+										)
+									}
+								</div>
+							)
+							: (
+								<Space
+									style={styles.commentListSpace}
+									align="center"
+								>
+									<Space
+										style={styles.authBlockLayout}
+										direction="vertical"
+										align="center"
+									>
+										로그인 후 이용 가능한 페이지입니다.
+									</Space>
+								</Space>
+							)
+						}
+					</Layout.Sider>
+				) :
+				(
+					<Drawer
+						style={{ backgroundColor: '#fff' }}
+						visible={drawerVisible}
+						onClose={() => setDrawerVisible(false)}
+						placement="right"
+					>
+						{
+							currentUser
+							? (
+								<div style={styles.commentLayout}>
+									<Card style={styles.commentEditCard}>
+										<p
+											style={{
+												fontSize: '22pt',
+												fontWeight: 'bold'
+											}}
+										>
+											해당 시설에 대한 평가를 남겨주세요!
+										</p>
+										<Rate
+											style={{
+												display: 'block',
+												fontSize: '22pt'
+											}}
+											value={currentRate}
+											onChange={setCurrentRate}
+											character={<StarFilled />}
+										/>
+										<Comment
+											avatar={<Avatar src={currentUser.photoURL} />}
+											content={
+												<Input.TextArea
+													style={styles.commentEditor}
+													placeholder="댓글을 입력해주세요."
+													autoSize={true}
+													allowClear={true}
+													value={currentComment}
+													onChange={(event) => setCurrentComment(event.target.value, currentUser, spotInfo, spotComments)}
+												/>
+											}
+										/>
+										<div style={styles.submitButtonLayout}>
+											<Button
+												type="primary"
+												onClick={() => { 
+													userBadge.then((badge) => {
+														sendComment(currentComment, currentRate, badge, currentUser, spotInfo, spotComments);
+													});
+												}}
+											>
+												등록
+											</Button>
+										</div>
+									</Card>
+									{
+										!spotComments
+										? (
+											<Space
+												style={styles.commentListSpace}
+												align="center"
+											>
+												댓글이 없습니다. 새 댓글을 작성해주세요.
+											</Space>
+										)
+										: (
+											<List
+												header={spotComments.length.toString() + "개의 댓글이 있습니다."}
+												itemLayout="horizontal"
+												dataSource={spotComments}
+												renderItem={(item) => (
+													<Comment
+														avatar={<Avatar src={item.avatar} icon={<UserOutlined />} />}
+														// set icon as fallback for image
+														author={
+															item.badge === 'none' ?
+																item.author :
+																(
+																	<span>
+																		<img
+																			 style={{ width: '20pt', maxHeight: '12pt' }}
+																			 src={badgeMap[item.badge].image}
+																			 alt={item.badge}
+																		 />
+																		{item.badge + ' ' + item.author}
+																	</span>
+																)
+														}
+														content={
+															<div>
+																<Rate
+																	style={styles.ratingStyle}
+																	value={item.rating}
+																	disabled={true}
+																	character={<StarFilled />}
+																/>
+																{
+																	item.content.split('\n').map((text) => {
+																		return (<p>{text}<br /></p>);
+																	})
+																}
+															</div>
+														}
+														datetime={new Date(item.datetime.seconds * 1000).toLocaleString()}
+													/>
+												)}
+											/>
+										)
+									}
+								</div>
+							)
+							: (
+								<Space
+									style={styles.commentListSpace}
+									align="center"
+								>
+									<Space
+										style={styles.authBlockLayout}
+										direction="vertical"
+										align="center"
+									>
+										로그인 후 이용 가능한 페이지입니다.
+									</Space>
+								</Space>
+							)
+						}
+					</Drawer>
+				)
+			}
 		</Layout>
 	);
 }

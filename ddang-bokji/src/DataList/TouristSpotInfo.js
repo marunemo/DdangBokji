@@ -137,15 +137,16 @@ function TouristSpotInfo(props) {
 				<Layout.Header style={styles.headerLayout}>
 					<Row justify="space-between">
 						<Col>
-						<Button
-							style={styles.goBackButton}
-							shape="circle"
-							size="large"
-							icon={<LeftOutlined />}
-							onClick={backToHome}
-						/>
+							<Button
+								style={styles.goBackButton}
+								shape="circle"
+								size="large"
+								icon={<LeftOutlined />}
+								onClick={backToHome}
+							/>
 						</Col>
-						{	!screenWidth.md &&
+						{
+							!screenWidth.md &&
 							<Col>
 								<Button
 									type="ghost"
@@ -468,7 +469,6 @@ function TouristSpotInfo(props) {
 					</Drawer>
 				)
 			}
-			
 		</Layout>
 	);
 }

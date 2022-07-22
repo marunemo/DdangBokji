@@ -1,5 +1,5 @@
 import React from 'react';
-import { Spin, Space, Typography } from 'antd';
+import { Spin, Space } from 'antd';
 
 export default function LoadingSpin() {
 	return(
@@ -13,13 +13,19 @@ export default function LoadingSpin() {
 			align="center"
 			size="middle"
 		>
-			<Spin size="large" />
-			<Typography.Title
-				style={{ color: 'red' }}
-				level={2}
-			>
-				Loading...
-			</Typography.Title>
+			<Spin
+				size="large"
+				tip={
+					<p
+						style={{
+							fontSize: '16pt',
+							fontWeight: 'bold'
+						}}
+					>
+						잠시만 기다려주세요...
+					</p>
+				}
+			/>
 		</Space>
 	);
 }

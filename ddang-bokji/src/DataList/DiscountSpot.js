@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import ItemCard from '../Utility/ListItem';
 import ItemGrid from '../Utility/ItemGrid';
 import LoadingSpin from '../Utility/LoadingSpin';
+import emptyImg from '../Assets/no-pictures.png';
 
 function DiscountSpotList(props) {
 	const [spotData, setSpotData] = useState([]);
@@ -19,7 +20,7 @@ function DiscountSpotList(props) {
 								<ItemCard
 									title={discountSpot.instltnnm}
 									description={discountSpot.rgn}
-									photoImage={null}
+									photoImage={emptyImg}
 									imageDesc={discountSpot.instltnnm}
 								/>
 							</Link>

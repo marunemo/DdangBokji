@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import ItemCard from '../Utility/ListItem';
 import ItemGrid from '../Utility/ItemGrid';
 import LoadingSpin from '../Utility/LoadingSpin';
+import emptyImg from '../Assets/no-pictures.png';
 
 function ResortSpotList(props) {
 	const [spotData, setSpotData] = useState([]);
@@ -19,7 +20,7 @@ function ResortSpotList(props) {
 								<ItemCard
 									title={resortSpot.instltn_nm}
 									description={resortSpot.pstn_addr}
-									photoImage={null}
+									photoImage={emptyImg}
 									imageDesc={resortSpot.instltn_nm}
 								/>
 							</Link>

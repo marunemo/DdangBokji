@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import ItemCard from '../Utility/ListItem';
 import ItemGrid from '../Utility/ItemGrid';
 import LoadingSpin from '../Utility/LoadingSpin';
+import emptyImg from '../Assets/no-pictures.png';
 
 function TMOSpotList(props) {
 	const [spotData, setSpotData] = useState([]);
@@ -19,7 +20,7 @@ function TMOSpotList(props) {
 								<ItemCard
 									title={tmoSpot.tmo_nm + "TMO"}
 									description={tmoSpot.pstnexpln}
-									photoImage={null}
+									photoImage={emptyImg}
 									imageDesc={tmoSpot.tmo_nm}
 								/>
 							</Link>

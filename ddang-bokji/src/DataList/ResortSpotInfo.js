@@ -166,8 +166,8 @@ function ResortSpotInfo(props) {
 					width="100%"
 					height="100%"
 					style={styles.sampleImage}
-					alt={spotInfo.phototitle}
-					src={spotInfo.image_file}
+					alt={spotInfo.instltn_nm}
+					src={emptyImg}
 					fallback={emptyImg}
 				/>
 				<div style={{ padding: '10px 25px 25px' }}>
